@@ -419,7 +419,7 @@ textarea { resize: vertical; }
   align-items: center;
 }
 
-/* ===== WORK CARDS (画面1) ===== */
+/* ===== WORK CARDS ===== */
 .works-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -614,7 +614,7 @@ textarea { resize: vertical; }
 .form-row-2 { grid-template-columns: 1fr 1fr; }
 .form-row-3 { grid-template-columns: 1fr 1fr 1fr; }
 
-/* ===== ACCORDION (本文入力) ===== */
+/* ===== ACCORDION ===== */
 .accordion-item {
   background: var(--bg-surface);
   border: 1px solid var(--border);
@@ -1159,9 +1159,7 @@ textarea { resize: vertical; }
         </button>
       </div>
 
-      <div id="works-grid" class="works-grid">
-        <!-- cards injected -->
-      </div>
+      <div id="works-grid" class="works-grid"></div>
       <div id="works-empty" class="empty-state" style="display:none">
         <div class="empty-icon">📖</div>
         <h3>まだ作品が登録されていません</h3>
@@ -1182,10 +1180,9 @@ textarea { resize: vertical; }
         <button class="tab-btn" onclick="switchTab('analysis')">分析結果・エクスポート</button>
       </div>
 
-      <!-- TAB A: メタ情報 + 本文 -->
+      <!-- TAB A -->
       <div class="tab-panel active" id="tab-meta">
 
-        <!-- セクションA：メタ情報 -->
         <div class="form-section">
           <div class="form-section-header">
             <div class="form-section-title">
@@ -1265,7 +1262,6 @@ textarea { resize: vertical; }
           </div>
         </div>
 
-        <!-- セクションB：本文入力 -->
         <div class="form-section">
           <div class="form-section-header">
             <div class="form-section-title">
@@ -1286,12 +1282,11 @@ textarea { resize: vertical; }
           </div>
         </div>
 
-      </div><!-- /tab-meta -->
+      </div>
 
-      <!-- TAB B: 分析結果・エクスポート -->
+      <!-- TAB B -->
       <div class="tab-panel" id="tab-analysis">
 
-        <!-- 機能①：分析依頼エクスポート -->
         <div class="form-section">
           <div class="form-section-header">
             <div class="form-section-title">
@@ -1334,7 +1329,6 @@ textarea { resize: vertical; }
           </div>
         </div>
 
-        <!-- 機能②：分析結果の保存 -->
         <div class="form-section">
           <div class="form-section-header">
             <div class="form-section-title">
@@ -1343,11 +1337,11 @@ textarea { resize: vertical; }
             </div>
             <button class="btn btn-primary btn-sm" onclick="openAddRecordModal()">＋ 新規記録を追加</button>
           </div>
-         <div class="form-section-body" style="gap:0">
-  <div id="records-container"></div>
-</div>
+          <div class="form-section-body" style="gap:0">
+            <div id="records-container"></div>
+          </div>
+        </div>
 
-        <!-- 機能③：再エクスポート -->
         <div class="form-section">
           <div class="form-section-header">
             <div class="form-section-title">
@@ -1403,15 +1397,14 @@ textarea { resize: vertical; }
           </div>
         </div>
 
-      </div><!-- /tab-analysis -->
+      </div>
     </section>
 
-  </div><!-- /main-content -->
-</div><!-- /app-layout -->
+  </div>
+</div>
 
 <!-- ===== MODALS ===== -->
 
-<!-- 新規作品モーダル（簡易：タイトルだけ入力してすぐ画面2へ） -->
 <div class="modal-overlay" id="modal-new-work">
   <div class="modal">
     <div class="modal-header">
@@ -1439,7 +1432,6 @@ textarea { resize: vertical; }
   </div>
 </div>
 
-<!-- 分析記録追加/編集モーダル -->
 <div class="modal-overlay" id="modal-record">
   <div class="modal">
     <div class="modal-header">
@@ -1449,9 +1441,7 @@ textarea { resize: vertical; }
     <div class="modal-body">
       <div class="form-group">
         <label class="form-label">タグ（複数選択可）</label>
-        <div class="tag-checkbox-group" id="record-tag-group">
-          <!-- injected -->
-        </div>
+        <div class="tag-checkbox-group" id="record-tag-group"></div>
       </div>
       <div class="form-group">
         <label class="form-label">分析内容（Claudeの回答をそのまま貼り付け）</label>
@@ -1465,7 +1455,6 @@ textarea { resize: vertical; }
   </div>
 </div>
 
-<!-- 削除確認モーダル -->
 <div class="modal-overlay confirm-modal" id="modal-confirm">
   <div class="modal">
     <div class="modal-header">
@@ -1482,7 +1471,6 @@ textarea { resize: vertical; }
   </div>
 </div>
 
-<!-- Toast -->
 <div class="toast-container" id="toast-container"></div>
 
 <script>
@@ -1569,7 +1557,7 @@ function genId() {
 // ======================================================
 let currentWorkId = null;
 let currentWork   = null;
-let currentTags   = [];      // meta tags for current edit
+let currentTags   = [];
 let currentEpisodesCount = 0;
 let currentRecords = [];
 let editingRecordId = null;
@@ -1587,13 +1575,14 @@ function showPage(page, workId) {
     document.getElementById('nav-list').classList.add('active');
     document.getElementById('top-bar-title').textContent = '分析対象作品リスト';
     document.getElementById('top-bar-actions').innerHTML = '';
+    currentWorkId = null;
+    currentWork = null;
     renderWorksList();
   } else if (page === 'work' && workId) {
     currentWorkId = workId;
     document.getElementById('page-work').classList.add('active');
     document.getElementById('top-bar-title').textContent = '作品詳細';
     loadWorkPage(workId);
-    // tab reset
     switchTab('meta');
     updateNavWorksList(workId);
   }
@@ -1613,7 +1602,7 @@ function switchTab(tab) {
 }
 
 // ======================================================
-//  WORKS LIST (画面1)
+//  WORKS LIST
 // ======================================================
 async function renderWorksList() {
   const works = await dbGetAll(STORE_WORKS);
@@ -1730,7 +1719,7 @@ async function createNewWork() {
 }
 
 // ======================================================
-//  WORK PAGE (画面2) — META
+//  WORK PAGE — META
 // ======================================================
 async function loadWorkPage(workId) {
   const work = await dbGet(STORE_WORKS, workId);
@@ -1740,7 +1729,6 @@ async function loadWorkPage(workId) {
   document.getElementById('breadcrumb-title').textContent = work.title||'（無題）';
   document.getElementById('top-bar-title').textContent = work.title||'（無題）';
 
-  // fill meta fields
   document.getElementById('meta-title').value     = work.title    || '';
   document.getElementById('meta-url').value       = work.url      || '';
   document.getElementById('meta-author').value    = work.author   || '';
@@ -1752,16 +1740,15 @@ async function loadWorkPage(workId) {
   document.getElementById('meta-status').value    = work.status   || 'new';
   document.getElementById('meta-reason').value    = work.reason   || '';
 
-  // tags
   currentTags = [...(work.tags||[])];
   renderTags();
 
-  // episodes
   currentEpisodesCount = parseInt(work.episodes)||0;
   await renderEpisodesAccordion(workId, currentEpisodesCount);
 }
 
 async function saveMeta() {
+  if (!currentWorkId) return;
   const work = await dbGet(STORE_WORKS, currentWorkId);
   if (!work) return;
 
@@ -1810,7 +1797,7 @@ async function syncEpisodes() {
 }
 
 // ======================================================
-//  EPISODES ACCORDION (セクションB)
+//  EPISODES ACCORDION
 // ======================================================
 async function renderEpisodesAccordion(workId, count) {
   const container = document.getElementById('episodes-container');
@@ -1824,7 +1811,6 @@ async function renderEpisodesAccordion(workId, count) {
     return;
   }
 
-  // load existing
   const existing = await dbGetByIndex(STORE_EPISODES, 'workId', workId);
   const epMap = {};
   existing.forEach(e => { epMap[e.number] = e; });
@@ -1891,14 +1877,17 @@ async function saveEpisode(n) {
 
 async function saveAllEpisodes() {
   if (!currentWorkId || !currentEpisodesCount) return;
+  const existing = await dbGetByIndex(STORE_EPISODES, 'workId', currentWorkId);
+  const epMap = {};
+  existing.forEach(e => { epMap[e.number] = e; });
+
   for (let i = 1; i <= currentEpisodesCount; i++) {
     const subtitleEl = document.getElementById(`ep-subtitle-${i}`);
     const contentEl  = document.getElementById(`ep-content-${i}`);
     if (!subtitleEl) continue;
     const subtitle = subtitleEl.value.trim();
     const content  = contentEl ? contentEl.value : '';
-    const existing = await dbGetByIndex(STORE_EPISODES, 'workId', currentWorkId);
-    const ep = existing.find(e => e.number === i) || { id: genId(), workId: currentWorkId, number: i };
+    const ep = epMap[i] || { id: genId(), workId: currentWorkId, number: i };
     ep.subtitle  = subtitle;
     ep.content   = content;
     ep.updatedAt = Date.now();
@@ -1943,7 +1932,7 @@ function renderTags() {
 }
 
 // ======================================================
-//  ANALYSIS RECORDS (機能②)
+//  ANALYSIS RECORDS — 修正版
 // ======================================================
 const RECORD_TAGS = ['構成分析','R18配置','感情曲線','転換点','読者の声','キャラクター抽出','その他'];
 
@@ -1998,9 +1987,13 @@ function renderRecords() {
 function toggleRecord(id) {
   const body = document.getElementById(`record-body-${id}`);
   const icon = document.getElementById(`toggle-icon-${id}`);
+  if (!body || !icon) return;
   const open = body.classList.toggle('expanded');
   icon.textContent = open ? '▲' : '▼';
-  body.previousElementSibling.childNodes[1].textContent = open ? ' 折りたたむ' : ' 全文を表示';
+  const toggleBtn = body.previousElementSibling;
+  if (toggleBtn) {
+    toggleBtn.innerHTML = `<span id="toggle-icon-${id}">${open ? '▲' : '▼'}</span> ${open ? '折りたたむ' : '全文を表示'}`;
+  }
 }
 
 function openAddRecordModal() {
@@ -2045,11 +2038,13 @@ async function saveRecord() {
 
   if (editingRecordId) {
     const r = await dbGet(STORE_RECORDS, editingRecordId);
-    r.content    = content;
-    r.tags       = selectedTags;
-    r.updatedAt  = Date.now();
-    await dbPut(STORE_RECORDS, r);
-    showToast('記録を更新しました ✓');
+    if (r) {
+      r.content    = content;
+      r.tags       = selectedTags;
+      r.updatedAt  = Date.now();
+      await dbPut(STORE_RECORDS, r);
+      showToast('記録を更新しました ✓');
+    }
   } else {
     const r = {
       id: genId(),
@@ -2068,7 +2063,7 @@ async function saveRecord() {
 }
 
 // ======================================================
-//  EPISODE CHECKS (機能③ 文章分析用)
+//  EPISODE CHECKS
 // ======================================================
 async function renderEpisodeChecks() {
   const container = document.getElementById('episode-checks');
@@ -2098,7 +2093,7 @@ function toggleEpCheck(n) {
 }
 
 // ======================================================
-//  EXPORT LOGIC (機能①)
+//  EXPORT LOGIC
 // ======================================================
 async function buildExportMarkdown(type) {
   const work = await dbGet(STORE_WORKS, currentWorkId);
@@ -2138,7 +2133,7 @@ async function downloadMd(type) {
 }
 
 // ======================================================
-//  RE-EXPORT LOGIC (機能③)
+//  RE-EXPORT LOGIC
 // ======================================================
 async function buildReExportMarkdown(type) {
   const work = await dbGet(STORE_WORKS, currentWorkId);
@@ -2146,7 +2141,7 @@ async function buildReExportMarkdown(type) {
   const episodes = await dbGetByIndex(STORE_EPISODES, 'workId', currentWorkId);
   episodes.sort((a,b) => a.number - b.number);
   const records = await dbGetByIndex(STORE_RECORDS, 'workId', currentWorkId);
-  records.sort((a,b) => a.createdAt - b.createdAt);
+  records.sort((a,b) => (a.createdAt||0) - (b.createdAt||0));
 
   const metaBlock = buildMetaBlock(work);
   let md = '';
@@ -2232,302 +2227,4 @@ ${w.reason||'（未記入）'}`;
 }
 
 function buildAllBodyBlock(episodes) {
-  if (!episodes || episodes.length === 0) return '## 本文\n\n（本文未入力）';
-  let md = '## 本文\n\n';
-  episodes.forEach(ep => {
-    md += `### 第${ep.number}話${ep.subtitle ? '「'+ep.subtitle+'」' : ''}\n\n`;
-    md += (ep.content||'（本文未入力）') + '\n\n---\n\n';
-  });
-  return md;
-}
-
-function buildSelectedBodyBlock(episodes) {
-  if (!episodes || episodes.length === 0) return '## 本文（選択なし）\n\n';
-  let md = '## 本文（選択した話）\n\n';
-  episodes.forEach(ep => {
-    md += `### 第${ep.number}話${ep.subtitle ? '「'+ep.subtitle+'」' : ''}\n\n`;
-    md += (ep.content||'（本文未入力）') + '\n\n---\n\n';
-  });
-  return md;
-}
-
-function buildRecordsBlock(records, tagFilter) {
-  const filtered = tagFilter ? records.filter(r => (r.tags||[]).some(t => tagFilter.includes(t))) : records;
-  if (!filtered || filtered.length === 0) return '## 分析記録\n\n（記録なし）';
-  let md = '## 分析記録\n\n';
-  filtered.forEach(r => {
-    const dateStr = r.createdAt ? new Date(r.createdAt).toLocaleDateString('ja-JP') : '';
-    const tags = (r.tags||[]).join('・');
-    md += `### [${tags}] ${dateStr}\n\n${r.content||''}\n\n---\n\n`;
-  });
-  return md;
-}
-
-function buildFilename(title, type) {
-  const today = new Date();
-  const ymd = today.getFullYear().toString()
-    + (today.getMonth()+1).toString().padStart(2,'0')
-    + today.getDate().toString().padStart(2,'0');
-  const safeTitle = (title||'無題').replace(/[\/\\:*?"<>|]/g,'_');
-  return `${safeTitle}_${type}_${ymd}.md`;
-}
-
-// ======================================================
-//  PROMPT TEMPLATES
-// ======================================================
-function PROMPT_STRUCTURE(w) {
-  return `---
-## 依頼：小説の構成分析
-
-### 前提
-
-あなたはBL・TL（女性向け）ポルノ小説の構造分析の専門家です。
-以下の作品を分析してください。
-この分析結果は後日、別のAIアシスタントに「創作の参考資料」として渡します。そのため、人間向けの感想や批評ではなく、創作者が自分の作品設計に転用できる構造的・技術的な情報を、AIが正確にパースできるフォーマットで出力してください。
-
-### 出力フォーマット（厳守）
-
-**1. 全体構成サマリー**
-作品全体の構造を一段落で要約。「どういう人物が、どういう状況で出会い、何を経て、どこに着地する話か」を構造として記述する。
-
-**2. 章ごとの要約と役割**
-各章について以下の形式で出力する。
-
-第N話「章タイトル」
-- 要約：（3〜5文でその章の出来事を要約）
-- 物語上の役割：（導入/関係構築/衝突/転換/深化/クライマックス/解決/エピローグ 等から該当するものを記述）
-- 感情の方向：（↑上昇/↓下降/→停滞/↑↓揺さぶり から選択し、補足説明を一文で）
-- R18シーンの有無と機能：（なし/あり→関係進展の装置/あり→感情表現の手段/あり→サービスシーン 等、物語における機能を記述）
-
-**3. 展開パターン**
-この作品の物語展開を、以下のような矢印形式で表現する。
-例：出会い → 反発 → 接近 → 初体験 → すれ違い → 再接近 → 本音の吐露 → 結ばれる
-各ステップにどの章が該当するかも併記する。
-
-**4. 転換点リスト**
-物語の流れが大きく変わるポイントを列挙する。各転換点について、「何がどう変わったか」「なぜそこで変わったか（トリガー）」を記述する。
-
-**5. R18シーン配置マップ**
-R18シーンがある章番号を時系列で並べ、作品全体のどの位置（序盤/中盤/終盤）にどの密度で配置されているかを可視化する。各R18シーンの物語的機能（初めての接触、関係の変質、和解のセックス等）も併記する。
-
-**6. 感情曲線の概要**
-主人公（または視点人物）の感情の起伏を、章ごとに高/中/低の3段階で簡易的に示し、全体の波形パターン（右肩上がり/V字/W字/ジェットコースター型等）を記述する。
-
-**7. 特筆すべき技法・構成上の工夫**
-この作品が構成面で優れている点、特徴的な手法（時系列操作、視点切替、伏線の張り方、テンポのコントロール等）があれば記述する。`;
-}
-
-function PROMPT_READER(w) {
-  return `---
-## 依頼：読者レビュー・感想の分析
-
-### 前提
-
-あなたはBL・TL（女性向けポルノ小説）の読者心理分析の専門家です。
-以下は特定の作品に寄せられた読者のレビュー・感想です。
-この分析結果は後日、別のAIアシスタントに「自作品の企画・執筆の参考資料」として渡します。そのため、AIが正確にパースできるフォーマットで出力してください。
-
-### 出力フォーマット（厳守）
-
-**1. ポジティブ要素（読者が賞賛している点）**
-読者が明確に褒めている・好きだと表明している要素を抽出し、以下のカテゴリ別に整理する。
-
-- キャラクターに関する賞賛：（具体的な引用または要約＋該当レビュー数の目安）
-- ストーリー・展開に関する賞賛：（同上）
-- R18シーンに関する賞賛：（同上）
-- 文体・描写に関する賞賛：（同上）
-- その他の賞賛：（同上）
-
-**2. 不満・願望（読者が改善や追加を望んでいる点）**
-
-- キャラクターに関する不満・願望：（具体的な引用または要約）
-- ストーリー・展開に関する不満・願望：（同上）
-- R18シーンに関する不満・願望：（同上）
-- 文体・描写に関する不満・願望：（同上）
-- その他の不満・願望：（同上）
-
-**3. 発見（創作に活かせる示唆）**
-上記の分析から導き出せる、「この作品のジャンル・タグの読者が本質的に求めているもの」を3〜5点に絞って記述する。各点について「なぜそう言えるか」の根拠も示す。`;
-}
-
-function PROMPT_CHARACTER(w) {
-  return `---
-## 依頼：作品からのキャラクター情報抽出
-
-### 前提
-
-あなたはBL・TL（女性向けポルノ小説）のキャラクター分析の専門家です。以下の作品本文から、登場キャラクターの設定情報を抽出してください。
-この分析結果は、キャラクター設定データベースに登録するために使います。後日、別のAIアシスタントに「創作の参考資料」として渡すため、以下のフォーマットを厳守してください。
-
-### 出力フォーマット（厳守）
-
-登場人物ごとに以下の構造で出力する。本文中に明示されていない情報は「本文中に明示なし」と記載し、推測で埋めないこと。ただし、描写から高い確度で読み取れる情報は「（描写から推定）」と注記した上で記載してよい。
-
----
-
-【キャラクター名】
-
-**A. 基本情報**
-- 名前（本名）：
-- 愛称・通称：
-- 年齢：
-- 職業・社会的立場：
-- 身長：
-- 体格：
-
-**B. 外見**
-- 髪型・髪色：
-- 瞳の色：
-- 顔立ち：
-- 体つきの特徴：
-- 服装の傾向：
-
-**C. 性格・内面**
-- 表の性格（他人から見た印象）：
-- 裏の性格・本質：
-- 弱点・コンプレックス：
-- 過去・トラウマ：
-
-**D. 性的設定**
-- ポジション：
-- 性感帯：
-- 性的嗜好・フェティシズム：
-- 性経験の程度：
-- 濡れ場での反応パターン：
-
-**E. 口調・話し方**
-- 一人称：
-- 語尾の癖：
-- 話し方の特徴：
-- 台詞サンプル（日常会話）：「（本文から引用）」
-- 台詞サンプル（濡れ場）：「（本文から引用）」
-
-**F. 物語を通じた変化**
-- 序盤の状態：
-- 転換点：
-- 終盤の状態：`;
-}
-
-// ======================================================
-//  DELETE OPERATIONS
-// ======================================================
-function confirmDeleteWork(id, title) {
-  document.getElementById('confirm-message').textContent =
-    `「${title}」を削除しますか？\n本文・分析記録もすべて削除されます。この操作は取り消せません。`;
-  pendingConfirmFn = async () => {
-    await deleteWork(id);
-    closeModal('modal-confirm');
-  };
-  document.getElementById('confirm-ok-btn').onclick = pendingConfirmFn;
-  openModal('modal-confirm');
-}
-
-async function deleteWork(id) {
-  await dbDelete(STORE_WORKS, id);
-
-  const eps = await dbGetByIndex(STORE_EPISODES, 'workId', id);
-  for (const ep of eps) await dbDelete(STORE_EPISODES, ep.id);
-
-  const recs = await dbGetByIndex(STORE_RECORDS, 'workId', id);
-  for (const r of recs) await dbDelete(STORE_RECORDS, r.id);
-
-  showToast('作品を削除しました');
-  showPage('list');
-}
-
-function confirmDeleteRecord(id) {
-  document.getElementById('confirm-message').textContent =
-    'この分析記録を削除しますか？この操作は取り消せません。';
-  pendingConfirmFn = async () => {
-    await dbDelete(STORE_RECORDS, id);
-    await loadRecords(currentWorkId);
-    closeModal('modal-confirm');
-    showToast('記録を削除しました');
-  };
-  document.getElementById('confirm-ok-btn').onclick = pendingConfirmFn;
-  openModal('modal-confirm');
-}
-
-// ======================================================
-//  UTILITIES
-// ======================================================
-function esc(str) {
-  return String(str||'')
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;');
-}
-
-async function copyToClipboard(text) {
-  try {
-    await navigator.clipboard.writeText(text);
-  } catch {
-    // fallback
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity  = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-  }
-}
-
-function downloadFile(filename, content) {
-  const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(a.href);
-  showToast(`${filename} をダウンロードしました`);
-}
-
-function openModal(id) {
-  document.getElementById(id).classList.add('open');
-}
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
-
-// close modal on overlay click
-document.querySelectorAll('.modal-overlay').forEach(overlay => {
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) overlay.classList.remove('open');
-  });
-});
-
-function showToast(msg, type='success') {
-  const container = document.getElementById('toast-container');
-  const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  toast.innerHTML = `<span>${type==='success'?'✓':'✕'}</span> ${esc(msg)}`;
-  container.appendChild(toast);
-  setTimeout(() => {
-    toast.style.opacity = '0';
-    toast.style.transform = 'translateX(20px)';
-    toast.style.transition = 'all 0.3s ease';
-    setTimeout(() => toast.remove(), 300);
-  }, 3000);
-}
-
-async function renderSidebarWorksFromDB() {
-  const works = await dbGetAll(STORE_WORKS);
-  works.sort((a,b) => (b.updatedAt||0) - (a.updatedAt||0));
-  renderSidebarWorks(works);
-}
-
-// ======================================================
-//  INIT
-// ======================================================
-async function init() {
-  await initDB();
-  renderWorksList();
-}
-
-init();
-</script>
-</body>
-</html>
+  if
