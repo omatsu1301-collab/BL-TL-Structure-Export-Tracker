@@ -1343,15 +1343,9 @@ textarea { resize: vertical; }
             </div>
             <button class="btn btn-primary btn-sm" onclick="openAddRecordModal()">＋ 新規記録を追加</button>
           </div>
-          <div class="form-section-body" style="gap:0">
-            <div id="records-container">
-              <div class="empty-state" style="padding:32px" id="records-empty">
-                <div class="empty-icon" style="font-size:2rem">💾</div>
-                <p style="font-size:0.85rem">Claudeから返ってきた分析結果を<br>「新規記録を追加」から保存してください</p>
-              </div>
-            </div>
-          </div>
-        </div>
+         <div class="form-section-body" style="gap:0">
+  <div id="records-container"></div>
+</div>
 
         <!-- 機能③：再エクスポート -->
         <div class="form-section">
@@ -1963,15 +1957,15 @@ async function loadRecords(workId) {
 
 function renderRecords() {
   const container = document.getElementById('records-container');
-  const empty     = document.getElementById('records-empty');
 
   if (currentRecords.length === 0) {
-    container.innerHTML = '';
-    container.appendChild(empty);
-    empty.style.display = 'block';
+    container.innerHTML = `
+      <div class="empty-state" style="padding:32px">
+        <div class="empty-icon" style="font-size:2rem">💾</div>
+        <p style="font-size:0.85rem">Claudeから返ってきた分析結果を<br>「新規記録を追加」から保存してください</p>
+      </div>`;
     return;
   }
-  empty.style.display = 'none';
 
   container.innerHTML = currentRecords.map((r,idx) => {
     const tagBadges = (r.tags||[]).map(t =>
