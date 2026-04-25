@@ -648,7 +648,7 @@ textarea { resize: vertical; }
 // ======================================================
 //  DB LAYER : IndexedDB
 // ======================================================
-const DB_NAME='NovelAnalysisDB';const DB_VERSION=2;
+const DB_NAME='NovelAnalysisDB';const DB_VERSION=3;
 const STORE_WORKS='works';const STORE_EPISODES='episodes';const STORE_RECORDS='records';const STORE_RULES='rules';
 let db;
 function initDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,DB_VERSION);req.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains(STORE_WORKS)){const ws=d.createObjectStore(STORE_WORKS,{keyPath:'id'});ws.createIndex('updatedAt','updatedAt');}if(!d.objectStoreNames.contains(STORE_EPISODES)){const es=d.createObjectStore(STORE_EPISODES,{keyPath:'id'});es.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RECORDS)){const rs=d.createObjectStore(STORE_RECORDS,{keyPath:'id'});rs.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RULES)){d.createObjectStore(STORE_RULES,{keyPath:'id'});}};req.onsuccess=e=>{db=e.target.result;resolve();};req.onerror=e=>reject(e.target.error);});}
