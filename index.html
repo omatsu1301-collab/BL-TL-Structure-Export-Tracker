@@ -345,6 +345,44 @@ textarea { resize: vertical; }
   .page { padding: 16px; }
   .works-grid { grid-template-columns: 1fr; }
 }
+.pm-assist-area { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 16px; }
+.pm-assist-title { font-size: 0.85rem; font-weight: 700; color: var(--purple-300); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.preset-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.preset-card { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; transition: var(--transition); }
+.preset-card:hover { border-color: var(--border-hover); }
+.preset-card-info { flex: 1; min-width: 0; }
+.preset-card-name { font-size: 0.82rem; font-weight: 600; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.preset-card-meta { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+.preset-card-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.preset-parse-result { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; margin-top: 10px; max-height: 300px; overflow-y: auto; }
+.preset-rule-item { display: flex; align-items: center; gap: 6px; padding: 4px 0; font-size: 0.78rem; color: var(--text-secondary); }
+.preset-rule-item input { width: 14px; height: 14px; accent-color: var(--purple-500); }
+.preset-rule-item .preset-rule-category { font-size: 0.7rem; color: var(--text-muted); margin-left: 4px; }
+.preset-rule-item.preset-excluded { opacity: 0.4; text-decoration: line-through; }
+/* === RULE REFINE === */
+.refine-work-list { display: flex; flex-direction: column; gap: 6px; max-height: 360px; overflow-y: auto; padding: 4px; }
+.refine-work-item {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+  background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  transition: var(--transition); cursor: pointer;
+}
+.refine-work-item:hover:not(.refine-disabled) { border-color: var(--border-hover); background: var(--bg-hover); }
+.refine-work-item.refine-checked { border-color: var(--purple-500); background: var(--purple-glow2); box-shadow: 0 0 8px var(--purple-glow2); }
+.refine-work-item.refine-disabled { opacity: 0.5; cursor: not-allowed; }
+.refine-work-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--purple-500); flex-shrink: 0; cursor: pointer; }
+.refine-work-item.refine-disabled input[type="checkbox"] { cursor: not-allowed; }
+.refine-work-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.refine-work-title { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.refine-work-meta { font-size: 0.72rem; color: var(--text-muted); display: flex; gap: 10px; flex-wrap: wrap; }
+.refine-work-meta .refine-genre-bl { color: var(--purple-300); }
+.refine-work-meta .refine-genre-tl { color: #F9A8D4; }
+.refine-work-meta .refine-rec-count { color: var(--purple-400); font-weight: 600; }
+.refine-work-meta .refine-no-records { color: var(--danger); }
+.refine-bulk-bar { display: flex; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+.refine-bulk-info { font-size: 0.78rem; color: var(--text-muted); margin-left: auto; }
+.refine-bulk-info .refine-selected-count { color: var(--purple-300); font-weight: 700; }
+/* === END RULE REFINE === */
+
 </style>
 </head>
 <body>
@@ -553,12 +591,13 @@ textarea { resize: vertical; }
           <div class="form-section-body">
             <p style="font-size:0.78rem;color:var(--text-muted)">プロット設計＋キャラ設定シート＋マイルール（選択式）をもとに、セクション単位の執筆プロンプトを生成します。</p>
 
-            <div class="pm-record-select" id="pm-c-plot-select-area"><label>プロット設計の記録を選択</label><select id="pm-c-plot-select"><option value="">（プロット設計の記録がありません）</option></select></div>
+            <div class="pm-record-select" id="pm-c-plot-select-area"><label>プロット設計の記録を選択</label><select id="pm-c-plot-select" onchange="onPlotSelectChange()"><option value="">（プロット設計の記録がありません）</option></select></div>
             <div class="pm-record-select" id="pm-c-char-select-area"><label>キャラ設定シートの記録を選択</label><select id="pm-c-char-select"><option value="">（キャラ設定シートの記録がありません）</option></select></div>
 
             <div class="form-row form-row-2">
-              <div class="form-group"><label class="form-label">執筆対象セクション番号</label><input type="number" id="pm-c-section-num" min="1" placeholder="例：3"></div>
-              <div class="form-group"><label class="form-label">R18シーンの有無</label><select id="pm-c-has-r18"><option value="no">なし（通常セクション）</option><option value="yes">あり（R18セクション）</option></select></div>
+             <div class="form-group"><label class="form-label">執筆対象セクション</label><div id="pm-c-section-area"><select id="pm-c-section-select" style="display:none" onchange="onSectionSelect()"><option value="">（プロットを選択してください）</option></select><input type="number" id="pm-c-section-num" min="1" placeholder="例：3" style="display:none"><div id="pm-c-section-hint" class="form-hint" style="margin-top:4px"></div></div></div>
+
+              <div class="form-group"><label class="form-label">R18シーンの有無</label><select id="pm-c-has-r18"><option value="no">なし（通常セクション）</option><option value="yes">あり（R18セクション）</option></select><div id="pm-c-r18-hint" class="form-hint" style="margin-top:4px"></div></div>
             </div>
             <div class="form-group"><label class="form-label">前セクションまでの本文（任意）</label><textarea id="pm-c-prev-text" rows="6" placeholder="セクション2以降を執筆する際、それまでに書き上がった本文を貼り付けてください…"></textarea></div>
 
@@ -567,6 +606,13 @@ textarea { resize: vertical; }
               <div class="pm-param-item"><label>R18セクション文字数</label><div style="display:flex;gap:4px;align-items:center"><input type="number" id="pm-c-r18-min" value="5000" min="500" step="500"><span style="font-size:0.78rem;color:var(--text-muted)">〜</span><input type="number" id="pm-c-r18-max" value="10000" min="500" step="500"><span style="font-size:0.72rem;color:var(--text-muted)">字</span></div></div>
               <div class="pm-param-item"><label>比喩の上限</label><div style="display:flex;gap:4px;align-items:center"><input type="number" id="pm-c-metaphor-min" value="1" min="0" max="20"><span style="font-size:0.78rem;color:var(--text-muted)">〜</span><input type="number" id="pm-c-metaphor-max" value="2" min="0" max="20"><span style="font-size:0.72rem;color:var(--text-muted)">個/場面</span></div></div>
               <div class="pm-param-item"><label>会話:地の文バランス</label><div style="display:flex;gap:4px;align-items:center"><input type="text" id="pm-c-dialog-ratio" value="6:4〜4:6" style="width:120px"></div></div>
+            </div>
+              <div class="pm-assist-area" style="margin-top:12px">
+              <div class="pm-assist-title"><span>🤖</span> ルール選別アシスタント</div>
+              <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:10px">プロット＋キャラ設定＋全ルールをClaudeに渡して、今回のセクションに適用すべきルールを選別してもらいます。</p>
+              <div class="export-btn-group" style="margin-bottom:12px"><button class="btn btn-export" onclick="generateRuleSelectionPrompt()">📋 ルール選別プロンプトをコピー</button><button class="btn btn-secondary btn-sm" onclick="downloadRuleSelectionPrompt()">↓ .md</button></div>
+              <div style="display:flex;gap:8px;margin-bottom:10px"><button class="btn btn-secondary btn-sm" onclick="openAddPresetModal()">💾 Claudeの回答からプリセット保存</button></div>
+              <div id="pm-c-presets-area"><div style="font-size:0.75rem;color:var(--text-muted)">保存済みプリセットはありません</div></div>
             </div>
 
             <div style="margin-top:12px">
@@ -584,10 +630,11 @@ textarea { resize: vertical; }
     <section class="page" id="page-rules">
       <div class="section-header">
         <div class="section-title"><span class="icon">📐</span> マイルール集 <span class="count-badge" id="rules-count">0</span></div>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-secondary" onclick="exportAllRules()">📋 全ルールをコピー</button>
-          <button class="btn btn-primary" onclick="openAddRuleModal()">＋ ルールを追加</button>
-        </div>
+           <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-secondary" onclick="openRefineSelectModal()">🔄 作品横断リファイン</button>
+      <button class="btn btn-secondary" onclick="exportAllRules()">📋 全ルールをコピー</button>
+      <button class="btn btn-primary" onclick="openAddRuleModal()">＋ ルールを追加</button>
+    </div>
       </div>
       <div class="rule-filter-bar" id="rule-filter-bar"></div>
       <div id="rules-container"></div>
@@ -628,7 +675,8 @@ textarea { resize: vertical; }
         <div class="form-group"><label class="form-label">カテゴリ <span class="req">*</span></label><select id="rule-input-category"><option value="">選択してください</option><option value="描写技法">描写技法</option><option value="キャラクター">キャラクター</option><option value="シーン構成">シーン構成</option><option value="物語構成">物語構成</option><option value="読者意識">読者意識</option></select></div>
       </div>
       <div class="form-group"><label class="form-label">ルール本文 <span class="req">*</span></label><textarea id="rule-input-body" rows="10" placeholder="ルールの内容を記述…"></textarea></div>
-      <div class="form-group"><label class="form-label">出典（どの作品の分析から導いたか）</label><input type="text" id="rule-input-source" placeholder="例：「○○」の構成分析から（任意）"></div>
+           <div class="form-group"><label class="form-label">出典（どの作品の分析から導いたか）</label><input type="text" id="rule-input-source" placeholder="例：「○○」の構成分析から（任意）"><div id="rule-source-suggest" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div></div>
+
     </div>
     <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-rule')">キャンセル</button><button class="btn btn-primary" id="rule-save-btn" onclick="saveRule()">保存</button></div>
   </div>
@@ -642,6 +690,53 @@ textarea { resize: vertical; }
   </div>
 </div>
 
+<div class="modal-overlay" id="modal-preset">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="modal-preset-title">💾 ルールプリセットを保存</div><button class="modal-close" onclick="closeModal('modal-preset')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">プリセット名 <span class="req">*</span></label><input type="text" id="preset-input-name" placeholder="例：公爵編・通常セクション用"></div>
+      <div class="form-group"><label class="form-label">Claudeの回答を貼り付け</label><textarea id="preset-input-response" rows="8" placeholder="ルール選別プロンプトに対するClaudeの回答をここに貼り付けてください…"></textarea></div>
+      <div style="display:flex;gap:8px"><button class="btn btn-secondary" onclick="parsePresetResponse()">🔍 回答を解析</button></div>
+      <div id="preset-parse-area" style="display:none">
+        <div style="font-size:0.78rem;font-weight:600;color:var(--text-secondary);margin-bottom:6px">解析結果（チェックを調整してから保存してください）</div>
+        <div class="preset-parse-result" id="preset-parse-result"></div>
+      </div>
+      <div class="form-group"><label class="form-label">メモ（任意）</label><textarea id="preset-input-memo" rows="2" placeholder="このプリセットについてのメモ…"></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-preset')">キャンセル</button><button class="btn btn-primary" id="preset-save-btn" onclick="savePreset()">保存</button></div>
+  </div>
+</div>
+<div class="modal-overlay" id="modal-refine-select">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">🔄 作品横断リファイン — 対象作品を選択</div>
+      <button class="modal-close" onclick="closeModal('modal-refine-select')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.6">
+        分析記録のある作品から、リファインの素材として渡したい作品を選択してください。<br>
+        選択された作品の分析記録すべて＋現在のマイルール集をClaudeに渡し、<br>
+        ルール集全体の改訂提案（修正・統合・分割・削除・新規追加・カテゴリ変更）を依頼します。
+      </p>
+      <div class="refine-bulk-bar">
+        <button class="btn btn-ghost btn-sm" onclick="setAllRefineWorks(true)">全選択</button>
+        <button class="btn btn-ghost btn-sm" onclick="setAllRefineWorks(false)">全解除</button>
+        <div class="refine-bulk-info">
+          選択中：<span class="refine-selected-count" id="refine-selected-count">0</span> 作品
+        </div>
+      </div>
+      <div class="refine-work-list" id="refine-work-list">
+        <div style="font-size:0.8rem;color:var(--text-muted);text-align:center;padding:20px">読み込み中…</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-refine-select')">キャンセル</button>
+      <button class="btn btn-secondary btn-sm" onclick="downloadRefinePrompt()">↓ .md</button>
+      <button class="btn btn-primary" onclick="generateRefinePrompt()">📋 リファインプロンプトを生成</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast-container" id="toast-container"></div>
 
 <script>
@@ -651,7 +746,7 @@ textarea { resize: vertical; }
 const DB_NAME='NovelAnalysisDB';const DB_VERSION=3;
 const STORE_WORKS='works';const STORE_EPISODES='episodes';const STORE_RECORDS='records';const STORE_RULES='rules';
 let db;
-function initDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,DB_VERSION);req.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains(STORE_WORKS)){const ws=d.createObjectStore(STORE_WORKS,{keyPath:'id'});ws.createIndex('updatedAt','updatedAt');}if(!d.objectStoreNames.contains(STORE_EPISODES)){const es=d.createObjectStore(STORE_EPISODES,{keyPath:'id'});es.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RECORDS)){const rs=d.createObjectStore(STORE_RECORDS,{keyPath:'id'});rs.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RULES)){d.createObjectStore(STORE_RULES,{keyPath:'id'});}};req.onsuccess=e=>{db=e.target.result;resolve();};req.onerror=e=>reject(e.target.error);});}
+function initDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,DB_VERSION);req.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains(STORE_WORKS)){const ws=d.createObjectStore(STORE_WORKS,{keyPath:'id'});ws.createIndex('updatedAt','updatedAt');}if(!d.objectStoreNames.contains(STORE_EPISODES)){const es=d.createObjectStore(STORE_EPISODES,{keyPath:'id'});es.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RECORDS)){const rs=d.createObjectStore(STORE_RECORDS,{keyPath:'id'});rs.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RULES)){d.createObjectStore(STORE_RULES,{keyPath:'id'});}if(!d.objectStoreNames.contains('rulePresets')){const ps=d.createObjectStore('rulePresets',{keyPath:'id'});ps.createIndex('workId','workId');}};req.onsuccess=e=>{db=e.target.result;resolve();};req.onerror=e=>reject(e.target.error);});}
 function dbGet(s,k){return new Promise((r,j)=>{const tx=db.transaction(s,'readonly');const rq=tx.objectStore(s).get(k);rq.onsuccess=()=>r(rq.result);rq.onerror=()=>j(rq.error);});}
 function dbGetAll(s){return new Promise((r,j)=>{const tx=db.transaction(s,'readonly');const rq=tx.objectStore(s).getAll();rq.onsuccess=()=>r(rq.result);rq.onerror=()=>j(rq.error);});}
 function dbGetByIndex(s,i,v){return new Promise((r,j)=>{const tx=db.transaction(s,'readonly');const rq=tx.objectStore(s).index(i).getAll(v);rq.onsuccess=()=>r(rq.result);rq.onerror=()=>j(rq.error);});}
@@ -894,15 +989,28 @@ function openAddRuleModal(){
   document.getElementById('rule-save-btn').textContent='保存';
   document.getElementById('rule-input-title').value='';document.getElementById('rule-input-category').value='';
   document.getElementById('rule-input-body').value='';document.getElementById('rule-input-source').value='';
+  renderRuleSourceSuggest();
   openModal('modal-rule');
 }
+
 async function openEditRuleModal(id){
   const r=await dbGet(STORE_RULES,id);if(!r)return;editingRuleId=id;
   document.getElementById('modal-rule-title').textContent='✏️ ルールを編集';
   document.getElementById('rule-save-btn').textContent='更新';
   document.getElementById('rule-input-title').value=r.title||'';document.getElementById('rule-input-category').value=r.category||'';
   document.getElementById('rule-input-body').value=r.body||'';document.getElementById('rule-input-source').value=r.source||'';
+  renderRuleSourceSuggest();
   openModal('modal-rule');
+}
+
+async function renderRuleSourceSuggest(){
+  const area=document.getElementById('rule-source-suggest');
+  const works=await dbGetAll(STORE_WORKS);
+  works.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+  const recent=works.slice(0,5);
+  if(recent.length===0){area.innerHTML='';return;}
+  area.innerHTML='<span style="font-size:0.72rem;color:var(--text-muted);width:100%">直近の作品から入力：</span>'+
+    recent.map(w=>`<button type="button" class="btn btn-ghost btn-sm" style="font-size:0.72rem" onclick="document.getElementById('rule-input-source').value='「${esc(w.title)}」の分析から'">${esc(w.title)}</button>`).join('');
 }
 async function saveRule(){
   const title=document.getElementById('rule-input-title').value.trim();const category=document.getElementById('rule-input-category').value;
@@ -1017,16 +1125,269 @@ async function loadPromptMakerTab(){
   const plotSel=document.getElementById('pm-c-plot-select');
   plotSel.innerHTML=plotRecs.length===0?'<option value="">（プロット設計の記録がありません）</option>':
     plotRecs.map(r=>{const ds=r.createdAt?new Date(r.createdAt).toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'';const p=(r.content||'').slice(0,40).replace(/\n/g,' ');return `<option value="${r.id}">${ds} — ${esc(p)}…</option>`;}).join('');
+  if(plotSel.value){onPlotSelectChange();}else{parsedSections=[];updateSectionDropdown();}
   const csRecs=records.filter(r=>(r.tags||[]).includes('キャラ設定シート')).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
   const charSel=document.getElementById('pm-c-char-select');
   charSel.innerHTML=csRecs.length===0?'<option value="">（キャラ設定シートの記録がありません）</option>':
     csRecs.map(r=>{const ds=r.createdAt?new Date(r.createdAt).toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'';const p=(r.content||'').slice(0,40).replace(/\n/g,' ');return `<option value="${r.id}">${ds} — ${esc(p)}…</option>`;}).join('');
   const rules=await dbGetAll(STORE_RULES);rules.sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
   const rc=document.getElementById('pm-c-rules');
-  rc.innerHTML=rules.length===0?'<span style="font-size:0.75rem;color:var(--text-muted)">ルールが登録されていません</span>':
+   rc.innerHTML=rules.length===0?'<span style="font-size:0.75rem;color:var(--text-muted)">ルールが登録されていません</span>':
     rules.map((r,i)=>`<label class="pm-rule-check-label pm-rule-checked" id="pm-rlbl-${r.id}"><input type="checkbox" checked data-rule-id="${r.id}" onchange="document.getElementById('pm-rlbl-${r.id}').classList.toggle('pm-rule-checked',this.checked)">第${i+1}則：${esc(r.title)}</label>`).join('');
+  renderPresetsList();
 }
 function pmRuleSelectAll(on){document.querySelectorAll('#pm-c-rules input[type=checkbox]').forEach(cb=>{cb.checked=on;cb.closest('.pm-rule-check-label').classList.toggle('pm-rule-checked',on);});}
+// ======================================================
+//  PROMPT C — Section Parser
+// ======================================================
+let parsedSections = [];
+
+function parseSectionsFromPlot(content) {
+  parsedSections = [];
+  if (!content) return [];
+  const lines = content.split('\n');
+  let headerIdx = -1;
+  let colSection = -1, colHeading = -1, colR18 = -1;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (line.startsWith('|') && line.includes('セクション') && line.includes('見出し')) {
+      const cols = line.split('|').map(c => c.trim()).filter(c => c !== '');
+      colSection = cols.findIndex(c => c === 'セクション' || c === 'セクション番号');
+      colHeading = cols.findIndex(c => c === '見出し');
+      colR18 = cols.findIndex(c => c.includes('R18'));
+      headerIdx = i;
+      break;
+    }
+  }
+  if (headerIdx === -1 || colSection === -1 || colHeading === -1) return [];
+  for (let i = headerIdx + 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line.startsWith('|')) break;
+    if (line.replace(/[\|\s\-]/g, '') === '') continue;
+    const cols = line.split('|').map(c => c.trim()).filter(c => c !== '');
+    const secNum = (cols[colSection] || '').replace(/[^0-9]/g, '');
+    if (!secNum) continue;
+    const heading = cols[colHeading] || '';
+    const r18raw = colR18 >= 0 ? (cols[colR18] || '') : '';
+    const hasR18 = r18raw !== '' && r18raw !== 'なし';
+    parsedSections.push({ num: parseInt(secNum), heading, r18raw, hasR18 });
+  }
+  return parsedSections;
+}
+
+function updateSectionDropdown() {
+  const sel = document.getElementById('pm-c-section-select');
+  const inp = document.getElementById('pm-c-section-num');
+  const hint = document.getElementById('pm-c-section-hint');
+  if (parsedSections.length > 0) {
+    sel.innerHTML = '<option value="">セクションを選択…</option>' +
+      parsedSections.map(s =>
+        `<option value="${s.num}" data-r18="${s.hasR18 ? '1' : '0'}" data-r18raw="${esc(s.r18raw)}">${s.hasR18 ? '🔞 ' : ''}セクション${s.num}：${esc(s.heading)}</option>`
+      ).join('');
+    sel.style.display = '';
+    inp.style.display = 'none';
+    hint.textContent = `${parsedSections.length}セクションを検出しました`;
+  } else {
+    sel.style.display = 'none';
+    inp.style.display = '';
+    inp.value = '';
+    hint.textContent = 'テーブルが検出できなかったため手入力モードです';
+  }
+}
+
+function onPlotSelectChange() {
+  const plotId = document.getElementById('pm-c-plot-select').value;
+  if (!plotId) { parsedSections = []; updateSectionDropdown(); return; }
+  dbGet(STORE_RECORDS, plotId).then(rec => {
+    if (!rec) { parsedSections = []; updateSectionDropdown(); return; }
+    parseSectionsFromPlot(rec.content || '');
+    updateSectionDropdown();
+  });
+}
+
+function onSectionSelect() {
+  const sel = document.getElementById('pm-c-section-select');
+  const opt = sel.options[sel.selectedIndex];
+  const hint = document.getElementById('pm-c-r18-hint');
+  if (!opt || !opt.value) {
+    if (hint) hint.textContent = '';
+    return;
+  }
+  const isR18 = opt.dataset.r18 === '1';
+  const r18raw = opt.dataset.r18raw || '';
+  document.getElementById('pm-c-has-r18').value = isR18 ? 'yes' : 'no';
+  if (hint) {
+    hint.textContent = isR18 ? '🔞 自動設定：' + r18raw : '自動設定：R18なし（手動で上書き可）';
+    hint.style.color = isR18 ? '#FCA5A5' : 'var(--text-muted)';
+  }
+}
+// ======================================================
+//  RULE SELECTION ASSISTANT & PRESETS
+// ======================================================
+let editingPresetId = null;
+
+async function buildRuleSelectionPromptMd() {
+  const plotId = document.getElementById('pm-c-plot-select').value;
+  const charId = document.getElementById('pm-c-char-select').value;
+  if (!plotId) { showToast('プロット設計の記録を選択してください', 'error'); return null; }
+  if (!charId) { showToast('キャラ設定シートの記録を選択してください', 'error'); return null; }
+  const plotRec = await dbGet(STORE_RECORDS, plotId);
+  const charRec = await dbGet(STORE_RECORDS, charId);
+  if (!plotRec || !charRec) { showToast('記録の取得に失敗しました', 'error'); return null; }
+  const allRules = await dbGetAll(STORE_RULES);
+  allRules.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+  let md = `# 役割定義\n\nあなたはTL／BL／ポルノ小説の執筆技法に精通した編集者です。\n以下のプロットとキャラクター設定シートを踏まえた上で、\n提示するマイルール集の各ルールを分類してください。\n\n---\n\n# 入力\n\n## プロット\n\n${plotRec.content || ''}\n\n## キャラクター設定シート\n\n${charRec.content || ''}\n\n## マイルール集\n\n`;
+  if (allRules.length === 0) { md += '（ルール未登録）\n\n'; }
+  else { allRules.forEach((r, i) => { md += `### 第${i + 1}則：${r.title}【${r.category}】\n\n${r.body}\n\n---\n\n`; }); }
+  md += `---\n\n# 依頼\n\nこのプロットとキャラクター設計で新作を執筆する前提で、\n上記マイルール集の各ルールを以下の4カテゴリに分類してください。\n\n## 出力フォーマット（厳守）\n\n### 必須\nこのプロット・キャラ設計において必ず適用すべきルール。\n各ルールについて「第N則：タイトル」と、なぜ必須かの理由を1〜2文で記述。\n\n### 推奨\n適用すると品質が上がるが、必須ではないルール。\n各ルールについて「第N則：タイトル」と、どう活きるかを1〜2文で記述。\n\n### 化学反応枠\n通常は優先度が低いが、このプロット・キャラの特性と組み合わせると\n意外な効果を生む可能性があるルール。\n各ルールについて「第N則：タイトル」と、期待される化学反応を1〜2文で記述。\n\n### 今回は不要\nこのプロット・キャラ設計では適用しない方がよい、または無関係なルール。\n各ルールについて「第N則：タイトル」と、不要と判断した理由を1文で記述。\n\n## 注意事項\n\n- 全ルールをいずれかのカテゴリに必ず振り分けること（漏れなく）\n- 各カテゴリ内ではルール番号順に記載すること\n- 判断に迷う場合は「推奨」に分類し、迷った理由を付記すること`;
+  return md;
+}
+
+async function generateRuleSelectionPrompt() {
+  const md = await buildRuleSelectionPromptMd();
+  if (!md) return;
+  await copyToClipboard(md);
+  showToast('ルール選別プロンプトをコピーしました 📋');
+}
+
+async function downloadRuleSelectionPrompt() {
+  const md = await buildRuleSelectionPromptMd();
+  if (!md) return;
+  const work = await dbGet(STORE_WORKS, currentWorkId);
+  downloadFile(buildFilename(work?.title || '無題', 'ルール選別プロンプト'), md);
+}
+
+function openAddPresetModal() {
+  editingPresetId = null;
+  document.getElementById('modal-preset-title').textContent = '💾 ルールプリセットを保存';
+  document.getElementById('preset-save-btn').textContent = '保存';
+  document.getElementById('preset-input-name').value = '';
+  document.getElementById('preset-input-response').value = '';
+  document.getElementById('preset-input-memo').value = '';
+  document.getElementById('preset-parse-area').style.display = 'none';
+  document.getElementById('preset-parse-result').innerHTML = '';
+  openModal('modal-preset');
+}
+
+async function openEditPresetModal(id) {
+  const p = await dbGet('rulePresets', id);
+  if (!p) return;
+  editingPresetId = id;
+  document.getElementById('modal-preset-title').textContent = '✏️ プリセットを編集';
+  document.getElementById('preset-save-btn').textContent = '更新';
+  document.getElementById('preset-input-name').value = p.name || '';
+  document.getElementById('preset-input-response').value = p.response || '';
+  document.getElementById('preset-input-memo').value = p.memo || '';
+  // 保存済みのルールIDで解析結果を再構築
+  const allRules = await dbGetAll(STORE_RULES);
+  allRules.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+  if (allRules.length > 0) {
+    const savedIds = p.ruleIds || [];
+    const area = document.getElementById('preset-parse-area');
+    const result = document.getElementById('preset-parse-result');
+    result.innerHTML = allRules.map((r, i) => {
+      const checked = savedIds.includes(r.id);
+      return `<div class="preset-rule-item"><input type="checkbox" data-rule-id="${r.id}" ${checked ? 'checked' : ''}><span>第${i + 1}則：${esc(r.title)}</span><span class="preset-rule-category">【${esc(r.category)}】</span></div>`;
+    }).join('');
+    area.style.display = '';
+  }
+  openModal('modal-preset');
+}
+
+async function parsePresetResponse() {
+  const response = document.getElementById('preset-input-response').value;
+  if (!response.trim()) { showToast('Claudeの回答を貼り付けてください', 'error'); return; }
+  const allRules = await dbGetAll(STORE_RULES);
+  allRules.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+  if (allRules.length === 0) { showToast('ルールが登録されていません', 'error'); return; }
+
+  // 「今回は不要」セクションの範囲を特定
+  const lines = response.split('\n');
+  let inExcludeSection = false;
+  const excludeNums = new Set();
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (/^#{1,4}\s*今回は不要/.test(trimmed)) { inExcludeSection = true; continue; }
+    if (inExcludeSection && /^#{1,4}\s/.test(trimmed) && !/今回は不要/.test(trimmed)) { inExcludeSection = false; continue; }
+    if (inExcludeSection) {
+      const m = trimmed.match(/第(\d+)則/);
+      if (m) excludeNums.add(parseInt(m[1]));
+    }
+  }
+
+  // 回答全体から言及されている「第N則」を検出
+  const mentionedNums = new Set();
+  const allMatches = response.matchAll(/第(\d+)則/g);
+  for (const m of allMatches) mentionedNums.add(parseInt(m[1]));
+
+  const area = document.getElementById('preset-parse-area');
+  const result = document.getElementById('preset-parse-result');
+  result.innerHTML = allRules.map((r, i) => {
+    const num = i + 1;
+    const isExcluded = excludeNums.has(num);
+    const isMentioned = mentionedNums.has(num);
+    const checked = isMentioned && !isExcluded;
+    const cls = isExcluded ? ' preset-excluded' : '';
+    return `<div class="preset-rule-item${cls}"><input type="checkbox" data-rule-id="${r.id}" ${checked ? 'checked' : ''}><span>第${num}則：${esc(r.title)}</span><span class="preset-rule-category">【${esc(r.category)}】${isExcluded ? '（不要と判定）' : ''}</span></div>`;
+  }).join('');
+  area.style.display = '';
+  showToast(`解析完了：${excludeNums.size}件を「不要」として除外`);
+}
+
+async function savePreset() {
+  const name = document.getElementById('preset-input-name').value.trim();
+  if (!name) { showToast('プリセット名を入力してください', 'error'); return; }
+  const checkedIds = [...document.querySelectorAll('#preset-parse-result input[type=checkbox]:checked')].map(cb => cb.dataset.ruleId);
+  if (checkedIds.length === 0) { showToast('ルールが1つも選択されていません。回答を解析してください', 'error'); return; }
+  const memo = document.getElementById('preset-input-memo').value.trim();
+  const response = document.getElementById('preset-input-response').value.trim();
+  if (editingPresetId) {
+    const p = await dbGet('rulePresets', editingPresetId);
+    if (p) { p.name = name; p.ruleIds = checkedIds; p.memo = memo; p.response = response; p.updatedAt = Date.now(); await dbPut('rulePresets', p); showToast('プリセットを更新しました ✓'); }
+  } else {
+    await dbPut('rulePresets', { id: genId(), workId: currentWorkId, name, ruleIds: checkedIds, memo, response, createdAt: Date.now(), updatedAt: Date.now() });
+    showToast('プリセットを保存しました ✓');
+  }
+  closeModal('modal-preset');
+  renderPresetsList();
+}
+
+async function renderPresetsList() {
+  if (!currentWorkId) return;
+  const presets = await dbGetByIndex('rulePresets', 'workId', currentWorkId);
+  presets.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  const area = document.getElementById('pm-c-presets-area');
+  if (presets.length === 0) {
+    area.innerHTML = '<div style="font-size:0.75rem;color:var(--text-muted)">保存済みプリセットはありません</div>';
+    return;
+  }
+  area.innerHTML = '<div style="font-size:0.78rem;font-weight:600;color:var(--text-secondary);margin-bottom:6px">保存済みプリセット</div><div class="preset-list">' +
+    presets.map(p => {
+      const cnt = (p.ruleIds || []).length;
+      const ds = p.createdAt ? new Date(p.createdAt).toLocaleDateString('ja-JP', { month: '2-digit', day: '2-digit' }) : '';
+      return `<div class="preset-card"><div class="preset-card-info"><div class="preset-card-name">${esc(p.name)}</div><div class="preset-card-meta">${ds} ・ ${cnt}ルール${p.memo ? ' ・ ' + esc(p.memo.slice(0, 30)) : ''}</div></div><div class="preset-card-actions"><button class="btn btn-primary btn-sm" onclick="applyPreset('${p.id}')">適用</button><button class="btn btn-ghost btn-sm" onclick="openEditPresetModal('${p.id}')">編集</button><button class="btn btn-danger btn-sm" onclick="confirmDeletePreset('${p.id}','${esc(p.name)}')">削除</button></div></div>`;
+    }).join('') + '</div>';
+}
+
+async function applyPreset(id) {
+  const p = await dbGet('rulePresets', id);
+  if (!p) return;
+  const savedIds = p.ruleIds || [];
+  document.querySelectorAll('#pm-c-rules input[type=checkbox]').forEach(cb => {
+    const rid = cb.dataset.ruleId;
+    const shouldCheck = savedIds.includes(rid);
+    cb.checked = shouldCheck;
+    cb.closest('.pm-rule-check-label').classList.toggle('pm-rule-checked', shouldCheck);
+  });
+  showToast(`プリセット「${p.name}」を適用しました ✓`);
+}
+
+function confirmDeletePreset(id, name) {
+  document.getElementById('confirm-message').textContent = `プリセット「${name}」を削除しますか？`;
+  const okBtn = document.getElementById('confirm-ok-btn'); const nb = okBtn.cloneNode(true); okBtn.parentNode.replaceChild(nb, okBtn);
+  nb.addEventListener('click', async () => { await dbDelete('rulePresets', id); closeModal('modal-confirm'); renderPresetsList(); showToast('プリセットを削除しました'); });
+  openModal('modal-confirm');
+}
 
 // ======================================================
 //  PROMPT MAKER — Generate
@@ -1087,7 +1448,9 @@ async function pmC(records){
   const plotRec=await dbGet(STORE_RECORDS,plotId);
   const charRec=await dbGet(STORE_RECORDS,charId);
   if(!plotRec||!charRec){showToast('記録の取得に失敗しました','error');return null;}
-  const secNum=gv('pm-c-section-num','（未指定）');
+  const secSelVal = document.getElementById('pm-c-section-select').value;
+  const secInpVal = document.getElementById('pm-c-section-num').value;
+  const secNum = secSelVal || secInpVal || '（未指定）';
   const hasR18=document.getElementById('pm-c-has-r18').value==='yes';
   const prevText=document.getElementById('pm-c-prev-text').value.trim();
   const nMin=gv('pm-c-normal-min',3000),nMax=gv('pm-c-normal-max',6000);
@@ -1110,6 +1473,166 @@ async function pmC(records){
   return md;
 }
 
+
+// ╔═══════════════════════════════════════════════════════
+// ║ BLOCK: ルールリファイン機能（Phase 1: プロンプト生成のみ）
+// ║ 依存: dbGetAll, dbGetByIndex, STORE_WORKS, STORE_RECORDS, STORE_RULES
+// ║ 配置: PROMPT MAKER ブロックの直後、DELETE OPERATIONS の直前
+// ╚═══════════════════════════════════════════════════════
+
+let refineSelectedWorkIds = new Set();
+
+async function openRefineSelectModal() {
+  refineSelectedWorkIds = new Set();
+  document.getElementById('refine-selected-count').textContent = '0';
+  openModal('modal-refine-select');
+  await renderRefineWorkList();
+}
+
+async function renderRefineWorkList() {
+  const list = document.getElementById('refine-work-list');
+  const works = await dbGetAll(STORE_WORKS);
+  works.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+  if (works.length === 0) {
+    list.innerHTML = '<div style="font-size:0.8rem;color:var(--text-muted);text-align:center;padding:20px">作品が登録されていません</div>';
+    return;
+  }
+  // 各作品の記録数を取得
+  const items = [];
+  for (const w of works) {
+    const recs = await dbGetByIndex(STORE_RECORDS, 'workId', w.id);
+    items.push({ work: w, recCount: recs.length });
+  }
+  list.innerHTML = items.map(({ work, recCount }) => {
+    const hasRecords = recCount > 0;
+    const disabled = !hasRecords;
+    const checked = refineSelectedWorkIds.has(work.id);
+    const genreClass = work.genre === 'BL' ? 'refine-genre-bl' : work.genre === 'TL' ? 'refine-genre-tl' : '';
+    const genreText = work.genre ? `<span class="${genreClass}">${esc(work.genre)}</span>` : '';
+    const recText = hasRecords
+      ? `<span class="refine-rec-count">📝 ${recCount}件の記録</span>`
+      : `<span class="refine-no-records">記録なし</span>`;
+    return `<label class="refine-work-item ${checked ? 'refine-checked' : ''} ${disabled ? 'refine-disabled' : ''}" ${disabled ? '' : `onclick="toggleRefineWorkCheck('${work.id}')"`}>
+      <input type="checkbox" ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''} onclick="event.stopPropagation();toggleRefineWorkCheck('${work.id}')">
+      <div class="refine-work-info">
+        <div class="refine-work-title">${esc(work.title || '（無題）')}</div>
+        <div class="refine-work-meta">${genreText}${recText}</div>
+      </div>
+    </label>`;
+  }).join('');
+}
+
+function toggleRefineWorkCheck(workId) {
+  if (refineSelectedWorkIds.has(workId)) {
+    refineSelectedWorkIds.delete(workId);
+  } else {
+    refineSelectedWorkIds.add(workId);
+  }
+  document.getElementById('refine-selected-count').textContent = refineSelectedWorkIds.size;
+  // 該当アイテムのみクラス更新（再描画より軽い）
+  const items = document.querySelectorAll('#refine-work-list .refine-work-item');
+  items.forEach(el => {
+    const oc = el.getAttribute('onclick') || '';
+    const m = oc.match(/toggleRefineWorkCheck\('([^']+)'\)/);
+    if (m && m[1] === workId) {
+      const isChecked = refineSelectedWorkIds.has(workId);
+      el.classList.toggle('refine-checked', isChecked);
+      const cb = el.querySelector('input[type="checkbox"]');
+      if (cb) cb.checked = isChecked;
+    }
+  });
+}
+
+async function setAllRefineWorks(checked) {
+  const works = await dbGetAll(STORE_WORKS);
+  if (checked) {
+    refineSelectedWorkIds = new Set();
+    for (const w of works) {
+      const recs = await dbGetByIndex(STORE_RECORDS, 'workId', w.id);
+      if (recs.length > 0) refineSelectedWorkIds.add(w.id);
+    }
+  } else {
+    refineSelectedWorkIds = new Set();
+  }
+  document.getElementById('refine-selected-count').textContent = refineSelectedWorkIds.size;
+  await renderRefineWorkList();
+}
+
+async function buildRefinePromptMd() {
+  if (refineSelectedWorkIds.size === 0) {
+    showToast('対象作品を1つ以上選択してください', 'error');
+    return null;
+  }
+  const allRules = await dbGetAll(STORE_RULES);
+  allRules.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+
+  let md = `# 分析依頼:マイルール集の作品横断リファイン\n\n## 対象作品の分析記録\n\n`;
+
+  let workIdx = 0;
+  for (const workId of refineSelectedWorkIds) {
+    workIdx++;
+    const work = await dbGet(STORE_WORKS, workId);
+    if (!work) continue;
+    const records = await dbGetByIndex(STORE_RECORDS, 'workId', workId);
+    records.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+    md += `### 作品${workIdx}：${work.title || '（無題）'}\n\n`;
+    md += `- 作者：${work.author || '（不明）'}\n`;
+    md += `- ジャンル：${work.genre || '（未設定）'}\n`;
+    md += `- タグ：${(work.tags || []).join('・') || '（なし）'}\n`;
+    if (work.synopsis) md += `- あらすじ：${work.synopsis}\n`;
+    md += `\n#### 分析記録\n\n`;
+    if (records.length === 0) {
+      md += '（記録なし）\n\n';
+    } else {
+      records.forEach(r => {
+        const tags = (r.tags || []).join('・') || 'タグなし';
+        const ds = r.createdAt ? new Date(r.createdAt).toLocaleDateString('ja-JP') : '';
+        md += `**[${tags}] ${ds}**\n\n${r.content || ''}\n\n---\n\n`;
+      });
+    }
+  }
+
+  md += `## 現在のマイルール集\n\n`;
+  if (allRules.length === 0) {
+    md += '（ルール未登録）\n\n';
+  } else {
+    allRules.forEach((r, i) => {
+      md += `### 第${i + 1}則：${r.title}【${r.category}】\n\n${r.body}\n\n`;
+      if (r.source) md += `> 出典：${r.source}\n\n`;
+      md += `---\n\n`;
+    });
+  }
+
+  md += PROMPT_REFINE();
+  return md;
+}
+
+async function generateRefinePrompt() {
+  const md = await buildRefinePromptMd();
+  if (!md) return;
+  await copyToClipboard(md);
+  closeModal('modal-refine-select');
+  showToast(`${refineSelectedWorkIds.size}作品分のリファインプロンプトをコピーしました 📋`);
+}
+
+async function downloadRefinePrompt() {
+  const md = await buildRefinePromptMd();
+  if (!md) return;
+  const t = new Date();
+  const ymd = t.getFullYear().toString() + (t.getMonth() + 1).toString().padStart(2, '0') + t.getDate().toString().padStart(2, '0');
+  const fn = `マイルール集_リファイン依頼_${refineSelectedWorkIds.size}作品_${ymd}.md`;
+  downloadFile(fn, md);
+  closeModal('modal-refine-select');
+}
+
+function PROMPT_REFINE() {
+  return `---\n\n# 役割定義\n\nあなたはBL・TL（女性向けポルノ小説）の執筆技法に精通した編集者です。\n上記の対象作品の分析記録と、依頼者が現在運用しているマイルール集を踏まえ、\n**マイルール集全体を構造的にメンテナンスする**ための改訂提案を出してください。\n\n単発の新規追加ではなく、ルール集全体を「読みやすく・矛盾なく・運用しやすい」状態に磨き上げることが目的です。\n\n---\n\n# 依頼内容\n\n以下6種類の操作のうち、必要なものだけを提案してください。提案数の上限・下限はありません。本当に変更が不要なら「変更不要」と一言で答えて構いません。\n\n## 操作の種類\n\n1. **修正**：既存ルールの内容を磨き直す（タイトル・本文・カテゴリのいずれかまたは複数を変更）\n2. **統合**：似たことを言っている2〜3個のルールを1個にまとめる\n3. **分割**：1個のルールが複雑すぎる、または複数の独立した主張を含んでいる場合に分割する\n4. **削除**：時代遅れ・現在の作品傾向から見て不要になったルール（最終判断は人間が行うので、削除候補として提示する形でよい）\n5. **新規追加**：分析記録から導かれる、現ルール集にない新ルール\n6. **カテゴリ変更**：本文・タイトルは維持したまま、カテゴリだけを修正する\n\n## 出力フォーマット（厳守）\n\n各提案を以下の形式で、提案番号順に出力してください。\n\n\`\`\`\n### 提案 #N\n- 操作：修正 / 統合 / 分割 / 削除 / 新規追加 / カテゴリ変更\n- 対象ルール：第N則「タイトル」（複数の場合はカンマ区切り、新規追加は「なし」）\n- 修正後タイトル：（新規追加・修正・分割時のみ。分割の場合は分割後のタイトルをすべて列挙）\n- 修正後カテゴリ：描写技法 / キャラクター / シーン構成 / 物語構成 / 読者意識 のいずれか（削除時は不要）\n- 修正後本文：\n（本文をここに記述。分割の場合は「---」で区切って複数記述）\n- 根拠：（なぜこの提案をするか。どの作品のどの分析記録から導いたか具体的に明記）\n\`\`\`\n\n## 注意事項\n\n- ルールの粒度は既存ルール集に揃えること（1ルールにつき1〜3段落＋具体例）\n- 「対象ルール」は必ず「第N則」の番号と現在のタイトルを正確に書くこと\n- 統合提案では、統合後の本文が元のルール群の主要な主張をすべてカバーしていること\n- 分割提案では、分割後の各ルールが独立して機能すること\n- 削除提案では、なぜ不要と判断したかの根拠を特に丁寧に書くこと\n- 根拠のない提案はしないこと\n- 既存ルールと内容が重複する新規追加提案はしないこと`;
+}
+
+// ║ END BLOCK: ルールリファイン機能
+
+
+
 // ======================================================
 //  DELETE OPERATIONS
 // ======================================================
@@ -1121,6 +1644,7 @@ function confirmDeleteWork(id,title){
 async function deleteWork(id){
   await dbDelete(STORE_WORKS,id);const eps=await dbGetByIndex(STORE_EPISODES,'workId',id);for(const ep of eps)await dbDelete(STORE_EPISODES,ep.id);
   const recs=await dbGetByIndex(STORE_RECORDS,'workId',id);for(const r of recs)await dbDelete(STORE_RECORDS,r.id);
+  const presets=await dbGetByIndex('rulePresets','workId',id);for(const p of presets)await dbDelete('rulePresets',p.id);
   showToast('作品を削除しました');showPage('list');
 }
 function confirmDeleteRecord(id){
