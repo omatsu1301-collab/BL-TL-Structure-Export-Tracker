@@ -381,6 +381,69 @@ textarea { resize: vertical; }
 .refine-bulk-bar { display: flex; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
 .refine-bulk-info { font-size: 0.78rem; color: var(--text-muted); margin-left: auto; }
 .refine-bulk-info .refine-selected-count { color: var(--purple-300); font-weight: 700; }
+
+
+/* --- Phase 2: 解析モーダル --- */
+.refine-parse-textarea { font-size: 0.82rem; line-height: 1.6; min-height: 160px; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; }
+.refine-parse-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.refine-parse-summary { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 0.78rem; color: var(--text-secondary); display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+.refine-parse-summary span strong { color: var(--purple-300); font-weight: 700; }
+.refine-parse-summary .refine-stat-applied { color: #6EE7B7; }
+.refine-parse-summary .refine-stat-rejected { color: #FCA5A5; }
+.refine-parse-summary .refine-stat-pending { color: #FCD34D; }
+.refine-bulk-actions { display: flex; gap: 8px; flex-wrap: wrap; padding-bottom: 10px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+
+/* --- 提案カード --- */
+.proposal-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 12px; overflow: hidden; transition: var(--transition); }
+.proposal-card:hover { border-color: var(--border-hover); }
+.proposal-card.proposal-applied { border-color: rgba(16,185,129,0.5); background: rgba(16,185,129,0.05); }
+.proposal-card.proposal-rejected { opacity: 0.45; border-color: var(--border); }
+.proposal-card.proposal-error { border-color: rgba(245,158,11,0.5); background: rgba(245,158,11,0.05); }
+.proposal-card-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; flex-wrap: wrap; }
+.proposal-num { font-size: 0.8rem; font-weight: 700; color: var(--purple-400); }
+.proposal-op-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; }
+.proposal-op-modify { background: rgba(59,130,246,0.18); color: #93C5FD; border: 1px solid rgba(59,130,246,0.35); }
+.proposal-op-merge { background: rgba(168,85,247,0.18); color: #D8B4FE; border: 1px solid rgba(168,85,247,0.35); }
+.proposal-op-split { background: rgba(251,146,60,0.18); color: #FDBA74; border: 1px solid rgba(251,146,60,0.35); }
+.proposal-op-delete { background: rgba(239,68,68,0.18); color: #FCA5A5; border: 1px solid rgba(239,68,68,0.35); }
+.proposal-op-create { background: rgba(16,185,129,0.18); color: #6EE7B7; border: 1px solid rgba(16,185,129,0.35); }
+.proposal-op-recategorize { background: rgba(236,72,153,0.18); color: #F9A8D4; border: 1px solid rgba(236,72,153,0.35); }
+.proposal-op-error { background: rgba(245,158,11,0.18); color: #FCD34D; border: 1px solid rgba(245,158,11,0.35); }
+.proposal-target { font-size: 0.78rem; color: var(--text-secondary); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.proposal-status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; }
+.proposal-status-applied { background: rgba(16,185,129,0.2); color: #6EE7B7; border: 1px solid rgba(16,185,129,0.4); }
+.proposal-status-rejected { background: rgba(107,114,128,0.2); color: #9CA3AF; border: 1px solid rgba(107,114,128,0.3); }
+.proposal-card-body { padding: 0 16px 14px; display: flex; flex-direction: column; gap: 10px; }
+.proposal-diff { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.proposal-diff-side { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; min-width: 0; }
+.proposal-diff-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.05em; }
+.proposal-diff-side.diff-before .proposal-diff-label { color: #FCA5A5; }
+.proposal-diff-side.diff-after .proposal-diff-label { color: #6EE7B7; }
+.proposal-diff-title { font-size: 0.82rem; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; line-height: 1.4; word-break: break-word; }
+.proposal-diff-cat { font-size: 0.7rem; color: var(--purple-300); margin-bottom: 6px; }
+.proposal-diff-body { font-size: 0.76rem; color: var(--text-secondary); line-height: 1.6; white-space: pre-wrap; word-break: break-word; max-height: 180px; overflow-y: auto; padding-right: 4px; }
+.proposal-diff-empty { font-size: 0.75rem; color: var(--text-muted); font-style: italic; }
+.proposal-rationale { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; }
+.proposal-rationale-label { font-size: 0.7rem; font-weight: 700; color: var(--purple-400); margin-bottom: 4px; }
+.proposal-rationale-text { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+.proposal-error-msg { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.35); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 0.78rem; color: #FCD34D; }
+.proposal-raw-text { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 0.75rem; color: var(--text-muted); white-space: pre-wrap; word-break: break-word; max-height: 200px; overflow-y: auto; font-family: 'SFMono-Regular', Consolas, monospace; }
+.proposal-card-footer { display: flex; gap: 6px; padding: 10px 16px; border-top: 1px solid var(--border); flex-wrap: wrap; align-items: center; }
+.proposal-card-footer .proposal-spacer { flex: 1; }
+
+/* --- 提案カード：編集モード --- */
+.proposal-edit { background: var(--bg-input); border: 1px solid var(--purple-500); border-radius: var(--radius-sm); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.proposal-edit-row { display: flex; flex-direction: column; gap: 4px; }
+.proposal-edit-row label { font-size: 0.72rem; font-weight: 700; color: var(--text-secondary); }
+.proposal-edit-row input, .proposal-edit-row select, .proposal-edit-row textarea { font-size: 0.82rem; }
+.proposal-edit-row textarea { min-height: 100px; line-height: 1.6; }
+.proposal-split-block { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px; display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.proposal-split-block-label { font-size: 0.7rem; font-weight: 700; color: var(--purple-300); }
+
+@media (max-width: 680px) {
+  .proposal-diff { grid-template-columns: 1fr; }
+}
+
 /* === END RULE REFINE === */
 
 </style>
@@ -729,10 +792,42 @@ textarea { resize: vertical; }
         <div style="font-size:0.8rem;color:var(--text-muted);text-align:center;padding:20px">読み込み中…</div>
       </div>
     </div>
-    <div class="modal-footer">
+       <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-refine-select')">キャンセル</button>
+      <div style="flex:1"></div>
+      <button class="btn btn-secondary btn-sm" onclick="openRefineParseModal()">📥 Claudeの回答を解析</button>
       <button class="btn btn-secondary btn-sm" onclick="downloadRefinePrompt()">↓ .md</button>
       <button class="btn btn-primary" onclick="generateRefinePrompt()">📋 リファインプロンプトを生成</button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="modal-refine-parse">
+  <div class="modal" style="max-width:880px">
+    <div class="modal-header">
+      <div class="modal-title">📥 Claudeの回答を解析 — ルール改訂提案の確認</div>
+      <button class="modal-close" onclick="closeModal('modal-refine-parse')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Claudeの回答を貼り付け</label>
+        <textarea id="refine-parse-input" class="refine-parse-textarea" rows="8" placeholder="リファインプロンプトに対するClaudeの回答をここに貼り付けてください…&#10;&#10;### 提案 #1&#10;- 操作：修正&#10;- 対象ルール：第3則「○○」&#10;...&#10;の形式で書かれていることを想定しています。"></textarea>
+      </div>
+      <div class="refine-parse-actions">
+        <button class="btn btn-primary" onclick="parseRefineResponse()">🔍 回答を解析</button>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('refine-parse-input').value=''">クリア</button>
+      </div>
+
+      <div id="refine-proposals-area" style="display:none">
+        <div class="refine-parse-summary" id="refine-parse-summary"></div>
+        <div class="refine-bulk-actions" id="refine-bulk-actions" style="display:none">
+          <button class="btn btn-primary btn-sm" onclick="applyAllRefineProposals()">✓ 保留中をすべて適用</button>
+          <button class="btn btn-ghost btn-sm" onclick="rejectAllRefineProposals()">✕ 保留中をすべて却下</button>
+        </div>
+        <div id="refine-proposals-list"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-refine-parse')">閉じる</button>
     </div>
   </div>
 </div>
@@ -1628,6 +1723,729 @@ async function downloadRefinePrompt() {
 function PROMPT_REFINE() {
   return `---\n\n# 役割定義\n\nあなたはBL・TL（女性向けポルノ小説）の執筆技法に精通した編集者です。\n上記の対象作品の分析記録と、依頼者が現在運用しているマイルール集を踏まえ、\n**マイルール集全体を構造的にメンテナンスする**ための改訂提案を出してください。\n\n単発の新規追加ではなく、ルール集全体を「読みやすく・矛盾なく・運用しやすい」状態に磨き上げることが目的です。\n\n---\n\n# 依頼内容\n\n以下6種類の操作のうち、必要なものだけを提案してください。提案数の上限・下限はありません。本当に変更が不要なら「変更不要」と一言で答えて構いません。\n\n## 操作の種類\n\n1. **修正**：既存ルールの内容を磨き直す（タイトル・本文・カテゴリのいずれかまたは複数を変更）\n2. **統合**：似たことを言っている2〜3個のルールを1個にまとめる\n3. **分割**：1個のルールが複雑すぎる、または複数の独立した主張を含んでいる場合に分割する\n4. **削除**：時代遅れ・現在の作品傾向から見て不要になったルール（最終判断は人間が行うので、削除候補として提示する形でよい）\n5. **新規追加**：分析記録から導かれる、現ルール集にない新ルール\n6. **カテゴリ変更**：本文・タイトルは維持したまま、カテゴリだけを修正する\n\n## 出力フォーマット（厳守）\n\n各提案を以下の形式で、提案番号順に出力してください。\n\n\`\`\`\n### 提案 #N\n- 操作：修正 / 統合 / 分割 / 削除 / 新規追加 / カテゴリ変更\n- 対象ルール：第N則「タイトル」（複数の場合はカンマ区切り、新規追加は「なし」）\n- 修正後タイトル：（新規追加・修正・分割時のみ。分割の場合は分割後のタイトルをすべて列挙）\n- 修正後カテゴリ：描写技法 / キャラクター / シーン構成 / 物語構成 / 読者意識 のいずれか（削除時は不要）\n- 修正後本文：\n（本文をここに記述。分割の場合は「---」で区切って複数記述）\n- 根拠：（なぜこの提案をするか。どの作品のどの分析記録から導いたか具体的に明記）\n\`\`\`\n\n## 注意事項\n\n- ルールの粒度は既存ルール集に揃えること（1ルールにつき1〜3段落＋具体例）\n- 「対象ルール」は必ず「第N則」の番号と現在のタイトルを正確に書くこと\n- 統合提案では、統合後の本文が元のルール群の主要な主張をすべてカバーしていること\n- 分割提案では、分割後の各ルールが独立して機能すること\n- 削除提案では、なぜ不要と判断したかの根拠を特に丁寧に書くこと\n- 根拠のない提案はしないこと\n- 既存ルールと内容が重複する新規追加提案はしないこと`;
 }
+
+
+// --- Phase 2: 解析モーダル ---
+let refineParsedProposals = [];
+let refineProposalStatuses = []; // 'pending' | 'applied' | 'rejected'
+let refineSessionId = null;       // Phase 3 で使用
+
+function openRefineParseModal() {
+  // 開いた時点では提案エリアを隠す（前回のパース結果は残してもよいが、混乱を避けるためリセット）
+  document.getElementById('refine-proposals-area').style.display = 'none';
+  document.getElementById('refine-parse-input').value = '';
+  refineParsedProposals = [];
+  refineProposalStatuses = [];
+  refineSessionId = null;
+  closeModal('modal-refine-select');
+  openModal('modal-refine-parse');
+}
+
+// 操作タイプの正規化（揺れ吸収）
+function normalizeOperation(str) {
+  if (!str) return null;
+  const s = str.trim().toLowerCase();
+  if (/修正|modify/.test(s)) return 'modify';
+  if (/統合|merge/.test(s)) return 'merge';
+  if (/分割|split/.test(s)) return 'split';
+  if (/削除|delete/.test(s)) return 'delete';
+  if (/新規|追加|create|add/.test(s)) return 'create';
+  if (/カテゴリ|recategoriz/.test(s)) return 'recategorize';
+  return null;
+}
+
+// 「第3則」「第3則, 第5則」「第3則「タイトル」」等から番号配列を抽出
+function extractRuleNumbers(str) {
+  if (!str) return [];
+  const nums = [];
+  const matches = str.matchAll(/第\s*(\d+)\s*則/g);
+  for (const m of matches) {
+    const n = parseInt(m[1]);
+    if (!isNaN(n)) nums.push(n);
+  }
+  return nums;
+}
+
+// カテゴリの揺れ吸収
+function normalizeCategory(str) {
+  if (!str) return '';
+  const s = str.trim();
+  const cats = ['描写技法', 'キャラクター', 'シーン構成', '物語構成', '読者意識'];
+  for (const c of cats) {
+    if (s.includes(c)) return c;
+  }
+  return s; // 既知カテゴリでなければそのまま返す（後で警告表示）
+}
+
+// メイン：Claudeの回答テキスト → 提案オブジェクト配列
+async function parseRefineResponse() {
+  const raw = document.getElementById('refine-parse-input').value;
+  if (!raw.trim()) {
+    showToast('回答を貼り付けてください', 'error');
+    return;
+  }
+
+  // 提案ブロックの分割：「### 提案 #N」「## 提案 #N」「#### 提案 N」等に対応
+  const blockRegex = /^#{2,4}\s*提案\s*#?\s*(\d+)/m;
+  const lines = raw.split('\n');
+
+  // 各提案の開始行を特定
+  const blockStarts = [];
+  for (let i = 0; i < lines.length; i++) {
+    if (blockRegex.test(lines[i])) {
+      const m = lines[i].match(/(\d+)/);
+      blockStarts.push({ idx: i, num: m ? parseInt(m[1]) : blockStarts.length + 1 });
+    }
+  }
+
+  if (blockStarts.length === 0) {
+    showToast('「### 提案 #N」形式のブロックが見つかりませんでした', 'error');
+    return;
+  }
+
+  // 各提案ブロックのテキストを切り出してパース
+  const allRules = await dbGetAll(STORE_RULES);
+  allRules.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+
+  refineParsedProposals = [];
+  refineProposalStatuses = [];
+  refineSessionId = genId(); // Phase 3 で使用するセッションID
+
+  for (let bi = 0; bi < blockStarts.length; bi++) {
+    const start = blockStarts[bi].idx;
+    const end = bi + 1 < blockStarts.length ? blockStarts[bi + 1].idx : lines.length;
+    const blockText = lines.slice(start, end).join('\n');
+    const proposal = parseSingleProposal(blockText, blockStarts[bi].num, allRules);
+    refineParsedProposals.push(proposal);
+    refineProposalStatuses.push('pending');
+  }
+
+  document.getElementById('refine-proposals-area').style.display = '';
+  document.getElementById('refine-bulk-actions').style.display = '';
+  renderRefineProposals();
+  showToast(`${refineParsedProposals.length}件の提案を検出しました`);
+}
+
+// 1ブロックのパース
+function parseSingleProposal(blockText, proposalNum, allRules) {
+  const proposal = {
+    num: proposalNum,
+    operation: null,
+    targetRuleNums: [],
+    targetRules: [],   // 解決済みルールオブジェクト
+    newTitle: '',
+    newCategory: '',
+    newBody: '',
+    newBodies: [],     // 分割提案用：複数の本文
+    rationale: '',
+    rawText: blockText,
+    parseError: null,
+    sessionId: refineSessionId
+  };
+
+  // フィールド抽出のための正規表現
+  // 「- 操作：修正」「・操作: 修正」「- **操作**: 修正」等に対応
+  const fieldRegex = /^[\s]*[-・\*]+\s*(?:\*\*)?(操作|対象ルール|修正後タイトル|修正後カテゴリ|修正後本文|根拠)(?:\*\*)?\s*[:：]\s*(.*)$/;
+
+  const lines = blockText.split('\n');
+  let currentField = null;
+  let buffer = [];
+
+  const flushBuffer = () => {
+    if (!currentField) return;
+    const value = buffer.join('\n').trim();
+    switch (currentField) {
+      case '操作': proposal.operation = normalizeOperation(value); break;
+      case '対象ルール': proposal.targetRuleNums = extractRuleNumbers(value); proposal._targetRaw = value; break;
+      case '修正後タイトル': proposal.newTitle = value; break;
+      case '修正後カテゴリ': proposal.newCategory = normalizeCategory(value); break;
+      case '修正後本文': proposal.newBody = value; break;
+      case '根拠': proposal.rationale = value; break;
+    }
+    buffer = [];
+  };
+
+  for (const line of lines) {
+    const m = line.match(fieldRegex);
+    if (m) {
+      flushBuffer();
+      currentField = m[1];
+      buffer = m[2] ? [m[2]] : [];
+    } else {
+      // ヘッダー行はスキップ、本文継続行は buffer に追加
+      if (/^#{2,4}\s*提案/.test(line)) continue;
+      if (currentField) buffer.push(line);
+    }
+  }
+  flushBuffer();
+
+  // 操作タイプ未検出ならパース失敗
+  if (!proposal.operation) {
+    proposal.parseError = '操作タイプを特定できませんでした（修正/統合/分割/削除/新規追加/カテゴリ変更）';
+    return proposal;
+  }
+
+  // 対象ルールを実体に解決
+  for (const num of proposal.targetRuleNums) {
+    const rule = allRules[num - 1]; // 第N則 = インデックスN-1
+    if (rule) {
+      proposal.targetRules.push({ num, rule });
+    } else {
+      proposal.targetRules.push({ num, rule: null }); // 該当なし
+    }
+  }
+
+  // 操作別のバリデーション
+  switch (proposal.operation) {
+    case 'modify':
+      if (proposal.targetRules.length === 0 || !proposal.targetRules[0].rule) {
+        proposal.parseError = `修正対象の第${proposal.targetRuleNums[0] || '?'}則が見つかりません`;
+      }
+      break;
+    case 'merge':
+      if (proposal.targetRules.length < 2 || proposal.targetRules.some(t => !t.rule)) {
+        proposal.parseError = '統合対象のルールが2つ以上必要です（または一部が見つかりません）';
+      }
+      break;
+    case 'split':
+      if (proposal.targetRules.length === 0 || !proposal.targetRules[0].rule) {
+        proposal.parseError = `分割対象の第${proposal.targetRuleNums[0] || '?'}則が見つかりません`;
+      } else {
+        // 分割本文を「---」で分離
+        proposal.newBodies = proposal.newBody.split(/^[\s]*-{3,}[\s]*$/m).map(s => s.trim()).filter(Boolean);
+        // タイトルが複数列挙されている場合（「タイトル1 / タイトル2」「タイトル1, タイトル2」「改行区切り」）を吸収
+        const titleParts = proposal.newTitle.split(/[\n／/,、]/).map(s => s.trim()).filter(Boolean);
+        proposal.newTitles = titleParts.length >= 2 ? titleParts : [proposal.newTitle];
+        if (proposal.newBodies.length < 2) {
+          proposal.parseError = '分割本文を「---」で2つ以上に区切る必要があります';
+        }
+      }
+      break;
+    case 'delete':
+      if (proposal.targetRules.length === 0 || !proposal.targetRules[0].rule) {
+        proposal.parseError = `削除対象の第${proposal.targetRuleNums[0] || '?'}則が見つかりません`;
+      }
+      break;
+    case 'create':
+      if (!proposal.newTitle || !proposal.newBody) {
+        proposal.parseError = '新規追加にはタイトルと本文が必要です';
+      }
+      break;
+    case 'recategorize':
+      if (proposal.targetRules.length === 0 || !proposal.targetRules[0].rule) {
+        proposal.parseError = `カテゴリ変更対象の第${proposal.targetRuleNums[0] || '?'}則が見つかりません`;
+      } else if (!proposal.newCategory) {
+        proposal.parseError = 'カテゴリ変更には新カテゴリの指定が必要です';
+      }
+      break;
+  }
+
+  return proposal;
+}
+
+
+// --- レンダリング ---
+const OPERATION_LABELS = {
+  modify: '修正',
+  merge: '統合',
+  split: '分割',
+  delete: '削除',
+  create: '新規追加',
+  recategorize: 'カテゴリ変更'
+};
+
+function renderRefineProposals() {
+  // サマリー更新
+  const total = refineParsedProposals.length;
+  const applied = refineProposalStatuses.filter(s => s === 'applied').length;
+  const rejected = refineProposalStatuses.filter(s => s === 'rejected').length;
+  const pending = total - applied - rejected;
+  const errorCount = refineParsedProposals.filter(p => p.parseError).length;
+
+  document.getElementById('refine-parse-summary').innerHTML =
+    `<span><strong>${total}</strong> 件検出</span>` +
+    `<span class="refine-stat-pending">保留 <strong>${pending}</strong></span>` +
+    `<span class="refine-stat-applied">適用済み <strong>${applied}</strong></span>` +
+    `<span class="refine-stat-rejected">却下 <strong>${rejected}</strong></span>` +
+    (errorCount > 0 ? `<span style="color:#FCD34D">⚠️ パース失敗 <strong>${errorCount}</strong></span>` : '');
+
+  // カードリスト
+  const list = document.getElementById('refine-proposals-list');
+  list.innerHTML = refineParsedProposals.map((p, idx) => buildProposalCardHTML(p, idx)).join('');
+}
+
+function buildProposalCardHTML(p, idx) {
+  const status = refineProposalStatuses[idx];
+  const hasError = !!p.parseError;
+  const cardCls = hasError ? 'proposal-error' : (status === 'applied' ? 'proposal-applied' : (status === 'rejected' ? 'proposal-rejected' : ''));
+  const opKey = hasError ? 'error' : p.operation;
+  const opLabel = hasError ? '⚠️ パース失敗' : OPERATION_LABELS[p.operation] || p.operation;
+  const opBadgeCls = `proposal-op-${opKey}`;
+
+  // 対象ルール表示
+  const targetText = p.targetRules.length === 0
+    ? (p.operation === 'create' ? '（新規追加）' : '対象未指定')
+    : p.targetRules.map(t => t.rule ? `第${t.num}則「${t.rule.title}」` : `⚠️ 第${t.num}則（該当なし）`).join('、');
+
+  // ステータスバッジ
+  let statusBadge = '';
+  if (status === 'applied') statusBadge = '<span class="proposal-status-badge proposal-status-applied">✓ 適用済み</span>';
+  else if (status === 'rejected') statusBadge = '<span class="proposal-status-badge proposal-status-rejected">✕ 却下</span>';
+
+  // ボディ部
+  let bodyHTML = '';
+  if (hasError) {
+    bodyHTML = `
+      <div class="proposal-error-msg">⚠️ ${esc(p.parseError)}</div>
+      <details><summary style="font-size:0.78rem;color:var(--text-muted);cursor:pointer;padding:4px 0">元のテキストを表示</summary>
+        <div class="proposal-raw-text">${esc(p.rawText)}</div>
+      </details>
+      ${p.rationale ? `<div class="proposal-rationale"><div class="proposal-rationale-label">根拠</div><div class="proposal-rationale-text">${esc(p.rationale)}</div></div>` : ''}
+    `;
+  } else {
+    bodyHTML = buildProposalDiffHTML(p) +
+      (p.rationale ? `<div class="proposal-rationale"><div class="proposal-rationale-label">根拠</div><div class="proposal-rationale-text">${esc(p.rationale)}</div></div>` : '');
+  }
+
+  // フッター（ボタン群）
+  const isPending = status === 'pending' && !hasError;
+  const canEdit = !hasError; // パース失敗時は編集も不可（生テキストは見れる）
+  let footerHTML = '<div class="proposal-spacer"></div>';
+  if (isPending) {
+    footerHTML += `
+      <button class="btn btn-ghost btn-sm" onclick="rejectRefineProposal(${idx})">✕ 却下</button>
+      ${canEdit ? `<button class="btn btn-secondary btn-sm" onclick="toggleRefineProposalEdit(${idx})">✏️ 編集して適用</button>` : ''}
+      <button class="btn btn-primary btn-sm" onclick="applyRefineProposal(${idx})">✓ 適用する</button>
+    `;
+  } else if (status === 'rejected') {
+    footerHTML += `<button class="btn btn-ghost btn-sm" onclick="reopenRefineProposal(${idx})">↺ 保留に戻す</button>`;
+  }
+  // applied 状態のときはボタンなし（変更不可）
+
+  return `<div class="proposal-card ${cardCls}" id="proposal-card-${idx}">
+    <div class="proposal-card-header">
+      <span class="proposal-num">提案 #${p.num}</span>
+      <span class="proposal-op-badge ${opBadgeCls}">${esc(opLabel)}</span>
+      <span class="proposal-target">${targetText}</span>
+      ${statusBadge}
+    </div>
+    <div class="proposal-card-body" id="proposal-body-${idx}">
+      ${bodyHTML}
+    </div>
+    <div class="proposal-card-footer">${footerHTML}</div>
+  </div>`;
+}
+
+// 操作別の差分プレビュー
+function buildProposalDiffHTML(p) {
+  switch (p.operation) {
+    case 'modify': {
+      const before = p.targetRules[0]?.rule;
+      if (!before) return '<div class="proposal-diff-empty">対象ルールが見つかりません</div>';
+      return `<div class="proposal-diff">
+        <div class="proposal-diff-side diff-before">
+          <div class="proposal-diff-label">修正前（第${p.targetRules[0].num}則）</div>
+          <div class="proposal-diff-title">${esc(before.title)}</div>
+          <div class="proposal-diff-cat">【${esc(before.category)}】</div>
+          <div class="proposal-diff-body">${esc(before.body)}</div>
+        </div>
+        <div class="proposal-diff-side diff-after">
+          <div class="proposal-diff-label">修正後</div>
+          <div class="proposal-diff-title">${esc(p.newTitle || before.title)}</div>
+          <div class="proposal-diff-cat">【${esc(p.newCategory || before.category)}】</div>
+          <div class="proposal-diff-body">${esc(p.newBody)}</div>
+        </div>
+      </div>`;
+    }
+    case 'merge': {
+      const beforeBlocks = p.targetRules.map(t => {
+        if (!t.rule) return `<div class="proposal-diff-empty">⚠️ 第${t.num}則（該当なし）</div>`;
+        return `<div style="border-bottom:1px dashed var(--border);padding-bottom:8px;margin-bottom:8px">
+          <div class="proposal-diff-title" style="font-size:0.78rem">第${t.num}則：${esc(t.rule.title)}</div>
+          <div class="proposal-diff-cat">【${esc(t.rule.category)}】</div>
+          <div class="proposal-diff-body" style="max-height:100px">${esc(t.rule.body)}</div>
+        </div>`;
+      }).join('');
+      return `<div class="proposal-diff">
+        <div class="proposal-diff-side diff-before">
+          <div class="proposal-diff-label">統合元（${p.targetRules.length}件）</div>
+          ${beforeBlocks}
+        </div>
+        <div class="proposal-diff-side diff-after">
+          <div class="proposal-diff-label">統合後（1件）</div>
+          <div class="proposal-diff-title">${esc(p.newTitle)}</div>
+          <div class="proposal-diff-cat">【${esc(p.newCategory)}】</div>
+          <div class="proposal-diff-body">${esc(p.newBody)}</div>
+        </div>
+      </div>`;
+    }
+    case 'split': {
+      const before = p.targetRules[0]?.rule;
+      if (!before) return '<div class="proposal-diff-empty">対象ルールが見つかりません</div>';
+      const afterBlocks = p.newBodies.map((body, i) => {
+        const title = p.newTitles[i] || `（タイトル${i + 1}）`;
+        return `<div class="proposal-split-block">
+          <div class="proposal-split-block-label">分割後 #${i + 1}</div>
+          <div class="proposal-diff-title" style="font-size:0.78rem">${esc(title)}</div>
+          <div class="proposal-diff-cat">【${esc(p.newCategory || before.category)}】</div>
+          <div class="proposal-diff-body" style="max-height:120px">${esc(body)}</div>
+        </div>`;
+      }).join('');
+      return `<div class="proposal-diff">
+        <div class="proposal-diff-side diff-before">
+          <div class="proposal-diff-label">分割前（第${p.targetRules[0].num}則）</div>
+          <div class="proposal-diff-title">${esc(before.title)}</div>
+          <div class="proposal-diff-cat">【${esc(before.category)}】</div>
+          <div class="proposal-diff-body">${esc(before.body)}</div>
+        </div>
+        <div class="proposal-diff-side diff-after">
+          <div class="proposal-diff-label">分割後（${p.newBodies.length}件）</div>
+          ${afterBlocks}
+        </div>
+      </div>`;
+    }
+    case 'delete': {
+      const before = p.targetRules[0]?.rule;
+      if (!before) return '<div class="proposal-diff-empty">対象ルールが見つかりません</div>';
+      return `<div class="proposal-diff">
+        <div class="proposal-diff-side diff-before">
+          <div class="proposal-diff-label">削除対象（第${p.targetRules[0].num}則）</div>
+          <div class="proposal-diff-title">${esc(before.title)}</div>
+          <div class="proposal-diff-cat">【${esc(before.category)}】</div>
+          <div class="proposal-diff-body">${esc(before.body)}</div>
+        </div>
+        <div class="proposal-diff-side diff-after">
+          <div class="proposal-diff-label">削除後</div>
+          <div class="proposal-diff-empty">（このルールは削除されます）</div>
+        </div>
+      </div>`;
+    }
+    case 'create': {
+      return `<div class="proposal-diff">
+        <div class="proposal-diff-side diff-before">
+          <div class="proposal-diff-label">追加前</div>
+          <div class="proposal-diff-empty">（該当なし）</div>
+        </div>
+        <div class="proposal-diff-side diff-after">
+          <div class="proposal-diff-label">新規追加</div>
+          <div class="proposal-diff-title">${esc(p.newTitle)}</div>
+          <div class="proposal-diff-cat">【${esc(p.newCategory)}】</div>
+          <div class="proposal-diff-body">${esc(p.newBody)}</div>
+        </div>
+      </div>`;
+    }
+    case 'recategorize': {
+      const before = p.targetRules[0]?.rule;
+      if (!before) return '<div class="proposal-diff-empty">対象ルールが見つかりません</div>';
+      return `<div class="proposal-diff">
+        <div class="proposal-diff-side diff-before">
+          <div class="proposal-diff-label">変更前</div>
+          <div class="proposal-diff-title">${esc(before.title)}</div>
+          <div class="proposal-diff-cat" style="font-size:0.85rem;color:#FCA5A5">【${esc(before.category)}】</div>
+        </div>
+        <div class="proposal-diff-side diff-after">
+          <div class="proposal-diff-label">変更後</div>
+          <div class="proposal-diff-title">${esc(before.title)}</div>
+          <div class="proposal-diff-cat" style="font-size:0.85rem;color:#6EE7B7">【${esc(p.newCategory)}】</div>
+        </div>
+      </div>`;
+    }
+    default:
+      return '<div class="proposal-diff-empty">不明な操作タイプ</div>';
+  }
+}
+
+// --- 編集モード切替 ---
+function toggleRefineProposalEdit(idx) {
+  const p = refineParsedProposals[idx];
+  const body = document.getElementById(`proposal-body-${idx}`);
+  if (!p || !body) return;
+
+  // 既に編集モードなら通常表示に戻す
+  if (body.dataset.editing === '1') {
+    body.dataset.editing = '0';
+    body.innerHTML = buildProposalDiffHTML(p) +
+      (p.rationale ? `<div class="proposal-rationale"><div class="proposal-rationale-label">根拠</div><div class="proposal-rationale-text">${esc(p.rationale)}</div></div>` : '');
+    return;
+  }
+
+  body.dataset.editing = '1';
+  body.innerHTML = buildProposalEditHTML(p, idx);
+}
+
+function buildProposalEditHTML(p, idx) {
+  const op = p.operation;
+  const cats = ['描写技法', 'キャラクター', 'シーン構成', '物語構成', '読者意識'];
+  const catOptions = cats.map(c => `<option value="${c}" ${c === p.newCategory ? 'selected' : ''}>${c}</option>`).join('');
+
+  let editFields = '';
+
+  if (op === 'modify' || op === 'create' || op === 'merge') {
+    editFields = `
+      <div class="proposal-edit-row"><label>タイトル</label><input type="text" id="edit-title-${idx}" value="${esc(p.newTitle)}"></div>
+      <div class="proposal-edit-row"><label>カテゴリ</label><select id="edit-cat-${idx}"><option value="">（選択）</option>${catOptions}</select></div>
+      <div class="proposal-edit-row"><label>本文</label><textarea id="edit-body-${idx}">${esc(p.newBody)}</textarea></div>
+    `;
+  } else if (op === 'split') {
+    const splitBlocks = p.newBodies.map((body, i) => {
+      const title = p.newTitles[i] || '';
+      return `<div class="proposal-split-block">
+        <div class="proposal-split-block-label">分割後 #${i + 1}</div>
+        <div class="proposal-edit-row"><label>タイトル</label><input type="text" id="edit-split-title-${idx}-${i}" value="${esc(title)}"></div>
+        <div class="proposal-edit-row"><label>本文</label><textarea id="edit-split-body-${idx}-${i}">${esc(body)}</textarea></div>
+      </div>`;
+    }).join('');
+    editFields = `
+      <div class="proposal-edit-row"><label>カテゴリ（全分割共通）</label><select id="edit-cat-${idx}"><option value="">（選択）</option>${catOptions}</select></div>
+      ${splitBlocks}
+    `;
+  } else if (op === 'recategorize') {
+    editFields = `
+      <div class="proposal-edit-row"><label>新しいカテゴリ</label><select id="edit-cat-${idx}"><option value="">（選択）</option>${catOptions}</select></div>
+    `;
+  } else if (op === 'delete') {
+    editFields = '<div style="font-size:0.8rem;color:var(--text-muted)">削除操作は編集項目がありません。確認してから「適用する」を押してください。</div>';
+  }
+
+  return `<div class="proposal-edit">
+    <div style="font-size:0.78rem;color:var(--purple-300);font-weight:700">✏️ 編集モード</div>
+    ${editFields}
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:6px">
+      <button class="btn btn-ghost btn-sm" onclick="toggleRefineProposalEdit(${idx})">キャンセル</button>
+      <button class="btn btn-primary btn-sm" onclick="saveRefineProposalEditAndApply(${idx})">✓ この内容で適用</button>
+    </div>
+  </div>`;
+}
+
+function saveRefineProposalEditAndApply(idx) {
+  const p = refineParsedProposals[idx];
+  if (!p) return;
+  const op = p.operation;
+
+  if (op === 'modify' || op === 'create' || op === 'merge') {
+    p.newTitle = document.getElementById(`edit-title-${idx}`).value.trim();
+    p.newCategory = document.getElementById(`edit-cat-${idx}`).value;
+    p.newBody = document.getElementById(`edit-body-${idx}`).value.trim();
+    if (!p.newTitle || !p.newBody) { showToast('タイトルと本文は必須です', 'error'); return; }
+    if (!p.newCategory) { showToast('カテゴリを選択してください', 'error'); return; }
+  } else if (op === 'split') {
+    const cat = document.getElementById(`edit-cat-${idx}`).value;
+    if (!cat) { showToast('カテゴリを選択してください', 'error'); return; }
+    p.newCategory = cat;
+    const newTitles = [];
+    const newBodies = [];
+    for (let i = 0; i < p.newBodies.length; i++) {
+      const t = document.getElementById(`edit-split-title-${idx}-${i}`).value.trim();
+      const b = document.getElementById(`edit-split-body-${idx}-${i}`).value.trim();
+      if (!t || !b) { showToast(`分割後#${i + 1}のタイトル・本文は必須です`, 'error'); return; }
+      newTitles.push(t); newBodies.push(b);
+    }
+    p.newTitles = newTitles; p.newBodies = newBodies;
+  } else if (op === 'recategorize') {
+    const cat = document.getElementById(`edit-cat-${idx}`).value;
+    if (!cat) { showToast('カテゴリを選択してください', 'error'); return; }
+    p.newCategory = cat;
+  }
+
+  // 適用実行
+  applyRefineProposal(idx);
+}
+
+
+// --- 提案の適用・却下 ---
+
+async function applyRefineProposal(idx) {
+  const p = refineParsedProposals[idx];
+  if (!p) return;
+  if (p.parseError) { showToast('パース失敗の提案は適用できません', 'error'); return; }
+  if (refineProposalStatuses[idx] !== 'pending') { showToast('保留中の提案のみ適用できます', 'error'); return; }
+
+  try {
+    // Phase 3 でこのスナップショット取得部分を ruleHistory への保存処理に拡張する
+    await captureSnapshotBeforeApply(p);
+    await executeProposal(p);
+    refineProposalStatuses[idx] = 'applied';
+    renderRefineProposals();
+    renderRulesPage(); // マイルール集ページの裏側も更新
+    showToast(`提案 #${p.num} を適用しました ✓`);
+  } catch (err) {
+    console.error(err);
+    showToast(`適用に失敗しました：${err.message || err}`, 'error');
+  }
+}
+
+function rejectRefineProposal(idx) {
+  if (refineProposalStatuses[idx] !== 'pending') { showToast('保留中の提案のみ却下できます', 'error'); return; }
+  refineProposalStatuses[idx] = 'rejected';
+  renderRefineProposals();
+  showToast(`提案 #${refineParsedProposals[idx].num} を却下しました`);
+}
+
+function reopenRefineProposal(idx) {
+  if (refineProposalStatuses[idx] !== 'rejected') return;
+  refineProposalStatuses[idx] = 'pending';
+  renderRefineProposals();
+}
+
+async function applyAllRefineProposals() {
+  const pendingIndexes = [];
+  for (let i = 0; i < refineParsedProposals.length; i++) {
+    if (refineProposalStatuses[i] === 'pending' && !refineParsedProposals[i].parseError) {
+      pendingIndexes.push(i);
+    }
+  }
+  if (pendingIndexes.length === 0) { showToast('適用可能な保留提案がありません', 'error'); return; }
+
+  let success = 0, failed = 0;
+  for (const idx of pendingIndexes) {
+    const p = refineParsedProposals[idx];
+    try {
+      await captureSnapshotBeforeApply(p);
+      await executeProposal(p);
+      refineProposalStatuses[idx] = 'applied';
+      success++;
+    } catch (err) {
+      console.error(`提案#${p.num}の適用エラー:`, err);
+      failed++;
+    }
+  }
+  renderRefineProposals();
+  renderRulesPage();
+  showToast(`${success}件適用${failed > 0 ? `／${failed}件失敗` : ''} ✓`);
+}
+
+function rejectAllRefineProposals() {
+  let count = 0;
+  for (let i = 0; i < refineParsedProposals.length; i++) {
+    if (refineProposalStatuses[i] === 'pending') {
+      refineProposalStatuses[i] = 'rejected';
+      count++;
+    }
+  }
+  renderRefineProposals();
+  showToast(`${count}件を却下しました`);
+}
+
+// --- スナップショット取得（Phase 3 で ruleHistory に保存する処理を追加する） ---
+async function captureSnapshotBeforeApply(p) {
+  // Phase 2 では何もしない（関数として独立させておくことで Phase 3 の差分が小さくなる）
+  // Phase 3 ではここで以下を行う：
+  //   1. 影響を受けるルール群のスナップショットを取得
+  //   2. ruleHistory ストアに { id, sessionId, ruleId, snapshot, operation, appliedAt } を保存
+  return;
+}
+
+// --- 操作タイプ別の DB 操作 ---
+async function executeProposal(p) {
+  switch (p.operation) {
+    case 'modify':       return await executeModify(p);
+    case 'merge':        return await executeMerge(p);
+    case 'split':        return await executeSplit(p);
+    case 'delete':       return await executeDelete(p);
+    case 'create':       return await executeCreate(p);
+    case 'recategorize': return await executeRecategorize(p);
+    default: throw new Error(`未対応の操作タイプ：${p.operation}`);
+  }
+}
+
+// 修正：既存ルールの内容を上書き
+async function executeModify(p) {
+  const target = p.targetRules[0]?.rule;
+  if (!target) throw new Error('対象ルールが見つかりません');
+  const rule = await dbGet(STORE_RULES, target.id);
+  if (!rule) throw new Error('対象ルールがDBから取得できません');
+  rule.title = p.newTitle || rule.title;
+  rule.category = p.newCategory || rule.category;
+  rule.body = p.newBody || rule.body;
+  rule.updatedAt = Date.now();
+  await dbPut(STORE_RULES, rule);
+}
+
+// 統合（Q1：案B）：先頭ルールを上書き、残りを削除
+async function executeMerge(p) {
+  if (p.targetRules.length < 2) throw new Error('統合には2つ以上の対象が必要です');
+  for (const t of p.targetRules) if (!t.rule) throw new Error(`第${t.num}則が見つかりません`);
+
+  // 先頭ルールを上書き（位置・createdAt を維持）
+  const head = await dbGet(STORE_RULES, p.targetRules[0].rule.id);
+  if (!head) throw new Error('先頭ルールがDBから取得できません');
+  head.title = p.newTitle;
+  head.category = p.newCategory;
+  head.body = p.newBody;
+  head.updatedAt = Date.now();
+  await dbPut(STORE_RULES, head);
+
+  // 残りを削除
+  for (let i = 1; i < p.targetRules.length; i++) {
+    await dbDelete(STORE_RULES, p.targetRules[i].rule.id);
+  }
+}
+
+// 分割（Q2：案B）：元ルールを1個目で上書き（位置維持）、残りを末尾追加
+async function executeSplit(p) {
+  const target = p.targetRules[0]?.rule;
+  if (!target) throw new Error('対象ルールが見つかりません');
+  if (p.newBodies.length < 2) throw new Error('分割本文が2つ以上必要です');
+
+  // 1個目で元ルールを上書き
+  const head = await dbGet(STORE_RULES, target.id);
+  if (!head) throw new Error('対象ルールがDBから取得できません');
+  head.title = p.newTitles[0] || head.title;
+  head.category = p.newCategory || head.category;
+  head.body = p.newBodies[0];
+  head.updatedAt = Date.now();
+  await dbPut(STORE_RULES, head);
+
+  // 2個目以降を末尾追加（createdAt を現在時刻にして末尾配置）
+  const baseTime = Date.now();
+  for (let i = 1; i < p.newBodies.length; i++) {
+    await dbPut(STORE_RULES, {
+      id: genId(),
+      title: p.newTitles[i] || `（分割後#${i + 1}）`,
+      category: p.newCategory || head.category,
+      body: p.newBodies[i],
+      source: head.source ? `${head.source}（第${p.targetRules[0].num}則から分割）` : `第${p.targetRules[0].num}則から分割`,
+      createdAt: baseTime + i, // 順序を保証
+      updatedAt: baseTime + i
+    });
+  }
+}
+
+// 削除
+async function executeDelete(p) {
+  const target = p.targetRules[0]?.rule;
+  if (!target) throw new Error('対象ルールが見つかりません');
+  await dbDelete(STORE_RULES, target.id);
+}
+
+// 新規追加
+async function executeCreate(p) {
+  if (!p.newTitle || !p.newBody || !p.newCategory) {
+    throw new Error('タイトル・本文・カテゴリが必須です');
+  }
+  await dbPut(STORE_RULES, {
+    id: genId(),
+    title: p.newTitle,
+    category: p.newCategory,
+    body: p.newBody,
+    source: 'リファインで追加',
+    createdAt: Date.now(),
+    updatedAt: Date.now()
+  });
+}
+
+// カテゴリ変更（Q4：本文・タイトルは維持）
+async function executeRecategorize(p) {
+  const target = p.targetRules[0]?.rule;
+  if (!target) throw new Error('対象ルールが見つかりません');
+  if (!p.newCategory) throw new Error('新カテゴリが指定されていません');
+  const rule = await dbGet(STORE_RULES, target.id);
+  if (!rule) throw new Error('対象ルールがDBから取得できません');
+  rule.category = p.newCategory;
+  rule.updatedAt = Date.now();
+  await dbPut(STORE_RULES, rule);
+}
+
 
 // ║ END BLOCK: ルールリファイン機能
 
