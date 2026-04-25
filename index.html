@@ -571,7 +571,7 @@ textarea { resize: vertical; }
             <div class="pm-record-select" id="pm-c-char-select-area"><label>キャラ設定シートの記録を選択</label><select id="pm-c-char-select"><option value="">（キャラ設定シートの記録がありません）</option></select></div>
 
             <div class="form-row form-row-2">
-             <div class="form-group"><label class="form-label">執筆対象セクション</label><div id="pm-c-section-area"><select id="pm-c-section-select" style="display:none" onchange="onSectionSelect()"><option value="">（プロットを選択してください）</option></select><input type="number" id="pm-c-section-num" min="1" placeholder="例：3" style="display:none"><div id="pm-c-section-hint" class="form-hint" style="margin-top:4px"></div></div></div>
+             <div class="form-group"><label class="form-label">執筆対象セクション</label><div id="pm-c-section-area"><select id="pm-c-section-select" style="display:none" onchange="onSectionSelect()"><option value="">（プロットを選択してください）</option></select><input type="number" id="pm-c-section-num" min="1" placeholder="例：3" style=""><div id="pm-c-section-hint" class="form-hint" style="margin-top:4px">手入力モード</div></div></div>
 
               <div class="form-group"><label class="form-label">R18シーンの有無</label><select id="pm-c-has-r18"><option value="no">なし（通常セクション）</option><option value="yes">あり（R18セクション）</option></select><div id="pm-c-r18-hint" class="form-hint" style="margin-top:4px"></div></div>
             </div>
@@ -691,7 +691,7 @@ textarea { resize: vertical; }
 const DB_NAME='NovelAnalysisDB';const DB_VERSION=3;
 const STORE_WORKS='works';const STORE_EPISODES='episodes';const STORE_RECORDS='records';const STORE_RULES='rules';
 let db;
-function initDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,DB_VERSION);req.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains(STORE_WORKS)){const ws=d.createObjectStore(STORE_WORKS,{keyPath:'id'});ws.createIndex('updatedAt','updatedAt');}if(!d.objectStoreNames.contains(STORE_EPISODES)){const es=d.createObjectStore(STORE_EPISODES,{keyPath:'id'});es.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RECORDS)){const rs=d.createObjectStore(STORE_RECORDS,{keyPath:'id'});rs.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RULES)){d.createObjectStore(STORE_RULES,{keyPath:'id'});}if(!d.objectStoreNames.contains('rulePresets')){const ps=d.createObjectStore('rulePresets',{keyPath:'id'});ps.createIndex('workId','workId');}};req.onsuccess=e=>{db=e.target.result;resolve();};req.onerror=e=>reject(e.target.error);});}
+function initDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,DB_VERSION);req.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains(STORE_WORKS)){const ws=d.createObjectStore(STORE_WORKS,{keyPath:'id'});ws.createIndex('updatedAt','updatedAt');}if(!d.objectStoreNames.contains(STORE_EPISODES)){const es=d.createObjectStore(STORE_EPISODES,{keyPath:'id'});es.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RECORDS)){const rs=d.createObjectStore(STORE_RECORDS,{keyPath:'id'});rs.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RULES)){d.createObjectStore(STORE_RULES,{keyPath:'id'});}if(!d.objectStoreNames.contains('rulePresets')){const ps=d.createObjectStore('rulePresets',{keyPath:'id'});ps.createIndex('workId','workId');}};req.onsuccess=e=>{db=e.target.result;resolve();};req.onerror=e=>{alert('IndexedDBの初期化に失敗しました。\n\nブラウザの開発者ツール（F12）→ アプリケーション → IndexedDB から「NovelAnalysisDB」を削除して、ページを再読み込みしてください。\n\nエラー詳細: '+e.target.error);reject(e.target.error);};});}
 function dbGet(s,k){return new Promise((r,j)=>{const tx=db.transaction(s,'readonly');const rq=tx.objectStore(s).get(k);rq.onsuccess=()=>r(rq.result);rq.onerror=()=>j(rq.error);});}
 function dbGetAll(s){return new Promise((r,j)=>{const tx=db.transaction(s,'readonly');const rq=tx.objectStore(s).getAll();rq.onsuccess=()=>r(rq.result);rq.onerror=()=>j(rq.error);});}
 function dbGetByIndex(s,i,v){return new Promise((r,j)=>{const tx=db.transaction(s,'readonly');const rq=tx.objectStore(s).index(i).getAll(v);rq.onsuccess=()=>r(rq.result);rq.onerror=()=>j(rq.error);});}
@@ -1093,28 +1093,59 @@ function parseSectionsFromPlot(content) {
   const lines = content.split('\n');
   let headerIdx = -1;
   let colSection = -1, colHeading = -1, colR18 = -1;
+
+  // ── ヘッダー行の検出 ─────────────────────────────────────
+  // 優先順位1: | で始まり「見出し」「タイトル」「シーン名」のいずれかを含む行
+  // 優先順位2: | で始まり「セクション」を含む行
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
-    if (line.startsWith('|') && line.includes('セクション') && line.includes('見出し')) {
+    if (!line.startsWith('|')) continue;
+    // セパレータ行はスキップ（|---|---| 形式）
+    if (/^\|[\s\-\|]+$/.test(line)) continue;
+    const hasHeadingKw = /見出し|タイトル|シーン名/.test(line);
+    const hasSectionKw = /セクション/.test(line);
+    if (hasHeadingKw || hasSectionKw) {
       const cols = line.split('|').map(c => c.trim()).filter(c => c !== '');
-      colSection = cols.findIndex(c => c === 'セクション' || c === 'セクション番号');
-      colHeading = cols.findIndex(c => c === '見出し');
-      colR18 = cols.findIndex(c => c.includes('R18'));
+      // セクション番号列: 「セクション」「No」「#」を含むか、なければ最初の列
+      colSection = cols.findIndex(c =>
+        /セクション|セクション番号/.test(c) ||
+        /^No\.?$/i.test(c) ||
+        /^#$/.test(c)
+      );
+      if (colSection === -1) colSection = 0; // フォールバック: 最初の列
+
+      // 見出し列: 「見出し」「タイトル」「シーン名」を含む列
+      colHeading = cols.findIndex(c => /見出し|タイトル|シーン名/.test(c));
+      if (colHeading === -1) colHeading = colSection === 0 ? 1 : 0; // フォールバック
+
+      // R18列: 「R18」を含む列（大文字小文字不問）
+      colR18 = cols.findIndex(c => /r18/i.test(c));
+
       headerIdx = i;
       break;
     }
   }
+
   if (headerIdx === -1 || colSection === -1 || colHeading === -1) return [];
+
+  // ── データ行のパース ──────────────────────────────────────
   for (let i = headerIdx + 1; i < lines.length; i++) {
     const line = lines[i].trim();
     if (!line.startsWith('|')) break;
-    if (line.replace(/[\|\s\-]/g, '') === '') continue;
+    // セパレータ行はスキップ（|---|---|）
+    if (/^\|[\s\-\|]+$/.test(line)) continue;
     const cols = line.split('|').map(c => c.trim()).filter(c => c !== '');
-    const secNum = (cols[colSection] || '').replace(/[^0-9]/g, '');
-    if (!secNum) continue;
+    if (cols.length === 0) continue;
+    // セクション番号列から数字を取り出す
+    const secRaw = cols[colSection] || '';
+    const secMatch = secRaw.match(/\d+/);
+    if (!secMatch) continue; // 数字を含まない行はスキップ
+    const secNum = secMatch[0];
     const heading = cols[colHeading] || '';
     const r18raw = colR18 >= 0 ? (cols[colR18] || '') : '';
-    const hasR18 = r18raw !== '' && r18raw !== 'なし';
+    // 「なし」「—」「-」「×」など否定表現以外はR18ありとみなす
+    const hasR18 = r18raw !== '' &&
+      !/^(なし|ー|ーー|–|—|-|×|無|none)$/i.test(r18raw.trim());
     parsedSections.push({ num: parseInt(secNum), heading, r18raw, hasR18 });
   }
   return parsedSections;
