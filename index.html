@@ -493,6 +493,259 @@ textarea { resize: vertical; }
 .rollback-summary-label { font-weight: 700; color: var(--purple-300); min-width: 80px; }
 /* === END RULE HISTORY === */
 
+/* === WRITING VAULT === */
+.vault-toolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.vault-ai-request {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.vault-ai-request textarea {
+  min-height: 110px;
+  line-height: 1.7;
+}
+
+.vault-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.vault-filter-btn {
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-input);
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.vault-filter-btn:hover {
+  border-color: var(--border-hover);
+  color: var(--text-secondary);
+}
+
+.vault-filter-btn.active {
+  border-color: var(--purple-500);
+  color: var(--purple-300);
+  background: var(--purple-glow2);
+}
+
+.vault-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vault-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.vault-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 0 14px var(--purple-glow2);
+}
+
+.vault-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px 10px;
+}
+
+.vault-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.vault-card-title-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.vault-card-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.vault-type-badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: var(--purple-glow2);
+  color: var(--purple-300);
+  border: 1px solid var(--border-hover);
+  flex-shrink: 0;
+}
+
+.vault-type-draft { color: #C4B5FD; }
+.vault-type-progress { color: #FCD34D; border-color: rgba(245,158,11,0.35); background: rgba(245,158,11,0.12); }
+.vault-type-setting { color: #6EE7B7; border-color: rgba(16,185,129,0.35); background: rgba(16,185,129,0.12); }
+.vault-type-instruction { color: #93C5FD; border-color: rgba(59,130,246,0.35); background: rgba(59,130,246,0.12); }
+.vault-type-memo { color: #9CA3AF; border-color: rgba(107,114,128,0.35); background: rgba(107,114,128,0.12); }
+
+.vault-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.vault-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.vault-tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.vault-card-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.vault-card-body {
+  padding: 0 18px 14px;
+}
+
+.vault-preview {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.vault-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 18px;
+  border-top: 1px solid var(--border);
+}
+
+.vault-ai-include-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.vault-ai-include-label input {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--purple-500);
+}
+
+.vault-empty {
+  text-align: center;
+  padding: 52px 24px;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.vault-empty .vault-empty-icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+.vault-empty h3 {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.vault-empty p {
+  font-size: 0.85rem;
+}
+
+.vault-modal-body textarea {
+  min-height: 220px;
+  line-height: 1.7;
+}
+
+.vault-modal-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.vault-modal-check input {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--purple-500);
+}
+
+@media (max-width: 680px) {
+  .vault-card-header,
+  .vault-card-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .vault-card-actions {
+    justify-content: flex-start;
+  }
+}
+/* === END WRITING VAULT === */
 
 </style>
 </head>
@@ -538,11 +791,12 @@ textarea { resize: vertical; }
     <!-- PAGE 2: 作品編集 -->
     <section class="page" id="page-work">
       <div class="breadcrumb"><a onclick="showPage('list')">← 作品リスト</a><span>/</span><span id="breadcrumb-title">作品詳細</span></div>
-      <div class="tab-bar">
-        <button class="tab-btn active" onclick="switchTab('meta')">メタ情報・本文</button>
-        <button class="tab-btn" onclick="switchTab('analysis')">分析結果・エクスポート</button>
-        <button class="tab-btn" onclick="switchTab('promptmaker')">プロンプトメーカー</button>
-      </div>
+     <div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('meta')">メタ情報・本文</button>
+  <button class="tab-btn" onclick="switchTab('analysis')">分析結果・エクスポート</button>
+  <button class="tab-btn" onclick="switchTab('promptmaker')">プロンプトメーカー</button>
+  <button class="tab-btn" onclick="switchTab('vault')">執筆保管庫</button>
+</div>
 
       <!-- TAB: メタ情報・本文 -->
       <div class="tab-panel active" id="tab-meta">
@@ -733,6 +987,42 @@ textarea { resize: vertical; }
 
             <div class="export-btn-group" style="margin-top:12px"><button class="btn btn-export" onclick="generatePrompt('C')">📋 プロンプトをコピー</button><button class="btn btn-secondary btn-sm" onclick="downloadPrompt('C')">↓ .md</button></div>
           </div>
+        </div>
+      </div>
+      <!-- TAB: 執筆保管庫 -->
+      <div class="tab-panel" id="tab-vault">
+        <div class="section-header">
+          <div class="section-title"><span class="icon">🗃</span> 執筆保管庫 <span class="count-badge" id="vault-count">0</span></div>
+          <div class="vault-toolbar">
+            <button class="btn btn-primary" onclick="openVaultModal()">＋ 新規メモ</button>
+            <button class="btn btn-export" onclick="copyWritingVaultAiMarkdown()">📋 AI引き継ぎ資料をコピー</button>
+            <button class="btn btn-secondary" onclick="downloadWritingVaultAiMarkdown()">↓ .md</button>
+          </div>
+        </div>
+
+        <div class="vault-ai-request">
+          <div class="form-group">
+            <label class="form-label" for="vault-ai-request">今回AIに頼みたいこと</label>
+            <textarea id="vault-ai-request" placeholder="例：第3話の続きとして、攻め視点で再会シーンを書きたい。既存設定と現在地を踏まえて、自然な会話と感情の揺れを重視してほしい。"></textarea>
+            <div class="form-hint">この内容は保存データではなく、コピー・ダウンロード時の引き継ぎMarkdownに含めます。</div>
+          </div>
+        </div>
+
+        <div class="vault-filter-bar" id="vault-filter-bar">
+          <button class="vault-filter-btn active" data-vault-filter="" onclick="setVaultFilter('')">すべて</button>
+          <button class="vault-filter-btn" data-vault-filter="draft" onclick="setVaultFilter('draft')">原稿</button>
+          <button class="vault-filter-btn" data-vault-filter="progress" onclick="setVaultFilter('progress')">現在地</button>
+          <button class="vault-filter-btn" data-vault-filter="setting" onclick="setVaultFilter('setting')">設定</button>
+          <button class="vault-filter-btn" data-vault-filter="instruction" onclick="setVaultFilter('instruction')">申し送り</button>
+          <button class="vault-filter-btn" data-vault-filter="memo" onclick="setVaultFilter('memo')">その他</button>
+        </div>
+
+        <div id="vault-list" class="vault-list"></div>
+
+        <div id="vault-empty" class="vault-empty" style="display:none">
+          <div class="vault-empty-icon">🗃</div>
+          <h3>まだ執筆保管庫にメモがありません。</h3>
+          <p>「新規メモ」から、原稿・現在地・設定・AIへの申し送りを保存してください。</p>
         </div>
       </div>
     </section>
@@ -963,6 +1253,56 @@ textarea { resize: vertical; }
     </div>
   </div>
 </div>
+<div class="modal-overlay" id="modal-writing-vault">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-writing-vault-title">🗃 執筆保管庫メモを追加</div>
+      <button class="modal-close" onclick="closeModal('modal-writing-vault')">✕</button>
+    </div>
+    <div class="modal-body vault-modal-body">
+      <input type="hidden" id="vault-edit-id">
+
+      <div class="form-row form-row-2">
+        <div class="form-group">
+          <label class="form-label" for="vault-type">種別</label>
+          <select id="vault-type">
+            <option value="draft">原稿・シーン断片</option>
+            <option value="progress">現在地・ここまでの進行状況</option>
+            <option value="setting">キャラ・設定メモ</option>
+            <option value="instruction">AIへの申し送り</option>
+            <option value="memo">その他メモ</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="vault-title">タイトル</label>
+          <input type="text" id="vault-title" placeholder="例：第1話 初稿 / 現在地メモ / 攻め設定">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="vault-body">本文</label>
+        <textarea id="vault-body" placeholder="原稿、設定、現在地、AIへの申し送りなどを入力"></textarea>
+        <div class="form-hint">タイトルまたは本文のどちらかは必須です。</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="vault-tags">タグ</label>
+        <input type="text" id="vault-tags" placeholder="例：第1話, 攻め視点, 再会シーン">
+        <div class="form-hint">カンマ区切りで入力してください。</div>
+      </div>
+
+      <label class="vault-modal-check">
+        <input type="checkbox" id="vault-include-ai" checked>
+        AI引き継ぎ資料に含める
+      </label>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-writing-vault')">キャンセル</button>
+      <button class="btn btn-primary" onclick="saveWritingVaultItem()">保存</button>
+    </div>
+  </div>
+</div>
 
 <div class="toast-container" id="toast-container"></div>
 
@@ -970,12 +1310,11 @@ textarea { resize: vertical; }
 // ======================================================
 //  DB LAYER : IndexedDB
 // ======================================================
-const DB_NAME='NovelAnalysisDB';const DB_VERSION=4;
+const DB_NAME='NovelAnalysisDB';const DB_VERSION=5;
 const STORE_WORKS='works';const STORE_EPISODES='episodes';const STORE_RECORDS='records';const STORE_RULES='rules';
 const STORE_RULE_HISTORY='ruleHistory';
-let db;
-function initDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,DB_VERSION);req.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains(STORE_WORKS)){const ws=d.createObjectStore(STORE_WORKS,{keyPath:'id'});ws.createIndex('updatedAt','updatedAt');}if(!d.objectStoreNames.contains(STORE_EPISODES)){const es=d.createObjectStore(STORE_EPISODES,{keyPath:'id'});es.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RECORDS)){const rs=d.createObjectStore(STORE_RECORDS,{keyPath:'id'});rs.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RULES)){d.createObjectStore(STORE_RULES,{keyPath:'id'});}if(!d.objectStoreNames.contains('rulePresets')){const ps=d.createObjectStore('rulePresets',{keyPath:'id'});ps.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RULE_HISTORY)){const hs=d.createObjectStore(STORE_RULE_HISTORY,{keyPath:'id'});hs.createIndex('sessionId','sessionId');hs.createIndex('appliedAt','appliedAt');}};req.onsuccess=e=>{db=e.target.result;resolve();};req.onerror=e=>reject(e.target.error);});}
-function dbGet(s,k){return new Promise((r,j)=>{const tx=db.transaction(s,'readonly');const rq=tx.objectStore(s).get(k);rq.onsuccess=()=>r(rq.result);rq.onerror=()=>j(rq.error);});}
+const STORE_WRITING_VAULT='writingVault';let db;
+function initDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,DB_VERSION);req.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains(STORE_WORKS)){const ws=d.createObjectStore(STORE_WORKS,{keyPath:'id'});ws.createIndex('updatedAt','updatedAt');}if(!d.objectStoreNames.contains(STORE_EPISODES)){const es=d.createObjectStore(STORE_EPISODES,{keyPath:'id'});es.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RECORDS)){const rs=d.createObjectStore(STORE_RECORDS,{keyPath:'id'});rs.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RULES)){d.createObjectStore(STORE_RULES,{keyPath:'id'});}if(!d.objectStoreNames.contains('rulePresets')){const ps=d.createObjectStore('rulePresets',{keyPath:'id'});ps.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RULE_HISTORY)){const hs=d.createObjectStore(STORE_RULE_HISTORY,{keyPath:'id'});hs.createIndex('sessionId','sessionId');hs.createIndex('appliedAt','appliedAt');}if(!d.objectStoreNames.contains(STORE_WRITING_VAULT)){const vs=d.createObjectStore(STORE_WRITING_VAULT,{keyPath:'id'});vs.createIndex('workId','workId',{unique:false});vs.createIndex('type','type',{unique:false});vs.createIndex('updatedAt','updatedAt',{unique:false});vs.createIndex('includeInAiExport','includeInAiExport',{unique:false});}};req.onsuccess=e=>{db=e.target.result;resolve();};req.onerror=e=>reject(e.target.error);});}function dbGet(s,k){return new Promise((r,j)=>{const tx=db.transaction(s,'readonly');const rq=tx.objectStore(s).get(k);rq.onsuccess=()=>r(rq.result);rq.onerror=()=>j(rq.error);});}
 function dbGetAll(s){return new Promise((r,j)=>{const tx=db.transaction(s,'readonly');const rq=tx.objectStore(s).getAll();rq.onsuccess=()=>r(rq.result);rq.onerror=()=>j(rq.error);});}
 function dbGetByIndex(s,i,v){return new Promise((r,j)=>{const tx=db.transaction(s,'readonly');const rq=tx.objectStore(s).index(i).getAll(v);rq.onsuccess=()=>r(rq.result);rq.onerror=()=>j(rq.error);});}
 function dbPut(s,o){return new Promise((r,j)=>{const tx=db.transaction(s,'readwrite');const rq=tx.objectStore(s).put(o);rq.onsuccess=()=>r(rq.result);rq.onerror=()=>j(rq.error);});}
@@ -1038,14 +1377,22 @@ function showPage(page,workId){
 }
 
 function switchTab(tab){
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>{b.classList.toggle('active',(i===0&&tab==='meta')||(i===1&&tab==='analysis')||(i===2&&tab==='promptmaker'));});
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
+    b.classList.toggle('active',
+      (i===0&&tab==='meta')||
+      (i===1&&tab==='analysis')||
+      (i===2&&tab==='promptmaker')||
+      (i===3&&tab==='vault')
+    );
+  });
   document.getElementById('tab-meta').classList.toggle('active',tab==='meta');
   document.getElementById('tab-analysis').classList.toggle('active',tab==='analysis');
   document.getElementById('tab-promptmaker').classList.toggle('active',tab==='promptmaker');
+  document.getElementById('tab-vault').classList.toggle('active',tab==='vault');
   if(tab==='analysis'&&currentWorkId){loadRecords(currentWorkId);renderEpisodeChecks();}
   if(tab==='promptmaker'&&currentWorkId){loadPromptMakerTab();}
+  if(tab==='vault'&&currentWorkId){loadWritingVaultTab();}
 }
-
 // ======================================================
 //  WORKS LIST
 // ======================================================
@@ -3166,6 +3513,365 @@ async function rollbackSingleRuleHistory(history, rolledBackAt) {
 
 
 // ║ END BLOCK: ルールリファイン機能
+// ╔═══════════════════════════════════════════════════════
+// ║ BLOCK: 執筆保管庫機能
+// ║ 依存: dbGet, dbGetAll, dbPut, dbDelete, copyToClipboard, showToast, esc
+// ║ 配置: SCRIPT内、ルール履歴機能ブロックの後
+// ╚═══════════════════════════════════════════════════════
+
+const WRITING_VAULT_TYPES = {
+  draft: '原稿・シーン断片',
+  progress: '現在地・ここまでの進行状況',
+  setting: 'キャラ・設定メモ',
+  instruction: 'AIへの申し送り',
+  memo: 'その他メモ'
+};
+
+let writingVaultFilter = '';
+let currentWritingVaultItems = [];
+
+function vaultTypeLabel(type) {
+  return WRITING_VAULT_TYPES[type] || WRITING_VAULT_TYPES.memo;
+}
+
+function vaultParseTags(raw) {
+  return String(raw || '')
+    .split(',')
+    .map(tag => tag.trim())
+    .filter(Boolean);
+}
+
+function vaultFormatDate(ts) {
+  if (!ts) return '日時不明';
+  const d = new Date(ts);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mm = String(d.getMinutes()).padStart(2, '0');
+  return `${y}/${m}/${day} ${hh}:${mm}`;
+}
+
+function vaultAutoTitle(body) {
+  const text = String(body || '').replace(/\s+/g, ' ').trim();
+  return text ? text.slice(0, 30) + (text.length > 30 ? '…' : '') : '無題メモ';
+}
+
+function vaultPreview(body) {
+  const text = String(body || '').trim();
+  if (!text) return '（本文なし）';
+  return text.length > 260 ? text.slice(0, 260) + '…' : text;
+}
+
+async function getWritingVaultItems(workId) {
+  if (!workId) return [];
+  const all = await dbGetAll(STORE_WRITING_VAULT);
+  return all
+    .filter(item => item.workId === workId)
+    .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+}
+
+async function loadWritingVaultTab() {
+  if (!currentWorkId) return;
+  currentWritingVaultItems = await getWritingVaultItems(currentWorkId);
+  renderWritingVaultList();
+}
+
+function setVaultFilter(type) {
+  writingVaultFilter = type || '';
+  document.querySelectorAll('#vault-filter-bar .vault-filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.vaultFilter === writingVaultFilter);
+  });
+  renderWritingVaultList();
+}
+
+function renderWritingVaultList() {
+  const list = document.getElementById('vault-list');
+  const empty = document.getElementById('vault-empty');
+  const count = document.getElementById('vault-count');
+  if (!list || !empty) return;
+
+  const items = writingVaultFilter
+    ? currentWritingVaultItems.filter(item => item.type === writingVaultFilter)
+    : currentWritingVaultItems;
+
+  if (count) count.textContent = String(currentWritingVaultItems.length);
+
+  if (items.length === 0) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+
+  empty.style.display = 'none';
+  list.innerHTML = items.map(buildWritingVaultCardHTML).join('');
+}
+
+function buildWritingVaultCardHTML(item) {
+  const tags = (item.tags || []).map(tag => `<span class="vault-tag">${esc(tag)}</span>`).join('');
+  const checked = item.includeInAiExport ? 'checked' : '';
+  return `
+    <div class="vault-card" id="vault-card-${esc(item.id)}">
+      <div class="vault-card-header">
+        <div class="vault-card-info">
+          <div class="vault-card-title-row">
+            <span class="vault-type-badge vault-type-${esc(item.type)}">${esc(vaultTypeLabel(item.type))}</span>
+            <div class="vault-card-title">${esc(item.title || '無題メモ')}</div>
+          </div>
+          <div class="vault-card-meta">
+            <span>更新：${esc(vaultFormatDate(item.updatedAt))}</span>
+          </div>
+          <div class="vault-card-tags">${tags}</div>
+        </div>
+        <div class="vault-card-actions">
+          <button class="btn btn-secondary btn-sm" onclick="openVaultModal('${item.id}')">編集</button>
+          <button class="btn btn-ghost btn-sm" onclick="copyWritingVaultItem('${item.id}')">コピー</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteWritingVaultItem('${item.id}')">削除</button>
+        </div>
+      </div>
+      <div class="vault-card-body">
+        <div class="vault-preview">${esc(vaultPreview(item.body))}</div>
+      </div>
+      <div class="vault-card-footer">
+        <label class="vault-ai-include-label">
+          <input type="checkbox" ${checked} onchange="toggleWritingVaultInclude('${item.id}', this.checked)">
+          AI資料に含める
+        </label>
+      </div>
+    </div>
+  `;
+}
+
+async function openVaultModal(id = '') {
+  if (!currentWorkId) {
+    showToast('作品を選択してください', 'error');
+    return;
+  }
+
+  const modal = document.getElementById('modal-writing-vault');
+  if (!modal) {
+    showToast('執筆保管庫モーダルが見つかりません', 'error');
+    return;
+  }
+
+  document.getElementById('vault-edit-id').value = id || '';
+  document.getElementById('modal-writing-vault-title').textContent = id ? '🗃 執筆保管庫メモを編集' : '🗃 執筆保管庫メモを追加';
+
+  if (id) {
+    const item = await dbGet(STORE_WRITING_VAULT, id);
+    if (!item || item.workId !== currentWorkId) {
+      showToast('メモが見つかりません', 'error');
+      return;
+    }
+    document.getElementById('vault-type').value = item.type || 'draft';
+    document.getElementById('vault-title').value = item.title || '';
+    document.getElementById('vault-body').value = item.body || '';
+    document.getElementById('vault-tags').value = (item.tags || []).join(', ');
+    document.getElementById('vault-include-ai').checked = item.includeInAiExport !== false;
+  } else {
+    document.getElementById('vault-type').value = 'draft';
+    document.getElementById('vault-title').value = '';
+    document.getElementById('vault-body').value = '';
+    document.getElementById('vault-tags').value = '';
+    document.getElementById('vault-include-ai').checked = true;
+  }
+
+  modal.classList.add('open');
+}
+
+async function saveWritingVaultItem() {
+  if (!currentWorkId) {
+    showToast('作品を選択してください', 'error');
+    return;
+  }
+
+  const id = document.getElementById('vault-edit-id').value;
+  const type = document.getElementById('vault-type').value || 'draft';
+  const titleInput = document.getElementById('vault-title').value.trim();
+  const body = document.getElementById('vault-body').value.trim();
+
+  if (!titleInput && !body) {
+    showToast('タイトルまたは本文を入力してください', 'error');
+    return;
+  }
+
+  const now = Date.now();
+  const existing = id ? await dbGet(STORE_WRITING_VAULT, id) : null;
+  if (id && (!existing || existing.workId !== currentWorkId)) {
+    showToast('保存対象のメモが見つかりません', 'error');
+    return;
+  }
+
+  const item = {
+    id: id || 'vault_' + genId(),
+    workId: currentWorkId,
+    type,
+    title: titleInput || vaultAutoTitle(body),
+    body,
+    tags: vaultParseTags(document.getElementById('vault-tags').value),
+    includeInAiExport: document.getElementById('vault-include-ai').checked,
+    createdAt: existing?.createdAt || now,
+    updatedAt: now
+  };
+
+  await dbPut(STORE_WRITING_VAULT, item);
+  document.getElementById('modal-writing-vault').classList.remove('open');
+  await loadWritingVaultTab();
+  showToast(id ? '保管庫メモを更新しました' : '保管庫メモを保存しました');
+}
+
+async function toggleWritingVaultInclude(id, checked) {
+  const item = await dbGet(STORE_WRITING_VAULT, id);
+  if (!item || item.workId !== currentWorkId) {
+    showToast('メモが見つかりません', 'error');
+    return;
+  }
+  item.includeInAiExport = !!checked;
+  item.updatedAt = Date.now();
+  await dbPut(STORE_WRITING_VAULT, item);
+  await loadWritingVaultTab();
+}
+
+async function deleteWritingVaultItem(id) {
+  const item = await dbGet(STORE_WRITING_VAULT, id);
+  if (!item || item.workId !== currentWorkId) {
+    showToast('メモが見つかりません', 'error');
+    return;
+  }
+
+  const title = item.title || '無題メモ';
+  if (!confirm(`「${title}」を削除しますか？\nこの操作は元に戻せません。`)) return;
+
+  await dbDelete(STORE_WRITING_VAULT, id);
+  await loadWritingVaultTab();
+  showToast('保管庫メモを削除しました');
+}
+const WRITING_VAULT_EXPORT_ORDER = ['progress', 'instruction', 'setting', 'draft', 'memo'];
+
+const WRITING_VAULT_EXPORT_HEADINGS = {
+  progress: '現在地・ここまでの進行状況',
+  instruction: 'AIへの申し送り',
+  setting: 'キャラ・設定メモ',
+  draft: '原稿・シーン断片',
+  memo: 'その他メモ'
+};
+
+function vaultMarkdownInline(value, emptyText = '未入力') {
+  const text = String(value ?? '').replace(/\r\n/g, '\n').replace(/\n+/g, ' / ').trim();
+  return text || emptyText;
+}
+
+function vaultMarkdownBlock(value, emptyText = '（未入力）') {
+  const text = String(value ?? '').replace(/\r\n/g, '\n').trim();
+  return text || emptyText;
+}
+
+function vaultGetInputValue(id, fallback = '') {
+  const el = document.getElementById(id);
+  return el ? el.value : fallback;
+}
+
+function vaultBuildMemoMarkdown(item) {
+  const tags = (item.tags || []).length ? item.tags.join(', ') : 'なし';
+  return [
+    `### ${vaultMarkdownInline(item.title || '無題メモ', '無題メモ')}`,
+    '',
+    `- 種別：${vaultMarkdownInline(vaultTypeLabel(item.type))}`,
+    `- タグ：${vaultMarkdownInline(tags, 'なし')}`,
+    `- 更新日時：${vaultMarkdownInline(vaultFormatDate(item.updatedAt))}`,
+    '',
+    vaultMarkdownBlock(item.body, '（本文なし）')
+  ].join('\n');
+}
+
+function vaultBuildGroupedSectionMarkdown(type, items) {
+  const heading = WRITING_VAULT_EXPORT_HEADINGS[type] || WRITING_VAULT_EXPORT_HEADINGS.memo;
+  const group = items
+    .filter(item => item.type === type)
+    .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+
+  if (group.length === 0) {
+    return [`## ${heading}`, '', '（該当メモなし）'].join('\n');
+  }
+
+  return [`## ${heading}`, '', group.map(vaultBuildMemoMarkdown).join('\n\n---\n\n')].join('\n');
+}
+
+async function buildWritingVaultAiMarkdown() {
+  if (!currentWorkId) {
+    showToast('作品を選択してください', 'error');
+    return '';
+  }
+
+  const savedWork = await dbGet(STORE_WORKS, currentWorkId);
+  const work = savedWork || currentWork || {};
+  const exportItems = (await getWritingVaultItems(currentWorkId))
+    .filter(item => item.includeInAiExport === true);
+
+  const title = vaultGetInputValue('meta-title', work.title || '');
+  const author = vaultGetInputValue('meta-author', work.author || '');
+  const genre = vaultGetInputValue('meta-genre', work.genre || '');
+  const scene = vaultGetInputValue('meta-scene', work.scene || '');
+  const tags = currentTags && currentTags.length ? currentTags : (work.tags || []);
+  const aiRequest = vaultGetInputValue('vault-ai-request', '');
+
+  const parts = [
+    '# 執筆引き継ぎ資料',
+    '',
+    '## 作品情報',
+    '',
+    `- タイトル：${vaultMarkdownInline(title)}`,
+    `- 作者名：${vaultMarkdownInline(author)}`,
+    `- ジャンル：${vaultMarkdownInline(genre)}`,
+    `- 作品タグ：${vaultMarkdownInline(tags.join(', '))}`,
+    `- 描きたいシーン：${vaultMarkdownInline(scene)}`,
+    '',
+    '## 今回AIに頼みたいこと',
+    '',
+    vaultMarkdownBlock(aiRequest),
+    ''
+  ];
+
+  WRITING_VAULT_EXPORT_ORDER.forEach(type => {
+    parts.push(vaultBuildGroupedSectionMarkdown(type, exportItems), '');
+  });
+
+  return parts.join('\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
+}
+async function copyWritingVaultItem(id) {
+  if (!currentWorkId) {
+    showToast('作品を選択してください', 'error');
+    return;
+  }
+
+  const item = await dbGet(STORE_WRITING_VAULT, id);
+  if (!item || item.workId !== currentWorkId) {
+    showToast('メモが見つかりません', 'error');
+    return;
+  }
+
+  await copyToClipboard(vaultBuildMemoMarkdown(item));
+  showToast('保管庫メモをコピーしました 📋');
+}
+
+async function copyWritingVaultAiMarkdown() {
+  const md = await buildWritingVaultAiMarkdown();
+  if (!md) return;
+
+  await copyToClipboard(md);
+  showToast('AI引き継ぎ資料をコピーしました 📋');
+}
+
+async function downloadWritingVaultAiMarkdown() {
+  const md = await buildWritingVaultAiMarkdown();
+  if (!md) return;
+
+  const work = await dbGet(STORE_WORKS, currentWorkId);
+  const title = vaultGetInputValue('meta-title', work?.title || '無題');
+  downloadFile(buildFilename(title, '執筆引き継ぎ資料'), md);
+}
+
+// ║ END BLOCK: 執筆保管庫機能
 
 
 
