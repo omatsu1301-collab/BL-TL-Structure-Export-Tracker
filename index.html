@@ -446,6 +446,54 @@ textarea { resize: vertical; }
 
 /* === END RULE REFINE === */
 
+
+/* === RULE HISTORY === */
+.history-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.85rem; }
+.history-session { margin-bottom: 18px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; transition: var(--transition); }
+.history-session:hover { border-color: var(--border-hover); }
+.history-session.session-rolledback { opacity: 0.55; }
+.history-session-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: linear-gradient(135deg, rgba(109,40,217,0.15), rgba(139,92,246,0.05)); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.history-session-title { font-size: 0.85rem; font-weight: 700; color: var(--purple-300); display: flex; align-items: center; gap: 8px; }
+.history-session-meta { font-size: 0.72rem; color: var(--text-muted); }
+.history-session-actions { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
+.history-session-body { padding: 8px; }
+.history-item { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 6px; transition: var(--transition); }
+.history-item:hover { border-color: var(--border-hover); }
+.history-item.item-rolledback { opacity: 0.5; background: var(--bg-input); }
+.history-item.item-rolledback .history-item-title { text-decoration: line-through; }
+.history-item-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.history-item-num { font-size: 0.72rem; font-weight: 700; color: var(--purple-400); min-width: 56px; }
+.history-item-op { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.68rem; font-weight: 700; }
+.history-item-title { flex: 1; min-width: 0; font-size: 0.8rem; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.history-item-status { font-size: 0.7rem; color: var(--text-muted); }
+.history-item-status.status-rolledback { color: #FCA5A5; }
+.history-item-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.history-item-detail { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); display: none; font-size: 0.76rem; color: var(--text-secondary); line-height: 1.6; }
+.history-item-detail.expanded { display: block; }
+.history-item-detail-label { font-size: 0.7rem; font-weight: 700; color: var(--purple-400); margin-bottom: 4px; }
+.history-item-detail-block { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; margin-bottom: 6px; }
+.history-item-detail-block .h-rule-title { font-weight: 600; color: var(--text-primary); margin-bottom: 2px; font-size: 0.8rem; }
+.history-item-detail-block .h-rule-cat { font-size: 0.7rem; color: var(--purple-300); margin-bottom: 4px; }
+.history-item-detail-block .h-rule-body { font-size: 0.75rem; color: var(--text-secondary); white-space: pre-wrap; word-break: break-word; max-height: 120px; overflow-y: auto; }
+.history-toggle-detail { background: none; border: none; color: var(--purple-400); font-size: 0.72rem; cursor: pointer; font-family: inherit; padding: 0; margin-top: 4px; transition: color 0.15s; }
+.history-toggle-detail:hover { color: var(--purple-300); }
+.history-filter-bar { display: flex; gap: 8px; flex-wrap: wrap; padding-bottom: 12px; border-bottom: 1px solid var(--border); margin-bottom: 14px; align-items: center; }
+.history-filter-bar input[type="text"] { flex: 1; min-width: 200px; padding: 6px 10px; font-size: 0.82rem; }
+.history-filter-bar select { width: auto; min-width: 140px; padding: 6px 10px; font-size: 0.82rem; }
+
+/* --- ロールバック確認モーダル --- */
+.rollback-warning { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.4); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 0.82rem; color: #FCD34D; line-height: 1.6; }
+.rollback-warning-title { font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.rollback-conflict-list { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; margin-top: 8px; max-height: 200px; overflow-y: auto; }
+.rollback-conflict-item { padding: 4px 0; font-size: 0.78rem; color: var(--text-secondary); border-bottom: 1px dashed var(--border); }
+.rollback-conflict-item:last-child { border-bottom: none; }
+.rollback-conflict-item strong { color: #FCA5A5; }
+.rollback-summary { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 0.82rem; color: var(--text-secondary); }
+.rollback-summary-row { display: flex; gap: 8px; padding: 3px 0; }
+.rollback-summary-label { font-weight: 700; color: var(--purple-300); min-width: 80px; }
+/* === END RULE HISTORY === */
+
+
 </style>
 </head>
 <body>
@@ -693,11 +741,12 @@ textarea { resize: vertical; }
     <section class="page" id="page-rules">
       <div class="section-header">
         <div class="section-title"><span class="icon">📐</span> マイルール集 <span class="count-badge" id="rules-count">0</span></div>
-           <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn btn-secondary" onclick="openRefineSelectModal()">🔄 作品横断リファイン</button>
-      <button class="btn btn-secondary" onclick="exportAllRules()">📋 全ルールをコピー</button>
-      <button class="btn btn-primary" onclick="openAddRuleModal()">＋ ルールを追加</button>
-    </div>
+                   <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-ghost" onclick="openRuleHistoryModal()">📜 改訂履歴</button>
+          <button class="btn btn-secondary" onclick="openRefineSelectModal()">🔄 作品横断リファイン</button>
+          <button class="btn btn-secondary" onclick="exportAllRules()">📋 全ルールをコピー</button>
+          <button class="btn btn-primary" onclick="openAddRuleModal()">＋ ルールを追加</button>
+        </div>
       </div>
       <div class="rule-filter-bar" id="rule-filter-bar"></div>
       <div id="rules-container"></div>
@@ -831,6 +880,89 @@ textarea { resize: vertical; }
     </div>
   </div>
 </div>
+<div class="modal-overlay" id="modal-rule-history">
+  <div class="modal" style="max-width:880px">
+    <div class="modal-header">
+      <div class="modal-title">📜 マイルール集 — 改訂履歴</div>
+      <button class="modal-close" onclick="closeModal('modal-rule-history')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:0.78rem;color:var(--text-muted);line-height:1.6">
+        作品横断リファインで適用された変更の履歴です。<br>
+        セッション単位（同じClaude回答からの提案群）でグループ化されています。<br>
+        各履歴は「個別ロールバック」または「セッション全体ロールバック」が可能です。
+      </p>
+      <div class="history-filter-bar">
+        <input type="text" id="history-search" placeholder="🔍 タイトル・根拠で検索…" oninput="renderRuleHistory()">
+        <select id="history-op-filter" onchange="renderRuleHistory()">
+          <option value="">すべての操作</option>
+          <option value="modify">修正</option>
+          <option value="merge">統合</option>
+          <option value="split">分割</option>
+          <option value="delete">削除</option>
+          <option value="create">新規追加</option>
+          <option value="recategorize">カテゴリ変更</option>
+        </select>
+        <select id="history-status-filter" onchange="renderRuleHistory()">
+          <option value="">すべての状態</option>
+          <option value="active">適用中のみ</option>
+          <option value="rolledback">ロールバック済みのみ</option>
+        </select>
+      </div>
+      <div id="rule-history-container">
+        <div class="history-empty">読み込み中…</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-rule-history')">閉じる</button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="modal-rollback-confirm">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" style="color:#FCD34D">⚠️ ロールバックの確認</div>
+      <button class="modal-close" onclick="closeModal('modal-rollback-confirm')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="rollback-target-info" class="rollback-summary">
+        <div class="rollback-summary-row"><span class="rollback-summary-label">対象：</span><span id="rollback-target-label"></span></div>
+        <div class="rollback-summary-row"><span class="rollback-summary-label">操作：</span><span id="rollback-target-ops"></span></div>
+        <div class="rollback-summary-row"><span class="rollback-summary-label">適用日時：</span><span id="rollback-target-date"></span></div>
+      </div>
+
+      <div id="rollback-effect-area" class="rollback-summary">
+        <div style="font-size:0.82rem;font-weight:700;color:var(--purple-300);margin-bottom:6px">この操作で行われること：</div>
+        <div id="rollback-effect-list" style="font-size:0.78rem;color:var(--text-secondary);line-height:1.7"></div>
+      </div>
+
+      <div id="rollback-conflict-area" style="display:none">
+        <div class="rollback-warning">
+          <div class="rollback-warning-title">⚠️ 衝突の可能性があります</div>
+          <div style="font-size:0.78rem">
+            ロールバック対象より<strong>新しい履歴で同じルールが触られています</strong>。<br>
+            このまま実行すると、新しい変更が踏み潰される可能性があります。
+          </div>
+          <div class="rollback-conflict-list" id="rollback-conflict-list"></div>
+          <div style="font-size:0.75rem;margin-top:6px">
+            続行する場合は「強制実行」、中止する場合は「キャンセル」を選んでください。
+          </div>
+        </div>
+      </div>
+
+      <div id="rollback-missing-area" style="display:none">
+        <div class="rollback-warning">
+          <div class="rollback-warning-title">ℹ️ 一部のルールが既に削除されています</div>
+          <div style="font-size:0.78rem" id="rollback-missing-detail"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-rollback-confirm')">キャンセル</button>
+      <button class="btn btn-danger" id="rollback-execute-btn">↺ ロールバック実行</button>
+    </div>
+  </div>
+</div>
 
 <div class="toast-container" id="toast-container"></div>
 
@@ -838,10 +970,11 @@ textarea { resize: vertical; }
 // ======================================================
 //  DB LAYER : IndexedDB
 // ======================================================
-const DB_NAME='NovelAnalysisDB';const DB_VERSION=3;
+const DB_NAME='NovelAnalysisDB';const DB_VERSION=4;
 const STORE_WORKS='works';const STORE_EPISODES='episodes';const STORE_RECORDS='records';const STORE_RULES='rules';
+const STORE_RULE_HISTORY='ruleHistory';
 let db;
-function initDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,DB_VERSION);req.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains(STORE_WORKS)){const ws=d.createObjectStore(STORE_WORKS,{keyPath:'id'});ws.createIndex('updatedAt','updatedAt');}if(!d.objectStoreNames.contains(STORE_EPISODES)){const es=d.createObjectStore(STORE_EPISODES,{keyPath:'id'});es.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RECORDS)){const rs=d.createObjectStore(STORE_RECORDS,{keyPath:'id'});rs.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RULES)){d.createObjectStore(STORE_RULES,{keyPath:'id'});}if(!d.objectStoreNames.contains('rulePresets')){const ps=d.createObjectStore('rulePresets',{keyPath:'id'});ps.createIndex('workId','workId');}};req.onsuccess=e=>{db=e.target.result;resolve();};req.onerror=e=>reject(e.target.error);});}
+function initDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,DB_VERSION);req.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains(STORE_WORKS)){const ws=d.createObjectStore(STORE_WORKS,{keyPath:'id'});ws.createIndex('updatedAt','updatedAt');}if(!d.objectStoreNames.contains(STORE_EPISODES)){const es=d.createObjectStore(STORE_EPISODES,{keyPath:'id'});es.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RECORDS)){const rs=d.createObjectStore(STORE_RECORDS,{keyPath:'id'});rs.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RULES)){d.createObjectStore(STORE_RULES,{keyPath:'id'});}if(!d.objectStoreNames.contains('rulePresets')){const ps=d.createObjectStore('rulePresets',{keyPath:'id'});ps.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RULE_HISTORY)){const hs=d.createObjectStore(STORE_RULE_HISTORY,{keyPath:'id'});hs.createIndex('sessionId','sessionId');hs.createIndex('appliedAt','appliedAt');}};req.onsuccess=e=>{db=e.target.result;resolve();};req.onerror=e=>reject(e.target.error);});}
 function dbGet(s,k){return new Promise((r,j)=>{const tx=db.transaction(s,'readonly');const rq=tx.objectStore(s).get(k);rq.onsuccess=()=>r(rq.result);rq.onerror=()=>j(rq.error);});}
 function dbGetAll(s){return new Promise((r,j)=>{const tx=db.transaction(s,'readonly');const rq=tx.objectStore(s).getAll();rq.onsuccess=()=>r(rq.result);rq.onerror=()=>j(rq.error);});}
 function dbGetByIndex(s,i,v){return new Promise((r,j)=>{const tx=db.transaction(s,'readonly');const rq=tx.objectStore(s).index(i).getAll(v);rq.onsuccess=()=>r(rq.result);rq.onerror=()=>j(rq.error);});}
@@ -2261,12 +2394,12 @@ async function applyRefineProposal(idx) {
   if (refineProposalStatuses[idx] !== 'pending') { showToast('保留中の提案のみ適用できます', 'error'); return; }
 
   try {
-    // Phase 3 でこのスナップショット取得部分を ruleHistory への保存処理に拡張する
-    await captureSnapshotBeforeApply(p);
-    await executeProposal(p);
+    const snap = await captureSnapshotBeforeApply(p);
+    const postState = await executeProposal(p);
+    await saveRuleHistory(p, snap, postState);
     refineProposalStatuses[idx] = 'applied';
     renderRefineProposals();
-    renderRulesPage(); // マイルール集ページの裏側も更新
+    renderRulesPage();
     showToast(`提案 #${p.num} を適用しました ✓`);
   } catch (err) {
     console.error(err);
@@ -2300,8 +2433,9 @@ async function applyAllRefineProposals() {
   for (const idx of pendingIndexes) {
     const p = refineParsedProposals[idx];
     try {
-      await captureSnapshotBeforeApply(p);
-      await executeProposal(p);
+      const snap = await captureSnapshotBeforeApply(p);
+      const postState = await executeProposal(p);
+      await saveRuleHistory(p, snap, postState);
       refineProposalStatuses[idx] = 'applied';
       success++;
     } catch (err) {
@@ -2313,6 +2447,25 @@ async function applyAllRefineProposals() {
   renderRulesPage();
   showToast(`${success}件適用${failed > 0 ? `／${failed}件失敗` : ''} ✓`);
 }
+
+// --- 履歴レコード保存 ---
+async function saveRuleHistory(p, snap, postState) {
+  const record = {
+    id: genId(),
+    sessionId: p.sessionId,
+    proposalNum: p.num,
+    operation: p.operation,
+    rationale: p.rationale || '',
+    affectedRuleIds: snap.affectedRuleIds || [],
+    snapshot: { rules: snap.ruleSnapshots || [] },
+    postState: postState || { addedIds: [], deletedIds: [], modifiedIds: [] },
+    appliedAt: Date.now(),
+    rolledBack: false,
+    rolledBackAt: null
+  };
+  await dbPut(STORE_RULE_HISTORY, record);
+}
+
 
 function rejectAllRefineProposals() {
   let count = 0;
@@ -2326,13 +2479,45 @@ function rejectAllRefineProposals() {
   showToast(`${count}件を却下しました`);
 }
 
-// --- スナップショット取得（Phase 3 で ruleHistory に保存する処理を追加する） ---
+// --- スナップショット取得（適用直前の状態を返す） ---
+// Phase 3：適用直前のルール群のディープコピーを返す。
+// 履歴レコードへの保存は executeProposal の戻り値とこのスナップショットを組み合わせて
+// applyRefineProposal 側で行う（postState を確定させてから保存するため）。
 async function captureSnapshotBeforeApply(p) {
-  // Phase 2 では何もしない（関数として独立させておくことで Phase 3 の差分が小さくなる）
-  // Phase 3 ではここで以下を行う：
-  //   1. 影響を受けるルール群のスナップショットを取得
-  //   2. ruleHistory ストアに { id, sessionId, ruleId, snapshot, operation, appliedAt } を保存
-  return;
+  const affectedRuleIds = [];
+  const ruleSnapshots = [];
+
+  // 操作タイプに応じて影響を受けるルールIDを収集
+  switch (p.operation) {
+    case 'modify':
+    case 'delete':
+    case 'recategorize':
+      if (p.targetRules[0]?.rule) {
+        affectedRuleIds.push(p.targetRules[0].rule.id);
+      }
+      break;
+    case 'merge':
+      for (const t of p.targetRules) {
+        if (t.rule) affectedRuleIds.push(t.rule.id);
+      }
+      break;
+    case 'split':
+      if (p.targetRules[0]?.rule) {
+        affectedRuleIds.push(p.targetRules[0].rule.id);
+      }
+      break;
+    case 'create':
+      // 新規追加は適用前のスナップショット対象なし
+      break;
+  }
+
+  // 各ルールのディープコピーを取得
+  for (const rid of affectedRuleIds) {
+    const rule = await dbGet(STORE_RULES, rid);
+    if (rule) ruleSnapshots.push(JSON.parse(JSON.stringify(rule)));
+  }
+
+  return { affectedRuleIds, ruleSnapshots };
 }
 
 // --- 操作タイプ別の DB 操作 ---
@@ -2359,6 +2544,7 @@ async function executeModify(p) {
   rule.body = p.newBody || rule.body;
   rule.updatedAt = Date.now();
   await dbPut(STORE_RULES, rule);
+  return { addedIds: [], deletedIds: [], modifiedIds: [target.id] };
 }
 
 // 統合（Q1：案B）：先頭ルールを上書き、残りを削除
@@ -2366,7 +2552,6 @@ async function executeMerge(p) {
   if (p.targetRules.length < 2) throw new Error('統合には2つ以上の対象が必要です');
   for (const t of p.targetRules) if (!t.rule) throw new Error(`第${t.num}則が見つかりません`);
 
-  // 先頭ルールを上書き（位置・createdAt を維持）
   const head = await dbGet(STORE_RULES, p.targetRules[0].rule.id);
   if (!head) throw new Error('先頭ルールがDBから取得できません');
   head.title = p.newTitle;
@@ -2375,10 +2560,12 @@ async function executeMerge(p) {
   head.updatedAt = Date.now();
   await dbPut(STORE_RULES, head);
 
-  // 残りを削除
+  const deletedIds = [];
   for (let i = 1; i < p.targetRules.length; i++) {
     await dbDelete(STORE_RULES, p.targetRules[i].rule.id);
+    deletedIds.push(p.targetRules[i].rule.id);
   }
+  return { addedIds: [], deletedIds, modifiedIds: [head.id] };
 }
 
 // 分割（Q2：案B）：元ルールを1個目で上書き（位置維持）、残りを末尾追加
@@ -2387,7 +2574,6 @@ async function executeSplit(p) {
   if (!target) throw new Error('対象ルールが見つかりません');
   if (p.newBodies.length < 2) throw new Error('分割本文が2つ以上必要です');
 
-  // 1個目で元ルールを上書き
   const head = await dbGet(STORE_RULES, target.id);
   if (!head) throw new Error('対象ルールがDBから取得できません');
   head.title = p.newTitles[0] || head.title;
@@ -2396,19 +2582,22 @@ async function executeSplit(p) {
   head.updatedAt = Date.now();
   await dbPut(STORE_RULES, head);
 
-  // 2個目以降を末尾追加（createdAt を現在時刻にして末尾配置）
+  const addedIds = [];
   const baseTime = Date.now();
   for (let i = 1; i < p.newBodies.length; i++) {
+    const newId = genId();
     await dbPut(STORE_RULES, {
-      id: genId(),
+      id: newId,
       title: p.newTitles[i] || `（分割後#${i + 1}）`,
       category: p.newCategory || head.category,
       body: p.newBodies[i],
       source: head.source ? `${head.source}（第${p.targetRules[0].num}則から分割）` : `第${p.targetRules[0].num}則から分割`,
-      createdAt: baseTime + i, // 順序を保証
+      createdAt: baseTime + i,
       updatedAt: baseTime + i
     });
+    addedIds.push(newId);
   }
+  return { addedIds, deletedIds: [], modifiedIds: [head.id] };
 }
 
 // 削除
@@ -2416,6 +2605,7 @@ async function executeDelete(p) {
   const target = p.targetRules[0]?.rule;
   if (!target) throw new Error('対象ルールが見つかりません');
   await dbDelete(STORE_RULES, target.id);
+  return { addedIds: [], deletedIds: [target.id], modifiedIds: [] };
 }
 
 // 新規追加
@@ -2423,8 +2613,9 @@ async function executeCreate(p) {
   if (!p.newTitle || !p.newBody || !p.newCategory) {
     throw new Error('タイトル・本文・カテゴリが必須です');
   }
+  const newId = genId();
   await dbPut(STORE_RULES, {
-    id: genId(),
+    id: newId,
     title: p.newTitle,
     category: p.newCategory,
     body: p.newBody,
@@ -2432,6 +2623,7 @@ async function executeCreate(p) {
     createdAt: Date.now(),
     updatedAt: Date.now()
   });
+  return { addedIds: [newId], deletedIds: [], modifiedIds: [] };
 }
 
 // カテゴリ変更（Q4：本文・タイトルは維持）
@@ -2444,7 +2636,533 @@ async function executeRecategorize(p) {
   rule.category = p.newCategory;
   rule.updatedAt = Date.now();
   await dbPut(STORE_RULES, rule);
+  return { addedIds: [], deletedIds: [], modifiedIds: [target.id] };
 }
+
+// --- Phase 3: 履歴閲覧UI ---
+
+// ╔═══════════════════════════════════════════════════════
+// ║ BLOCK: ルール履歴機能
+// ║ 依存: dbGetAll, STORE_RULE_HISTORY, OPERATION_LABELS, esc, openModal, closeModal
+// ║ 配置: SCRIPT内、ルールリファイン機能ブロック内の executeRecategorize() 直後
+// ╚═══════════════════════════════════════════════════════
+
+// 履歴モーダルを開く
+async function openRuleHistoryModal() {
+  document.getElementById('history-search').value = '';
+  document.getElementById('history-op-filter').value = '';
+  document.getElementById('history-status-filter').value = '';
+
+  openModal('modal-rule-history');
+  await renderRuleHistory();
+}
+
+// 履歴一覧を描画する
+async function renderRuleHistory() {
+  const container = document.getElementById('rule-history-container');
+  if (!container) return;
+
+  const allHistory = await dbGetAll(STORE_RULE_HISTORY);
+
+  if (allHistory.length === 0) {
+    container.innerHTML = `
+      <div class="history-empty">
+        📜 まだ改訂履歴がありません<br>
+        <span style="font-size:0.78rem;color:var(--text-muted)">
+          作品横断リファインで提案を適用すると、ここに履歴が表示されます
+        </span>
+      </div>`;
+    return;
+  }
+
+  const searchText = document.getElementById('history-search').value.trim().toLowerCase();
+  const opFilter = document.getElementById('history-op-filter').value;
+  const statusFilter = document.getElementById('history-status-filter').value;
+
+  const filtered = allHistory.filter(h => {
+    if (opFilter && h.operation !== opFilter) return false;
+    if (statusFilter === 'active' && h.rolledBack) return false;
+    if (statusFilter === 'rolledback' && !h.rolledBack) return false;
+
+    if (searchText) {
+      const searchableText = [
+        h.operation || '',
+        h.rationale || '',
+        ...(h.snapshot?.rules || []).map(r => `${r.title || ''} ${r.category || ''} ${r.body || ''}`)
+      ].join(' ').toLowerCase();
+
+      if (!searchableText.includes(searchText)) return false;
+    }
+
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="history-empty">条件に一致する履歴がありません</div>';
+    return;
+  }
+
+  filtered.sort((a, b) => (b.appliedAt || 0) - (a.appliedAt || 0));
+
+  const sessionMap = new Map();
+  for (const history of filtered) {
+    const sessionId = history.sessionId || 'no-session';
+    if (!sessionMap.has(sessionId)) sessionMap.set(sessionId, []);
+    sessionMap.get(sessionId).push(history);
+  }
+
+  const sessions = [...sessionMap.entries()].map(([sessionId, items]) => {
+    items.sort((a, b) => (a.proposalNum || 0) - (b.proposalNum || 0));
+    return {
+      sessionId,
+      items,
+      latestAt: Math.max(...items.map(item => item.appliedAt || 0))
+    };
+  });
+
+  sessions.sort((a, b) => b.latestAt - a.latestAt);
+
+  container.innerHTML = sessions.map(buildRuleHistorySessionHTML).join('');
+}
+
+// セッション単位の履歴HTMLを作る
+function buildRuleHistorySessionHTML(session) {
+  const items = session.items;
+  const allRolledBack = items.every(item => item.rolledBack);
+  const activeCount = items.filter(item => !item.rolledBack).length;
+  const totalCount = items.length;
+
+  const sessionClass = allRolledBack ? 'session-rolledback' : '';
+  const firstAppliedAt = items[0]?.appliedAt || session.latestAt;
+  const appliedAtText = firstAppliedAt
+    ? new Date(firstAppliedAt).toLocaleString('ja-JP', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    : '';
+
+  const rollbackButton = activeCount > 0
+    ? `<button class="btn btn-danger btn-sm" onclick="confirmRollbackSession('${session.sessionId}')">↺ セッション全体をロールバック</button>`
+    : '';
+
+  const statusText = allRolledBack
+    ? '全てロールバック済み'
+    : `適用中：${activeCount}／${totalCount}`;
+
+  return `
+    <div class="history-session ${sessionClass}">
+      <div class="history-session-header">
+        <div class="history-session-title">📦 セッション ${esc(String(session.sessionId).slice(0, 8))}</div>
+        <div class="history-session-meta">${esc(appliedAtText)} ／ ${totalCount}件の提案（${statusText}）</div>
+        <div class="history-session-actions">${rollbackButton}</div>
+      </div>
+      <div class="history-session-body">
+        ${items.map(buildRuleHistoryItemHTML).join('')}
+      </div>
+    </div>`;
+}
+
+// 個別履歴HTMLを作る
+function buildRuleHistoryItemHTML(history) {
+  const itemClass = history.rolledBack ? 'item-rolledback' : '';
+  const opLabel = OPERATION_LABELS[history.operation] || history.operation || '不明';
+  const opBadgeClass = `proposal-op-${history.operation || 'error'}`;
+  const title = getRuleHistoryTitle(history);
+
+  const appliedAtText = history.appliedAt
+    ? new Date(history.appliedAt).toLocaleTimeString('ja-JP', {
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    : '';
+
+  const rolledBackAtText = history.rolledBackAt
+    ? new Date(history.rolledBackAt).toLocaleString('ja-JP', {
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    : '';
+
+  const statusHTML = history.rolledBack
+    ? `<span class="history-item-status status-rolledback">↺ ${esc(rolledBackAtText)} に巻き戻し</span>`
+    : `<span class="history-item-status">${esc(appliedAtText)} 適用</span>`;
+
+  const rollbackButton = history.rolledBack
+    ? ''
+    : `<button class="btn btn-danger btn-sm" onclick="confirmRollbackProposal('${history.id}')">↺ ロールバック</button>`;
+
+  return `
+    <div class="history-item ${itemClass}" id="history-item-${history.id}">
+      <div class="history-item-row">
+        <span class="history-item-num">提案 #${history.proposalNum || '-'}</span>
+        <span class="history-item-op ${opBadgeClass}">${esc(opLabel)}</span>
+        <span class="history-item-title">${esc(title)}</span>
+        ${statusHTML}
+        <div class="history-item-actions">
+          <button class="history-toggle-detail" onclick="toggleRuleHistoryDetail('${history.id}')">詳細▼</button>
+          ${rollbackButton}
+        </div>
+      </div>
+      <div class="history-item-detail" id="history-detail-${history.id}">
+        ${buildRuleHistoryDetailHTML(history)}
+      </div>
+    </div>`;
+}
+
+// 履歴タイトルを取得する
+function getRuleHistoryTitle(history) {
+  const snapshotRules = history.snapshot?.rules || [];
+
+  if (snapshotRules.length > 0) {
+    return snapshotRules.map(rule => rule.title || '無題ルール').join(' / ');
+  }
+
+  if (history.operation === 'create') {
+    const addedCount = history.postState?.addedIds?.length || 0;
+    return addedCount > 0 ? `新規追加ルール ${addedCount}件` : '新規追加されたルール';
+  }
+
+  return 'タイトル不明';
+}
+
+// 履歴詳細HTMLを作る
+function buildRuleHistoryDetailHTML(history) {
+  let html = '';
+
+  if (history.rationale) {
+    html += `
+      <div class="history-item-detail-label">根拠</div>
+      <div style="font-size:0.78rem;color:var(--text-secondary);background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 10px;margin-bottom:8px;white-space:pre-wrap">
+        ${esc(history.rationale)}
+      </div>`;
+  }
+
+  const snapshotRules = history.snapshot?.rules || [];
+  if (snapshotRules.length > 0) {
+    html += '<div class="history-item-detail-label">適用前の状態</div>';
+
+    for (const rule of snapshotRules) {
+      html += `
+        <div class="history-item-detail-block">
+          <div class="h-rule-title">${esc(rule.title || '無題ルール')}</div>
+          <div class="h-rule-cat">【${esc(rule.category || '未分類')}】</div>
+          <div class="h-rule-body">${esc(rule.body || '')}</div>
+        </div>`;
+    }
+  }
+
+  const summary = buildRuleHistoryPostStateSummary(history.postState || {});
+  if (summary) {
+    html += `
+      <div class="history-item-detail-label">この適用で行われたこと</div>
+      <div style="font-size:0.78rem;color:var(--text-secondary)">${esc(summary)}</div>`;
+  }
+
+  return html || '<div style="font-size:0.78rem;color:var(--text-muted)">詳細情報なし</div>';
+}
+
+// postState の概要文を作る
+function buildRuleHistoryPostStateSummary(postState) {
+  const parts = [];
+
+  if ((postState.modifiedIds || []).length > 0) {
+    parts.push(`${postState.modifiedIds.length}件のルールを変更`);
+  }
+  if ((postState.addedIds || []).length > 0) {
+    parts.push(`${postState.addedIds.length}件のルールを追加`);
+  }
+  if ((postState.deletedIds || []).length > 0) {
+    parts.push(`${postState.deletedIds.length}件のルールを削除`);
+  }
+
+  return parts.join(' ／ ');
+}
+
+// 履歴詳細の開閉
+function toggleRuleHistoryDetail(id) {
+  const detail = document.getElementById(`history-detail-${id}`);
+  if (!detail) return;
+
+  detail.classList.toggle('expanded');
+
+  const button = detail.previousElementSibling?.querySelector('.history-toggle-detail');
+  if (button) {
+    button.textContent = detail.classList.contains('expanded') ? '詳細▲' : '詳細▼';
+  }
+}
+
+// 旧関数名互換：既存HTMLや手入力呼び出しが残っていても壊さない
+function toggleHistoryDetail(id) {
+  toggleRuleHistoryDetail(id);
+}
+
+// 個別履歴のロールバック確認を開く
+async function confirmRollbackProposal(id) {
+  const history = await dbGet(STORE_RULE_HISTORY, id);
+
+  if (!history) {
+    showToast('履歴が見つかりません', 'error');
+    return;
+  }
+
+  if (history.rolledBack) {
+    showToast('この履歴はすでにロールバック済みです', 'error');
+    return;
+  }
+
+  await openRollbackConfirmModal([history], 'proposal');
+}
+
+// セッション全体のロールバック確認を開く
+async function confirmRollbackSession(sessionId) {
+  const histories = await dbGetByIndex(STORE_RULE_HISTORY, 'sessionId', sessionId);
+  const activeHistories = histories
+    .filter(history => !history.rolledBack)
+    .sort((a, b) => (b.appliedAt || 0) - (a.appliedAt || 0));
+
+  if (activeHistories.length === 0) {
+    showToast('ロールバック可能な履歴がありません', 'error');
+    return;
+  }
+
+  await openRollbackConfirmModal(activeHistories, 'session');
+}
+
+// ロールバック確認モーダルを構築して開く
+async function openRollbackConfirmModal(histories, rollbackType) {
+  const activeHistories = histories.filter(history => history && !history.rolledBack);
+
+  if (activeHistories.length === 0) {
+    showToast('ロールバック可能な履歴がありません', 'error');
+    return;
+  }
+
+  const conflicts = await detectRollbackConflicts(activeHistories);
+  const missingItems = await detectRollbackMissingRules(activeHistories);
+
+  const targetLabel = rollbackType === 'session'
+    ? `セッション ${String(activeHistories[0].sessionId || '').slice(0, 8)}`
+    : `提案 #${activeHistories[0].proposalNum || '-'}`;
+
+  const opLabels = [...new Set(activeHistories.map(history => {
+    return OPERATION_LABELS[history.operation] || history.operation || '不明';
+  }))];
+
+  const appliedDates = activeHistories
+    .map(history => history.appliedAt || 0)
+    .filter(Boolean)
+    .sort((a, b) => a - b);
+
+  const dateLabel = appliedDates.length === 0
+    ? '-'
+    : appliedDates.length === 1
+      ? new Date(appliedDates[0]).toLocaleString('ja-JP')
+      : `${new Date(appliedDates[0]).toLocaleString('ja-JP')} 〜 ${new Date(appliedDates[appliedDates.length - 1]).toLocaleString('ja-JP')}`;
+
+  document.getElementById('rollback-target-label').textContent = targetLabel;
+  document.getElementById('rollback-target-ops').textContent = opLabels.join(' / ');
+  document.getElementById('rollback-target-date').textContent = dateLabel;
+
+  document.getElementById('rollback-effect-list').innerHTML = buildRollbackEffectHTML(activeHistories);
+
+  const conflictArea = document.getElementById('rollback-conflict-area');
+  const conflictList = document.getElementById('rollback-conflict-list');
+  if (conflicts.length > 0) {
+    conflictArea.style.display = 'block';
+    conflictList.innerHTML = conflicts.map(conflict => `
+      <div class="rollback-conflict-item">
+        <strong>提案 #${conflict.proposalNum || '-'}</strong>
+        ${esc(conflict.operationLabel)}：
+        ${esc(conflict.ruleTitle)}
+      </div>
+    `).join('');
+  } else {
+    conflictArea.style.display = 'none';
+    conflictList.innerHTML = '';
+  }
+
+  const missingArea = document.getElementById('rollback-missing-area');
+  const missingDetail = document.getElementById('rollback-missing-detail');
+  if (missingItems.length > 0) {
+    missingArea.style.display = 'block';
+    missingDetail.innerHTML = missingItems.map(item => `・${esc(item)}`).join('<br>');
+  } else {
+    missingArea.style.display = 'none';
+    missingDetail.innerHTML = '';
+  }
+
+  const executeButton = document.getElementById('rollback-execute-btn');
+  const newButton = executeButton.cloneNode(true);
+  executeButton.parentNode.replaceChild(newButton, executeButton);
+
+  newButton.textContent = conflicts.length > 0 ? '⚠️ 強制実行' : '↺ ロールバック実行';
+  newButton.addEventListener('click', async () => {
+    await executeRuleHistoryRollback(activeHistories.map(history => history.id));
+  });
+
+  openModal('modal-rollback-confirm');
+}
+
+// ロールバック時の影響概要HTMLを作る
+function buildRollbackEffectHTML(histories) {
+  let restoreCount = 0;
+  let deleteCount = 0;
+
+  for (const history of histories) {
+    restoreCount += history.snapshot?.rules?.length || 0;
+    deleteCount += history.postState?.addedIds?.length || 0;
+  }
+
+  const lines = [];
+  if (restoreCount > 0) lines.push(`・適用前のルール ${restoreCount}件を復元します`);
+  if (deleteCount > 0) lines.push(`・この適用で追加されたルール ${deleteCount}件を削除します`);
+  lines.push(`・履歴 ${histories.length}件をロールバック済みにします`);
+
+  return lines.join('<br>');
+}
+
+// 履歴が触ったルールIDを集約する
+function getRuleHistoryTouchedIds(history) {
+  const ids = new Set();
+
+  for (const id of history.affectedRuleIds || []) ids.add(id);
+  for (const id of history.postState?.addedIds || []) ids.add(id);
+  for (const id of history.postState?.deletedIds || []) ids.add(id);
+  for (const id of history.postState?.modifiedIds || []) ids.add(id);
+  for (const rule of history.snapshot?.rules || []) {
+    if (rule.id) ids.add(rule.id);
+  }
+
+  return ids;
+}
+
+// より新しい履歴との衝突を検出する
+async function detectRollbackConflicts(targetHistories) {
+  const allHistory = await dbGetAll(STORE_RULE_HISTORY);
+  const targetIds = new Set(targetHistories.map(history => history.id));
+  const conflicts = [];
+
+  for (const target of targetHistories) {
+    const touchedIds = getRuleHistoryTouchedIds(target);
+
+    for (const candidate of allHistory) {
+      if (!candidate || candidate.rolledBack) continue;
+      if (targetIds.has(candidate.id)) continue;
+      if ((candidate.appliedAt || 0) <= (target.appliedAt || 0)) continue;
+
+      const candidateTouchedIds = getRuleHistoryTouchedIds(candidate);
+      const conflictedRuleId = [...touchedIds].find(id => candidateTouchedIds.has(id));
+      if (!conflictedRuleId) continue;
+
+      const ruleTitle = await getRollbackConflictRuleTitle(conflictedRuleId, target, candidate);
+      conflicts.push({
+        proposalNum: candidate.proposalNum,
+        operationLabel: OPERATION_LABELS[candidate.operation] || candidate.operation || '不明',
+        ruleTitle
+      });
+    }
+  }
+
+  return conflicts;
+}
+
+// 衝突表示用のルールタイトルを取得する
+async function getRollbackConflictRuleTitle(ruleId, targetHistory, candidateHistory) {
+  const currentRule = await dbGet(STORE_RULES, ruleId);
+  if (currentRule?.title) return currentRule.title;
+
+  const snapshots = [
+    ...(candidateHistory.snapshot?.rules || []),
+    ...(targetHistory.snapshot?.rules || [])
+  ];
+
+  const snapshotRule = snapshots.find(rule => rule.id === ruleId);
+  return snapshotRule?.title || `ルールID: ${ruleId}`;
+}
+
+// 現在DB上に存在しない関連ルールを検出する
+async function detectRollbackMissingRules(histories) {
+  const messages = [];
+  const checkedIds = new Set();
+
+  for (const history of histories) {
+    const idsToCheck = [
+      ...(history.postState?.modifiedIds || []),
+      ...(history.postState?.addedIds || [])
+    ];
+
+    for (const id of idsToCheck) {
+      if (checkedIds.has(id)) continue;
+      checkedIds.add(id);
+
+      const rule = await dbGet(STORE_RULES, id);
+      if (rule) continue;
+
+      const snapshotRule = (history.snapshot?.rules || []).find(item => item.id === id);
+      const title = snapshotRule?.title || `ルールID: ${id}`;
+      messages.push(`${title} は現在DB上に存在しません。復元または削除済みとして処理します。`);
+    }
+  }
+
+  return messages;
+}
+
+// ロールバックを実行する
+async function executeRuleHistoryRollback(historyIds) {
+  const histories = [];
+
+  for (const id of historyIds) {
+    const history = await dbGet(STORE_RULE_HISTORY, id);
+    if (history && !history.rolledBack) histories.push(history);
+  }
+
+  if (histories.length === 0) {
+    showToast('ロールバック可能な履歴がありません', 'error');
+    closeModal('modal-rollback-confirm');
+    return;
+  }
+
+  histories.sort((a, b) => (b.appliedAt || 0) - (a.appliedAt || 0));
+
+  try {
+    const rolledBackAt = Date.now();
+
+    for (const history of histories) {
+      await rollbackSingleRuleHistory(history, rolledBackAt);
+    }
+
+    closeModal('modal-rollback-confirm');
+    await renderRuleHistory();
+    renderRulesPage();
+    showToast(`${histories.length}件をロールバックしました ✓`);
+  } catch (err) {
+    console.error(err);
+    showToast(`ロールバックに失敗しました：${err.message || err}`, 'error');
+  }
+}
+
+// 1履歴分のロールバックを実行する
+async function rollbackSingleRuleHistory(history, rolledBackAt) {
+  for (const addedId of history.postState?.addedIds || []) {
+    await dbDelete(STORE_RULES, addedId);
+  }
+
+  for (const snapshotRule of history.snapshot?.rules || []) {
+    if (!snapshotRule.id) continue;
+    await dbPut(STORE_RULES, JSON.parse(JSON.stringify(snapshotRule)));
+  }
+
+  history.rolledBack = true;
+  history.rolledBackAt = rolledBackAt;
+  await dbPut(STORE_RULE_HISTORY, history);
+}
+
+// ║ END BLOCK: ルール履歴機能
 
 
 // ║ END BLOCK: ルールリファイン機能
