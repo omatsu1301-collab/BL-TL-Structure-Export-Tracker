@@ -1000,6 +1000,23 @@ textarea { resize: vertical; }
 
       <!-- TAB: プロンプトメーカー -->
       <div class="tab-panel" id="tab-promptmaker">
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-title"><span>✍️</span> 執筆作品タイトル</div>
+          </div>
+          <div class="form-section-body">
+            <div class="form-group">
+              <label class="form-label" for="pm-writing-title">あなたが執筆する作品タイトル</label>
+              <input type="text" id="pm-writing-title" placeholder="例：死に急ぐ推しを助けるために、モブ店員の私が物語を書き換えます">
+              <div class="form-hint">
+                プロンプトメーカーでMarkdownをダウンロードするとき、このタイトルをファイル名に使います。未入力の場合は分析中の作品タイトルを使います。
+              </div>
+            </div>
+            <div>
+              <button class="btn btn-primary btn-sm" onclick="saveWritingTitleFromInput('pm-writing-title')">執筆作品タイトルを保存</button>
+            </div>
+          </div>
+        </div>
 
         <!-- 描きたいシーン プレビュー -->
         <div class="form-section">
@@ -1248,6 +1265,18 @@ textarea { resize: vertical; }
 <button class="btn btn-secondary" onclick="openVaultCompressionPromptModal()">🧩 圧縮プロンプト作成</button>
             <button class="btn btn-export" onclick="copyWritingVaultAiMarkdown()">📋 AI引き継ぎ資料をコピー</button>
             <button class="btn btn-secondary" onclick="downloadWritingVaultAiMarkdown()">↓ .md</button>
+          </div>
+        </div>
+        <div class="vault-ai-request">
+          <div class="form-group">
+            <label class="form-label" for="vault-writing-title">執筆作品タイトル</label>
+            <input type="text" id="vault-writing-title" placeholder="例：死に急ぐ推しを助けるために、モブ店員の私が物語を書き換えます">
+            <div class="form-hint">
+              執筆保管庫のAI引き継ぎ資料をMarkdown保存するとき、このタイトルをファイル名に使います。未入力の場合は分析中の作品タイトルを使います。
+            </div>
+          </div>
+          <div>
+            <button class="btn btn-primary btn-sm" onclick="saveWritingTitleFromInput('vault-writing-title')">執筆作品タイトルを保存</button>
           </div>
         </div>
 
@@ -1758,6 +1787,7 @@ async function loadWorkPage(workId){
   document.getElementById('meta-status').value=work.status||'new';
   document.getElementById('meta-reason').value=work.reason||'';
   document.getElementById('meta-scene').value=work.scene||'';
+   syncWritingTitleInputs(work.writingTitle || '');
   currentTags=[...(work.tags||[])];renderTags();
   currentEpisodesCount=parseInt(work.episodes)||0;
   await renderEpisodesAccordion(workId,currentEpisodesCount);
@@ -2006,6 +2036,68 @@ function buildAllBodyBlock(eps){if(!eps||eps.length===0)return '## 本文\n\n（
 function buildSelectedBodyBlock(eps){if(!eps||eps.length===0)return '## 本文（選択なし）\n\n';let md='## 本文（選択した話）\n\n';eps.forEach(ep=>{md+=`### 第${ep.number}話${ep.subtitle?'「'+ep.subtitle+'」':''}\n\n${ep.content||'（本文未入力）'}\n\n---\n\n`;});return md;}
 function buildRecordsBlock(recs,tf){const f=tf?recs.filter(r=>(r.tags||[]).some(t=>tf.includes(t))):recs;if(!f||f.length===0)return '## 分析記録\n\n（記録なし）';let md='## 分析記録\n\n';f.forEach(r=>{const ds=r.createdAt?new Date(r.createdAt).toLocaleDateString('ja-JP'):'';md+=`### [${(r.tags||[]).join('・')}] ${ds}\n\n${r.content||''}\n\n---\n\n`;});return md;}
 function buildFilename(title,type){const t=new Date();const ymd=t.getFullYear().toString()+(t.getMonth()+1).toString().padStart(2,'0')+t.getDate().toString().padStart(2,'0');return `${(title||'無題').replace(/[\/\\:*?"<>|]/g,'_')}_${type}_${ymd}.md`;}
+
+// ╔═══════════════════════════════════════════════════════
+// ║ BLOCK: 執筆作品タイトル管理
+// ║ 依存: currentWorkId, currentWork, dbGet, dbPut, STORE_WORKS, showToast
+// ║ 配置: SCRIPT内、buildFilename 関数の直後
+// ╚═══════════════════════════════════════════════════════
+
+function getWritingTitleInputValue() {
+  const pmTitle = document.getElementById('pm-writing-title')?.value.trim() || '';
+  const vaultTitle = document.getElementById('vault-writing-title')?.value.trim() || '';
+  return pmTitle || vaultTitle;
+}
+
+function getWritingTitleFromWork(work = {}) {
+  const inputTitle = getWritingTitleInputValue();
+  const savedTitle = (work.writingTitle || '').trim();
+  const analysisTitle = (work.title || '').trim();
+
+  return inputTitle || savedTitle || analysisTitle || '無題';
+}
+
+function syncWritingTitleInputs(value = '') {
+  const title = value || '';
+
+  const pmInput = document.getElementById('pm-writing-title');
+  if (pmInput) pmInput.value = title;
+
+  const vaultInput = document.getElementById('vault-writing-title');
+  if (vaultInput) vaultInput.value = title;
+}
+
+async function saveWritingTitleFromInput(inputId) {
+  if (!currentWorkId) {
+    showToast('作品を選択してください', 'error');
+    return;
+  }
+
+  const input = document.getElementById(inputId);
+  if (!input) {
+    showToast('執筆作品タイトル欄が見つかりません', 'error');
+    return;
+  }
+
+  const work = await dbGet(STORE_WORKS, currentWorkId);
+  if (!work) {
+    showToast('作品データが見つかりません', 'error');
+    return;
+  }
+
+  const writingTitle = input.value.trim();
+
+  work.writingTitle = writingTitle;
+  work.updatedAt = Date.now();
+
+  await dbPut(STORE_WORKS, work);
+  currentWork = work;
+  syncWritingTitleInputs(writingTitle);
+
+  showToast(writingTitle ? '執筆作品タイトルを保存しました' : '執筆作品タイトルを空にしました');
+}
+
+// ║ END BLOCK: 執筆作品タイトル管理
 
 // ======================================================
 //  PROMPT TEMPLATES (分析依頼用)
@@ -2558,6 +2650,7 @@ async function downloadPrompt(type) {
   if (!md) return;
 
   const work = await dbGet(STORE_WORKS, currentWorkId);
+  const title = getWritingTitleFromWork(work || {});
 
   const lb = {
     A: 'プロット生成',
@@ -2568,7 +2661,7 @@ async function downloadPrompt(type) {
 
   downloadFile(
     buildFilename(
-      work?.title || '無題',
+      title,
       'プロンプト' + (lb[type] || type)
     ),
     md
@@ -2632,6 +2725,7 @@ async function pmA2(records) {
   }
 
   const work = await dbGet(STORE_WORKS, currentWorkId);
+  const writingTitle = getWritingTitleFromWork(work || {});
   const plotRec = await dbGet(STORE_RECORDS, plotId);
   const charRec = charId
     ? await dbGet(STORE_RECORDS, charId)
@@ -2660,7 +2754,7 @@ async function pmA2(records) {
 
 # 対象作品
 
-- 作品タイトル：${work?.title || '無題'}
+- 作品タイトル：${writingTitle}
 - 対象章：第${chapterNum}章
 - 想定Part数：${partMin}〜${partMax}Part
 - 1Partあたりの想定文字数：${charsMin}〜${charsMax}字
@@ -5221,19 +5315,27 @@ async function buildWritingVaultAiMarkdown() {
   const exportItems = (await getWritingVaultItems(currentWorkId))
     .filter(item => item.includeInAiExport === true);
 
-  const title = vaultGetInputValue('meta-title', work.title || '');
+  const analysisTitle = vaultGetInputValue('meta-title', work.title || '');
+  const writingTitle = getWritingTitleFromWork(work);
   const author = vaultGetInputValue('meta-author', work.author || '');
   const genre = vaultGetInputValue('meta-genre', work.genre || '');
   const scene = vaultGetInputValue('meta-scene', work.scene || '');
   const tags = currentTags && currentTags.length ? currentTags : (work.tags || []);
   const aiRequest = vaultGetInputValue('vault-ai-request', '');
 
+  const titleLines = [
+    `- 執筆作品タイトル：${vaultMarkdownInline(writingTitle)}`,
+    analysisTitle && analysisTitle !== writingTitle
+      ? `- 分析元タイトル：${vaultMarkdownInline(analysisTitle)}`
+      : ''
+  ].filter(Boolean);
+
   const parts = [
     '# 執筆引き継ぎ資料',
     '',
     '## 作品情報',
     '',
-    `- タイトル：${vaultMarkdownInline(title)}`,
+    ...titleLines,
     `- 作者名：${vaultMarkdownInline(author)}`,
     `- ジャンル：${vaultMarkdownInline(genre)}`,
     `- 作品タグ：${vaultMarkdownInline(tags.join(', '))}`,
@@ -5280,7 +5382,8 @@ async function downloadWritingVaultAiMarkdown() {
   if (!md) return;
 
   const work = await dbGet(STORE_WORKS, currentWorkId);
-  const title = vaultGetInputValue('meta-title', work?.title || '無題');
+  const title = getWritingTitleFromWork(work || {});
+
   downloadFile(buildFilename(title, '執筆引き継ぎ資料'), md);
 }
 
