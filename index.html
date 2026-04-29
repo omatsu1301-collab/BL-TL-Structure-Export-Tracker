@@ -1323,100 +1323,313 @@ textarea { resize: vertical; }
           </div>
         </div>
 
-        <!-- プロンプトC: 本文執筆 -->
+       <!-- 執筆・仕上げプロンプト群 -->
         <div class="form-section">
-          <div class="form-section-header"><div class="form-section-title"><span>✍️</span> プロンプトC：本文執筆</div></div>
+          <div class="form-section-header">
+            <div class="form-section-title"><span>✍️</span> 執筆系プロンプト</div>
+          </div>
           <div class="form-section-body">
-           <p style="font-size:0.78rem;color:var(--text-muted)">プロット設計＋章アウトライン＋キャラ設定シート＋マイルール（選択式）をもとに、章内Part単位の執筆プロンプトを生成します。</p>
+            <p style="font-size:0.78rem;color:var(--text-muted)">
+              ここでは「初稿」「推敲」「整合性チェック」「引き継ぎ要約」「正史反映」「差分評価」に使うプロンプトを作ります。
+              Claude分析用 / Claude設計用は外部運用前提で、この画面には重複実装しません。
+            </p>
 
-            <div class="pm-record-select" id="pm-c-plot-select-area"><label>プロット設計の記録を選択</label><select id="pm-c-plot-select" onchange="onPlotSelectChange()"><option value="">（プロット設計の記録がありません）</option></select></div>
-            <div class="pm-record-select" id="pm-c-char-select-area"><label>キャラ設定シートの記録を選択</label><select id="pm-c-char-select"><option value="">（キャラ設定シートの記録がありません）</option></select></div>
+            <div class="pm-record-select" id="pm-c-plot-select-area">
+              <label>プロット設計の記録を選択</label>
+              <select id="pm-c-plot-select" onchange="onPlotSelectChange(); renderPmChapterAiPreferenceList(); refreshPmDraftModelUi();">
+                <option value="">（プロット設計の記録がありません）</option>
+              </select>
+            </div>
+
+            <div class="pm-record-select" id="pm-c-char-select-area">
+              <label>キャラ設定シートの記録を選択</label>
+              <select id="pm-c-char-select">
+                <option value="">（キャラ設定シートの記録がありません）</option>
+              </select>
+            </div>
 
             <div class="form-row form-row-2">
-             <div class="form-group">
-  <label class="form-label">執筆対象：章</label>
-  <div id="pm-c-section-area">
-    <select id="pm-c-section-select" style="display:none"
-            onchange="onSectionSelect()">
-      <option value="">（プロットを選択してください）</option>
-    </select>
-    <input type="number" id="pm-c-section-num" min="1"
-           placeholder="章番号 例：1" style="display:none">
-    <div id="pm-c-section-hint" class="form-hint"
-         style="margin-top:4px"></div>
-  </div>
-</div>
+              <div class="form-group">
+                <label class="form-label">執筆対象：章</label>
+                <div id="pm-c-section-area">
+                  <select id="pm-c-section-select" style="display:none"
+                          onchange="onSectionSelect(); refreshPmDraftModelUi();">
+                    <option value="">（プロットを選択してください）</option>
+                  </select>
+                  <input type="number" id="pm-c-section-num" min="1"
+                         placeholder="章番号 例：1" style="display:none"
+                         oninput="refreshPmDraftModelUi()">
+                  <div id="pm-c-section-hint" class="form-hint"
+                       style="margin-top:4px"></div>
+                </div>
+              </div>
 
-<div class="form-group">
-  <label class="form-label">執筆対象：Part番号</label>
-  <div style="display:flex;gap:8px;align-items:center">
-    <input type="number" id="pm-c-part-num" min="1" max="20"
-           placeholder="例：3" style="width:80px">
-    <span style="font-size:0.78rem;color:var(--text-muted)">／</span>
-    <input type="number" id="pm-c-part-total" min="1" max="20"
-           placeholder="全Part数 例：5" style="width:80px">
-    <span style="font-size:0.72rem;color:var(--text-muted)">Part中</span>
-  </div>
-  <div class="form-hint" style="margin-top:4px">
-    例：5Part構成の3番目 → 3 ／ 5
-  </div>
-</div>
-
-              <div class="form-group"><label class="form-label">R18シーンの有無</label><select id="pm-c-has-r18"><option value="no">なし（通常セクション）</option><option value="yes">あり（R18セクション）</option></select><div id="pm-c-r18-hint" class="form-hint" style="margin-top:4px"></div></div>
+              <div class="form-group">
+                <label class="form-label">執筆対象：Part番号</label>
+                <div style="display:flex;gap:8px;align-items:center">
+                  <input type="number" id="pm-c-part-num" min="1" max="20"
+                         placeholder="例：3" style="width:80px">
+                  <span style="font-size:0.78rem;color:var(--text-muted)">／</span>
+                  <input type="number" id="pm-c-part-total" min="1" max="20"
+                         placeholder="全Part数 例：5" style="width:80px">
+                  <span style="font-size:0.72rem;color:var(--text-muted)">Part中</span>
+                </div>
+                <div class="form-hint" style="margin-top:4px">
+                  例：5Part構成の3番目 → 3 ／ 5
+                </div>
+              </div>
             </div>
-<div class="form-group">
-  <label class="form-label">
-    章アウトライン（執筆保管庫から選択）
-  </label>
-  <select id="pm-c-outline-select">
-    <option value="">
-      （選択なし — 保管庫にアウトラインメモがない場合）
-    </option>
-  </select>
-  <div class="form-hint" style="margin-top:4px">
-    執筆保管庫に保存した章アウトラインメモを選択すると、
-    プロンプトに全Part構造が差し込まれます
-  </div>
-</div>
-            <div class="form-group">
-  <label class="form-label">保管庫の圧縮メモを接続資料に挿入</label>
-  <div style="display:flex;gap:8px;align-items:center">
-    <select id="pm-c-compressed-select">
-      <option value="">（選択なし）</option>
-    </select>
-    <button class="btn btn-secondary btn-sm" onclick="insertVaultMemoToCPrevText(false)">追記</button>
-    <button class="btn btn-ghost btn-sm" onclick="insertVaultMemoToCPrevText(true)">置換</button>
-  </div>
-  <div class="form-hint">
-    C本文接続用のAI圧縮メモを選ぶと、前セクション接続資料へ差し込めます。
-  </div>
-</div>
 
-<div class="form-group">
-  <label class="form-label">前セクションまでの接続資料（任意）</label>
-  <textarea id="pm-c-prev-text" rows="6" placeholder="全文ではなく、保管庫のC本文接続用圧縮メモや、直前本文の一部を貼り付けてください…"></textarea>
-</div>
+            <div class="form-row form-row-2">
+              <div class="form-group">
+                <label class="form-label">R18シーンの有無</label>
+                <select id="pm-c-has-r18" onchange="refreshPmDraftModelUi()">
+                  <option value="no">なし（通常セクション）</option>
+                  <option value="yes">あり（R18セクション）</option>
+                </select>
+                <div id="pm-c-r18-hint" class="form-hint" style="margin-top:4px"></div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">今回の執筆AI</label>
+                <select id="pm-c-draft-model" onchange="refreshPmDraftModelUi()">
+                  <option value="auto">章設定に従う（未設定なら自動判定）</option>
+                  <option value="chatgpt">ChatGPTで初稿を書く</option>
+                  <option value="claude">Claudeで初稿を書く</option>
+                </select>
+                <div id="pm-c-ai-pref-status" class="form-hint" style="margin-top:4px">
+                  章設定またはR18判定から自動で決めます
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section" style="margin-bottom:0">
+              <div class="form-section-header">
+                <div class="form-section-title"><span>🧭</span> 章ごとの既定執筆AI</div>
+                <button class="btn btn-primary btn-sm" onclick="savePmCurrentChapterAiPreference()">この章の既定AIを保存</button>
+              </div>
+              <div class="form-section-body">
+                <div class="form-hint">
+                  ここで保存した設定は「章ごとの既定執筆AI」です。  
+                  たとえば「第3章はClaude」「第4章はChatGPT」という切り替えを覚えさせられます。
+                </div>
+                <div id="pm-c-ai-pref-list" style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
+                  <div class="form-hint">章設定を読み込み中です…</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">章アウトライン（執筆保管庫から選択）</label>
+              <select id="pm-c-outline-select">
+                <option value="">（選択なし — 保管庫にアウトラインメモがない場合）</option>
+              </select>
+              <div class="form-hint" style="margin-top:4px">
+                執筆保管庫に保存した章アウトラインメモを選択すると、プロンプトに全Part構造が差し込まれます
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">保管庫の圧縮メモを接続資料に挿入</label>
+              <div style="display:flex;gap:8px;align-items:center">
+                <select id="pm-c-compressed-select">
+                  <option value="">（選択なし）</option>
+                </select>
+                <button class="btn btn-secondary btn-sm" onclick="insertVaultMemoToCPrevText(false)">追記</button>
+                <button class="btn btn-ghost btn-sm" onclick="insertVaultMemoToCPrevText(true)">置換</button>
+              </div>
+              <div class="form-hint">
+                C本文接続用のAI圧縮メモを選ぶと、前セクション接続資料へ差し込めます。
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">前Part・前章までの接続資料（任意）</label>
+              <textarea id="pm-c-prev-text" rows="6" placeholder="全文ではなく、直前までの状況、感情、距離感、身体状態、未解決の緊張などを貼り付けてください…"></textarea>
+            </div>
 
             <div class="pm-param-row">
-             <div class="pm-param-item"><label>通常セクション文字数</label><div style="display:flex;gap:4px;align-items:center"><input type="number" id="pm-c-normal-min" value="5500" min="500" step="500"><span style="font-size:0.78rem;color:var(--text-muted)">〜</span><input type="number" id="pm-c-normal-max" value="11000" min="500" step="500"><span style="font-size:0.72rem;color:var(--text-muted)">字</span></div></div>
-<div class="pm-param-item"><label>R18セクション文字数</label><div style="display:flex;gap:4px;align-items:center"><input type="number" id="pm-c-r18-min" value="5500" min="500" step="500"><span style="font-size:0.78rem;color:var(--text-muted)">〜</span><input type="number" id="pm-c-r18-max" value="11000" min="500" step="500"><span style="font-size:0.72rem;color:var(--text-muted)">字</span></div></div>
-                           <div class="pm-param-item"><label>比喩の上限</label><div style="display:flex;gap:4px;align-items:center"><input type="number" id="pm-c-metaphor-min" value="1" min="0" max="20"><span style="font-size:0.78rem;color:var(--text-muted)">〜</span><input type="number" id="pm-c-metaphor-max" value="2" min="0" max="20"><span style="font-size:0.72rem;color:var(--text-muted)">個/場面</span></div></div>
-              <div class="pm-param-item"><label>会話:地の文バランス</label><div style="display:flex;gap:4px;align-items:center"><input type="text" id="pm-c-dialog-ratio" value="6:4〜4:6" style="width:120px"></div></div>
+              <div class="pm-param-item">
+                <label>通常セクション文字数</label>
+                <div style="display:flex;gap:4px;align-items:center">
+                  <input type="number" id="pm-c-normal-min" value="5500" min="500" step="500">
+                  <span style="font-size:0.78rem;color:var(--text-muted)">〜</span>
+                  <input type="number" id="pm-c-normal-max" value="11000" min="500" step="500">
+                  <span style="font-size:0.72rem;color:var(--text-muted)">字</span>
+                </div>
+              </div>
+
+              <div class="pm-param-item">
+                <label>R18セクション文字数</label>
+                <div style="display:flex;gap:4px;align-items:center">
+                  <input type="number" id="pm-c-r18-min" value="5500" min="500" step="500">
+                  <span style="font-size:0.78rem;color:var(--text-muted)">〜</span>
+                  <input type="number" id="pm-c-r18-max" value="11000" min="500" step="500">
+                  <span style="font-size:0.72rem;color:var(--text-muted)">字</span>
+                </div>
+              </div>
+
+              <div class="pm-param-item">
+                <label>比喩の上限</label>
+                <div style="display:flex;gap:4px;align-items:center">
+                  <input type="number" id="pm-c-metaphor-min" value="1" min="0" max="20">
+                  <span style="font-size:0.78rem;color:var(--text-muted)">〜</span>
+                  <input type="number" id="pm-c-metaphor-max" value="2" min="0" max="20">
+                  <span style="font-size:0.72rem;color:var(--text-muted)">個/場面</span>
+                </div>
+              </div>
+
+              <div class="pm-param-item">
+                <label>会話:地の文バランス</label>
+                <div style="display:flex;gap:4px;align-items:center">
+                  <input type="text" id="pm-c-dialog-ratio" value="6:4〜4:6" style="width:120px">
+                </div>
+              </div>
             </div>
-              <div class="pm-assist-area" style="margin-top:12px">
+
+            <div class="pm-assist-area" style="margin-top:12px">
               <div class="pm-assist-title"><span>🤖</span> ルール選別アシスタント</div>
-              <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:10px">プロット＋キャラ設定＋全ルールをClaudeに渡して、今回のセクションに適用すべきルールを選別してもらいます。</p>
-              <div class="export-btn-group" style="margin-bottom:12px"><button class="btn btn-export" onclick="generateRuleSelectionPrompt()">📋 ルール選別プロンプトをコピー</button><button class="btn btn-secondary btn-sm" onclick="downloadRuleSelectionPrompt()">↓ .md</button></div>
-              <div style="display:flex;gap:8px;margin-bottom:10px"><button class="btn btn-secondary btn-sm" onclick="openAddPresetModal()">💾 Claudeの回答からプリセット保存</button></div>
-              <div id="pm-c-presets-area"><div style="font-size:0.75rem;color:var(--text-muted)">保存済みプリセットはありません</div></div>
+              <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:10px">
+                プロット＋キャラ設定＋全ルールをClaudeに渡して、今回の章 / Part に適用すべきルールを選別してもらいます。
+              </p>
+              <div class="export-btn-group" style="margin-bottom:12px">
+                <button class="btn btn-export" onclick="generateRuleSelectionPrompt()">📋 ルール選別プロンプトをコピー</button>
+                <button class="btn btn-secondary btn-sm" onclick="downloadRuleSelectionPrompt()">↓ .md</button>
+              </div>
+              <div style="display:flex;gap:8px;margin-bottom:10px">
+                <button class="btn btn-secondary btn-sm" onclick="openAddPresetModal()">💾 Claudeの回答からプリセット保存</button>
+              </div>
+              <div id="pm-c-presets-area">
+                <div style="font-size:0.75rem;color:var(--text-muted)">保存済みプリセットはありません</div>
+              </div>
             </div>
 
             <div style="margin-top:12px">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><label class="form-label" style="margin:0">適用するマイルール</label><div style="display:flex;gap:6px"><button class="btn btn-ghost btn-sm" onclick="pmRuleSelectAll(true)">全選択</button><button class="btn btn-ghost btn-sm" onclick="pmRuleSelectAll(false)">全解除</button></div></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                <label class="form-label" style="margin:0">適用するマイルール</label>
+                <div style="display:flex;gap:6px">
+                  <button class="btn btn-ghost btn-sm" onclick="pmRuleSelectAll(true)">全選択</button>
+                  <button class="btn btn-ghost btn-sm" onclick="pmRuleSelectAll(false)">全解除</button>
+                </div>
+              </div>
               <div class="pm-rule-checks" id="pm-c-rules"></div>
             </div>
 
-            <div class="export-btn-group" style="margin-top:12px"><button class="btn btn-export" onclick="generatePrompt('C')">📋 プロンプトをコピー</button><button class="btn btn-secondary btn-sm" onclick="downloadPrompt('C')">↓ .md</button></div>
+            <div class="export-btn-group" style="margin-top:12px;flex-wrap:wrap">
+              <button class="btn btn-export" onclick="generatePrompt('C_AUTO')">📋 既定AIで初稿プロンプトをコピー</button>
+              <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('C_AUTO')">↓ .md</button>
+              <button class="btn btn-export" onclick="generatePrompt('C_CHATGPT')">📋 ChatGPT初稿用をコピー</button>
+              <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('C_CHATGPT')">↓ .md</button>
+              <button class="btn btn-export" onclick="generatePrompt('C_CLAUDE')">📋 Claude初稿用をコピー</button>
+              <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('C_CLAUDE')">↓ .md</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-title"><span>🪄</span> Claude推敲用</div>
+          </div>
+          <div class="form-section-body">
+            <p style="font-size:0.78rem;color:var(--text-muted)">
+              初稿を小説として磨くための推敲プロンプトです。設定追加や大きな展開変更はさせず、文芸的な改善に限定します。
+            </p>
+            <div class="form-group">
+              <label class="form-label">推敲したい本文</label>
+              <textarea id="pm-d-revision-text" rows="10" placeholder="ChatGPT初稿または作者修正版をここへ貼り付けてください"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">今回の推敲で特に見てほしいこと（任意）</label>
+              <textarea id="pm-d-revision-goal" rows="4" placeholder="例：心理描写を厚くしたい / 台詞温度を上げたい / 地の文をなめらかにしたい"></textarea>
+            </div>
+            <div class="export-btn-group">
+              <button class="btn btn-export" onclick="generatePrompt('D')">📋 Claude推敲用をコピー</button>
+              <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('D')">↓ .md</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-title"><span>🧪</span> 整合性チェック用</div>
+          </div>
+          <div class="form-section-body">
+            <p style="font-size:0.78rem;color:var(--text-muted)">
+              キャラ・口調・知識矛盾・時系列・伏線・関係性・R18進行・シーン目的の確認に使います。
+            </p>
+            <div class="form-group">
+              <label class="form-label">チェックしたい本文</label>
+              <textarea id="pm-e-check-text" rows="10" placeholder="整合性チェックしたい本文を貼り付けてください"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">補足メモ（任意）</label>
+              <textarea id="pm-e-check-extra" rows="4" placeholder="例：第5話とのつながり重視 / R18進行速度を重点確認 など"></textarea>
+            </div>
+            <div class="export-btn-group">
+              <button class="btn btn-export" onclick="generatePrompt('E')">📋 整合性チェック用をコピー</button>
+              <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('E')">↓ .md</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-title"><span>📦</span> 引き継ぎ要約更新用</div>
+          </div>
+          <div class="form-section-body">
+            <p style="font-size:0.78rem;color:var(--text-muted)">
+              採用稿または現行本文から、次回AIへ渡す短い引き継ぎ要約を作らせるためのプロンプトです。
+            </p>
+            <div class="form-group">
+              <label class="form-label">要約元の本文または採用稿</label>
+              <textarea id="pm-f-summary-text" rows="10" placeholder="要約を作りたい本文を貼り付けてください"></textarea>
+            </div>
+            <div class="export-btn-group">
+              <button class="btn btn-export" onclick="generatePrompt('F')">📋 引き継ぎ要約更新用をコピー</button>
+              <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('F')">↓ .md</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-title"><span>🧭</span> 正史反映用</div>
+          </div>
+          <div class="form-section-body">
+            <p style="font-size:0.78rem;color:var(--text-muted)">
+              採用稿または現行本文から、確定設定へ反映すべき事実だけを抽出するためのプロンプトです。
+            </p>
+            <div class="form-group">
+              <label class="form-label">正史反映したい本文</label>
+              <textarea id="pm-g-canon-text" rows="10" placeholder="確定設定へ反映したい本文を貼り付けてください"></textarea>
+            </div>
+            <div class="export-btn-group">
+              <button class="btn btn-export" onclick="generatePrompt('G')">📋 正史反映用をコピー</button>
+              <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('G')">↓ .md</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-title"><span>🧩</span> 差分評価用</div>
+          </div>
+          <div class="form-section-body">
+            <p style="font-size:0.78rem;color:var(--text-muted)">
+              ChatGPT初稿とClaude推敲稿、または作者修正版の差分を評価し、改善点と変わりすぎた点を洗い出します。
+            </p>
+            <div class="form-group">
+              <label class="form-label">比較元本文</label>
+              <textarea id="pm-h-diff-original" rows="8" placeholder="元になった本文を貼り付けてください"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">比較先本文</label>
+              <textarea id="pm-h-diff-revised" rows="8" placeholder="比較したい改稿本文を貼り付けてください"></textarea>
+            </div>
+            <div class="export-btn-group">
+              <button class="btn btn-export" onclick="generatePrompt('H')">📋 差分評価用をコピー</button>
+              <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('H')">↓ .md</button>
+            </div>
           </div>
         </div>
       </div>
@@ -7132,80 +7345,128 @@ R18要素の有無と機能が分かるようにしてください。
 // ======================================================
 async function loadPromptMakerTab(){
   if(!currentWorkId)return;
-  const work=await dbGet(STORE_WORKS,currentWorkId);if(!work)return;
-  const pv=document.getElementById('pm-scene-preview');
-  if(work.scene&&work.scene.trim()){pv.textContent=work.scene;pv.classList.remove('pm-scene-empty');}
-  else{pv.textContent='（未入力 — メタ情報タブの「描きたいシーン」に入力してください）';pv.classList.add('pm-scene-empty');}
-  const records=await dbGetByIndex(STORE_RECORDS,'workId',currentWorkId);
-  const countByTag=tag=>records.filter(r=>(r.tags||[]).includes(tag)).length;
-  document.getElementById('pm-a-source').innerHTML=
-    `<div style="font-size:0.78rem;line-height:1.8">`+
-    (countByTag('構成分析')>0?`<span class="pm-source-found">✓ 構成分析：${countByTag('構成分析')}件</span>`:`<span class="pm-source-missing">✕ 構成分析：未保存</span>`)+`<br>`+
-    (countByTag('読者の声')>0?`<span class="pm-source-found">✓ 読者の声：${countByTag('読者の声')}件</span>`:`<span class="pm-source-missing">✕ 読者の声：未保存</span>`)+`</div>`;
-  document.getElementById('pm-b-source').innerHTML=
-    `<div style="font-size:0.78rem;line-height:1.8">`+
-    (countByTag('キャラクター抽出')>0?`<span class="pm-source-found">✓ キャラクター抽出：${countByTag('キャラクター抽出')}件</span>`:`<span class="pm-source-missing">✕ キャラクター抽出：未保存</span>`)+`<br>`+
-    (countByTag('読者の声')>0?`<span class="pm-source-found">✓ 読者の声：${countByTag('読者の声')}件</span>`:`<span class="pm-source-missing">✕ 読者の声：未保存</span>`)+`</div>`;
-  const plotRecs=records.filter(r=>(r.tags||[]).includes('プロット設計')).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
-  const plotSel=document.getElementById('pm-c-plot-select');
-  plotSel.innerHTML=plotRecs.length===0?'<option value="">（プロット設計の記録がありません）</option>':
-    plotRecs.map(r=>{const ds=r.createdAt?new Date(r.createdAt).toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'';const p=(r.content||'').slice(0,40).replace(/\n/g,' ');return `<option value="${r.id}">${ds} — ${esc(p)}…</option>`;}).join('');
-  if(plotSel.value){onPlotSelectChange();}else{parsedSections=[];updateSectionDropdown();}
-  const csRecs=records.filter(r=>(r.tags||[]).includes('キャラ設定シート')).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
-  const charSel=document.getElementById('pm-c-char-select');
-  charSel.innerHTML=csRecs.length===0?'<option value="">（キャラ設定シートの記録がありません）</option>':
-    csRecs.map(r=>{const ds=r.createdAt?new Date(r.createdAt).toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'';const p=(r.content||'').slice(0,40).replace(/\n/g,' ');return `<option value="${r.id}">${ds} — ${esc(p)}…</option>`;}).join('');
-  // プロンプトA-2：章アウトライン生成UIを初期化
+
+  const work = await dbGet(STORE_WORKS, currentWorkId);
+  if(!work)return;
+
+  const pv = document.getElementById('pm-scene-preview');
+  if (pv) {
+    if(work.scene && work.scene.trim()){
+      pv.textContent = work.scene;
+      pv.classList.remove('pm-scene-empty');
+    } else {
+      pv.textContent = '（未入力 — メタ情報タブの「描きたいシーン」に入力してください）';
+      pv.classList.add('pm-scene-empty');
+    }
+  }
+
+  const records = await dbGetByIndex(STORE_RECORDS, 'workId', currentWorkId);
+  const countByTag = tag => records.filter(r => (r.tags || []).includes(tag)).length;
+
+  const pmASource = document.getElementById('pm-a-source');
+  if (pmASource) {
+    pmASource.innerHTML =
+      `<div style="font-size:0.78rem;line-height:1.8">` +
+      (countByTag('構成分析') > 0
+        ? `<span class="pm-source-found">✓ 構成分析：${countByTag('構成分析')}件</span>`
+        : `<span class="pm-source-missing">✕ 構成分析：未保存</span>`) +
+      `<br>` +
+      (countByTag('読者の声') > 0
+        ? `<span class="pm-source-found">✓ 読者の声：${countByTag('読者の声')}件</span>`
+        : `<span class="pm-source-missing">✕ 読者の声：未保存</span>`) +
+      `</div>`;
+  }
+
+  const pmBSource = document.getElementById('pm-b-source');
+  if (pmBSource) {
+    pmBSource.innerHTML =
+      `<div style="font-size:0.78rem;line-height:1.8">` +
+      (countByTag('キャラクター抽出') > 0
+        ? `<span class="pm-source-found">✓ キャラクター抽出：${countByTag('キャラクター抽出')}件</span>`
+        : `<span class="pm-source-missing">✕ キャラクター抽出：未保存</span>`) +
+      `<br>` +
+      (countByTag('読者の声') > 0
+        ? `<span class="pm-source-found">✓ 読者の声：${countByTag('読者の声')}件</span>`
+        : `<span class="pm-source-missing">✕ 読者の声：未保存</span>`) +
+      `</div>`;
+  }
+
+  const plotRecs = records
+    .filter(r => (r.tags || []).includes('プロット設計'))
+    .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+
+  const plotSel = document.getElementById('pm-c-plot-select');
+  if (plotSel) {
+    plotSel.innerHTML = plotRecs.length === 0
+      ? '<option value="">（プロット設計の記録がありません）</option>'
+      : plotRecs.map(r => {
+          const ds = r.createdAt
+            ? new Date(r.createdAt).toLocaleDateString('ja-JP',{
+                year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'
+              })
+            : '';
+          const p = (r.content || '').slice(0,40).replace(/\n/g,' ');
+          return `<option value="${r.id}">${ds} — ${esc(p)}…</option>`;
+        }).join('');
+  }
+
+  if (plotSel && plotSel.value) {
+    onPlotSelectChange();
+  } else {
+    parsedSections = [];
+    updateSectionDropdown();
+  }
+
+  const csRecs = records
+    .filter(r => (r.tags || []).includes('キャラ設定シート'))
+    .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+
+  const charSel = document.getElementById('pm-c-char-select');
+  if (charSel) {
+    charSel.innerHTML = csRecs.length === 0
+      ? '<option value="">（キャラ設定シートの記録がありません）</option>'
+      : csRecs.map(r => {
+          const ds = r.createdAt
+            ? new Date(r.createdAt).toLocaleDateString('ja-JP',{
+                year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'
+              })
+            : '';
+          const p = (r.content || '').slice(0,40).replace(/\n/g,' ');
+          return `<option value="${r.id}">${ds} — ${esc(p)}…</option>`;
+        }).join('');
+  }
+
   const a2Source = document.getElementById('pm-a2-source');
   if (a2Source) {
     a2Source.innerHTML =
       `<div style="font-size:0.78rem;line-height:1.8">` +
-      (
-        countByTag('プロット設計') > 0
-          ? `<span class="pm-source-found">✓ プロット設計：${countByTag('プロット設計')}件</span>`
-          : `<span class="pm-source-missing">✕ プロット設計：未保存</span>`
-      ) +
+      (countByTag('プロット設計') > 0
+        ? `<span class="pm-source-found">✓ プロット設計：${countByTag('プロット設計')}件</span>`
+        : `<span class="pm-source-missing">✕ プロット設計：未保存</span>`) +
       `<br>` +
-      (
-        countByTag('キャラ設定シート') > 0
-          ? `<span class="pm-source-found">✓ キャラ設定シート：${countByTag('キャラ設定シート')}件</span>`
-          : `<span class="pm-source-missing">✕ キャラ設定シート：未保存（任意）</span>`
-      ) +
+      (countByTag('キャラ設定シート') > 0
+        ? `<span class="pm-source-found">✓ キャラ設定シート：${countByTag('キャラ設定シート')}件</span>`
+        : `<span class="pm-source-missing">✕ キャラ設定シート：未保存（任意）</span>`) +
       `</div>`;
   }
 
-  const a2PlotSel =
-    document.getElementById('pm-a2-plot-select');
-
+  const a2PlotSel = document.getElementById('pm-a2-plot-select');
   if (a2PlotSel) {
     a2PlotSel.innerHTML =
       plotRecs.length === 0
         ? '<option value="">（プロット設計の記録がありません）</option>'
         : plotRecs.map(r => {
             const ds = r.createdAt
-              ? new Date(r.createdAt).toLocaleDateString(
-                  'ja-JP',
-                  {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  }
-                )
+              ? new Date(r.createdAt).toLocaleDateString('ja-JP',{
+                  year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'
+                })
               : '';
-            const p = (r.content || '')
-              .slice(0, 40)
-              .replace(/\n/g, ' ');
-
-            return `<option value="${r.id}">` +
-              `${ds} — ${esc(p)}…</option>`;
+            const p = (r.content || '').slice(0,40).replace(/\n/g,' ');
+            return `<option value="${r.id}">${ds} — ${esc(p)}…</option>`;
           }).join('');
   }
 
-  const a2CharSel =
-    document.getElementById('pm-a2-char-select');
-
+  const a2CharSel = document.getElementById('pm-a2-char-select');
   if (a2CharSel) {
     a2CharSel.innerHTML =
       '<option value="">（任意）</option>' +
@@ -7214,60 +7475,56 @@ async function loadPromptMakerTab(){
           ? ''
           : csRecs.map(r => {
               const ds = r.createdAt
-                ? new Date(r.createdAt).toLocaleDateString(
-                    'ja-JP',
-                    {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    }
-                  )
+                ? new Date(r.createdAt).toLocaleDateString('ja-JP',{
+                    year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'
+                  })
                 : '';
-              const p = (r.content || '')
-                .slice(0, 40)
-                .replace(/\n/g, ' ');
-
-              return `<option value="${r.id}">` +
-                `${ds} — ${esc(p)}…</option>`;
+              const p = (r.content || '').slice(0,40).replace(/\n/g,' ');
+              return `<option value="${r.id}">${ds} — ${esc(p)}…</option>`;
             }).join('')
       );
   }
-  const rules=await dbGetAll(STORE_RULES);rules.sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
-  const rc=document.getElementById('pm-c-rules');
-   rc.innerHTML=rules.length===0?'<span style="font-size:0.75rem;color:var(--text-muted)">ルールが登録されていません</span>':
-    rules.map((r,i)=>`<label class="pm-rule-check-label pm-rule-checked" id="pm-rlbl-${r.id}"><input type="checkbox" checked data-rule-id="${r.id}" onchange="document.getElementById('pm-rlbl-${r.id}').classList.toggle('pm-rule-checked',this.checked)">第${i+1}則：${esc(r.title)}</label>`).join('');
-  // 章アウトライン選択ドロップダウンを初期化
-  const outlineSel =
-    document.getElementById('pm-c-outline-select');
 
+  const rules = await dbGetAll(STORE_RULES);
+  rules.sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
+
+  const rc = document.getElementById('pm-c-rules');
+  if (rc) {
+    rc.innerHTML = rules.length === 0
+      ? '<span style="font-size:0.75rem;color:var(--text-muted)">ルールが登録されていません</span>'
+      : rules.map((r,i)=>
+          `<label class="pm-rule-check-label pm-rule-checked" id="pm-rlbl-${r.id}">` +
+          `<input type="checkbox" checked data-rule-id="${r.id}" ` +
+          `onchange="document.getElementById('pm-rlbl-${r.id}').classList.toggle('pm-rule-checked',this.checked)">` +
+          `第${i+1}則：${esc(r.title)}</label>`
+        ).join('');
+  }
+
+  const outlineSel = document.getElementById('pm-c-outline-select');
   if (outlineSel && currentWorkId) {
-    const vaultItems =
-      await getWritingVaultItems(currentWorkId);
+    const vaultItems = await getWritingVaultItems(currentWorkId);
 
     if (vaultItems.length === 0) {
-      outlineSel.innerHTML =
-        '<option value="">' +
-        '（保管庫にメモがありません）</option>';
+      outlineSel.innerHTML = '<option value="">（保管庫にメモがありません）</option>';
     } else {
       outlineSel.innerHTML =
         '<option value="">（選択なし）</option>' +
         vaultItems.map(item => {
-          const label =
-            (item.title || '無題メモ').slice(0, 40);
+          const label = (item.title || '無題メモ').slice(0,40);
           const typeLabel = vaultTypeLabel(item.type);
-
-          return `<option value="${item.id}">` +
-            `[${esc(typeLabel)}] ${esc(label)}` +
-            `</option>`;
+          return `<option value="${item.id}">[${esc(typeLabel)}] ${esc(label)}</option>`;
         }).join('');
     }
   }
+
   await populateCompressedMemoSelect('pm-a2-compressed-select', 'a2');
   await populateCompressedMemoSelect('pm-c-compressed-select', 'c');
+
   renderPresetsList();
+  await renderPmChapterAiPreferenceList();
+  await refreshPmDraftModelUi();
 }
+
 function pmRuleSelectAll(on){document.querySelectorAll('#pm-c-rules input[type=checkbox]').forEach(cb=>{cb.checked=on;cb.closest('.pm-rule-check-label').classList.toggle('pm-rule-checked',on);});}
 // ======================================================
 //  PROMPT C — Section Parser
@@ -7547,7 +7804,13 @@ function confirmDeletePreset(id, name) {
 // ======================================================
 //  PROMPT MAKER — Generate
 // ======================================================
-async function generatePrompt(type){const md=await buildPM(type);if(!md)return;await copyToClipboard(md);showToast('プロンプトをコピーしました 📋');}
+async function generatePrompt(type){
+  const md = await buildPM(type);
+  if(!md)return;
+  await copyToClipboard(md);
+  showToast('プロンプトをコピーしました 📋');
+}
+
 async function downloadPrompt(type) {
   const md = await buildPM(type);
   if (!md) return;
@@ -7559,7 +7822,14 @@ async function downloadPrompt(type) {
     A: 'プロット生成',
     A2: '章アウトライン生成',
     B: 'キャラ設計',
-    C: '本文執筆'
+    C_AUTO: '既定AI初稿',
+    C_CHATGPT: 'ChatGPT初稿',
+    C_CLAUDE: 'Claude初稿',
+    D: 'Claude推敲',
+    E: '整合性チェック',
+    F: '引き継ぎ要約更新',
+    G: '正史反映',
+    H: '差分評価'
   };
 
   downloadFile(
@@ -7570,6 +7840,7 @@ async function downloadPrompt(type) {
     md
   );
 }
+
 async function buildPM(type) {
   if (!currentWorkId) {
     showToast('作品が選択されていません', 'error');
@@ -7579,15 +7850,28 @@ async function buildPM(type) {
   const work = await dbGet(STORE_WORKS, currentWorkId);
   if (!work) return null;
 
-  const records =
-    await dbGetByIndex(STORE_RECORDS, 'workId', currentWorkId);
-
+  const records = await dbGetByIndex(STORE_RECORDS, 'workId', currentWorkId);
   const scene = work.scene || '';
 
   if (type === 'A') return pmA(records, scene);
   if (type === 'A2') return await pmA2(records);
   if (type === 'B') return pmB(records, scene);
-  if (type === 'C') return await pmC(records);
+
+  if (type === 'C_AUTO') {
+    const base = await pmGetWritingBaseData();
+    if (!base) return null;
+    return base.effectiveModel === 'claude'
+      ? await pmDraftClaude()
+      : await pmDraftChatGPT();
+  }
+
+  if (type === 'C_CHATGPT') return await pmDraftChatGPT();
+  if (type === 'C_CLAUDE') return await pmDraftClaude();
+  if (type === 'D') return await pmClaudeRevisionPrompt();
+  if (type === 'E') return await pmConsistencyCheckPrompt();
+  if (type === 'F') return await pmSummaryUpdatePrompt();
+  if (type === 'G') return await pmCanonReflectionPrompt();
+  if (type === 'H') return await pmDiffEvaluationPrompt();
 
   return null;
 }
@@ -7797,83 +8081,268 @@ function pmB(records,scene){
   return md;
 }
 
-async function pmC(records) {
-  const plotId = document.getElementById('pm-c-plot-select').value;
-  const charId = document.getElementById('pm-c-char-select').value;
+function pmText(id, fallback = '') {
+  return document.getElementById(id)?.value?.trim() || fallback;
+}
 
-  if (!plotId) {
-    showToast('プロット設計の記録を選択してください', 'error');
-    return null;
-  }
-  if (!charId) {
-    showToast('キャラ設定シートの記録を選択してください', 'error');
-    return null;
-  }
-
-  const plotRec = await dbGet(STORE_RECORDS, plotId);
-  const charRec = await dbGet(STORE_RECORDS, charId);
-
-  if (!plotRec || !charRec) {
-    showToast('記録の取得に失敗しました', 'error');
-    return null;
-  }
-
+function pmGetSelectedChapterNumber() {
   const chapterSelect = document.getElementById('pm-c-section-select');
   const chapterInput = document.getElementById('pm-c-section-num');
 
   const chapterSelVal = (chapterSelect?.value || '').trim();
   const chapterInpVal = (chapterInput?.value || '').trim();
-  const chapterNum = chapterSelVal || chapterInpVal || '（未指定）';
 
-  const selectedChapterOption =
+  return chapterSelVal || chapterInpVal || '';
+}
+
+function pmGetSelectedChapterText() {
+  const chapterSelect = document.getElementById('pm-c-section-select');
+  const selectedOption =
     chapterSelect && chapterSelect.selectedIndex >= 0
       ? chapterSelect.options[chapterSelect.selectedIndex]
       : null;
 
-  const selectedChapterText =
-    selectedChapterOption && selectedChapterOption.value
-      ? selectedChapterOption.textContent.trim()
-      : '';
+  return selectedOption && selectedOption.value
+    ? selectedOption.textContent.trim()
+    : '';
+}
 
-  const chapterLabel =
-    chapterNum === '（未指定）'
-      ? chapterNum
-      : `第${chapterNum}章`;
-
-  const partNum =
-    (document.getElementById('pm-c-part-num')?.value || '').trim();
-
-  const partTotal =
-    (document.getElementById('pm-c-part-total')?.value || '').trim();
-
-  const partLabel = partNum
+function pmGetPartLabel() {
+  const partNum = pmText('pm-c-part-num');
+  const partTotal = pmText('pm-c-part-total');
+  return partNum
     ? `Part ${partNum}${partTotal ? ` / ${partTotal}` : ''}`
     : 'Part未指定';
+}
 
-  const outlineId =
-    (document.getElementById('pm-c-outline-select')?.value || '').trim();
+function pmGetChapterAiPrefs(work) {
+  return work?.pmChapterAiPrefs && typeof work.pmChapterAiPrefs === 'object'
+    ? work.pmChapterAiPrefs
+    : {};
+}
 
-  let outlineBlock = '（章アウトライン未選択）';
+function pmGetAutoDraftModel(work, chapterNum, hasR18) {
+  const prefs = pmGetChapterAiPrefs(work);
+  const chapterKey = String(chapterNum || '').trim();
 
-  if (outlineId) {
-    const outlineItem = await dbGet(STORE_WRITING_VAULT, outlineId);
-
-    if (!outlineItem || outlineItem.workId !== currentWorkId) {
-      showToast('章アウトラインメモの取得に失敗しました', 'error');
-      return null;
-    }
-
-    outlineBlock =
-      `### ${outlineItem.title || '無題メモ'}\n\n` +
-      `${outlineItem.body || '（本文なし）'}`;
+  if (chapterKey && prefs[chapterKey]) {
+    return prefs[chapterKey];
   }
 
-  const hasR18 =
-    document.getElementById('pm-c-has-r18').value === 'yes';
+  return hasR18 ? 'claude' : 'chatgpt';
+}
 
-  const prevText =
-    document.getElementById('pm-c-prev-text').value.trim();
+async function refreshPmDraftModelUi() {
+  const status = document.getElementById('pm-c-ai-pref-status');
+  if (!status || !currentWorkId) return;
 
+  const work = await dbGet(STORE_WORKS, currentWorkId);
+  if (!work) return;
+
+  const chapterNum = pmGetSelectedChapterNumber();
+  const chapterText = pmGetSelectedChapterText();
+  const hasR18 = (document.getElementById('pm-c-has-r18')?.value || 'no') === 'yes';
+  const selected = document.getElementById('pm-c-draft-model')?.value || 'auto';
+  const autoModel = pmGetAutoDraftModel(work, chapterNum, hasR18);
+  const effective = selected === 'auto' ? autoModel : selected;
+
+  const chapterLabel = chapterNum
+    ? `第${chapterNum}章`
+    : '章未指定';
+
+  const chapterNote = chapterText ? ` / ${chapterText}` : '';
+  const savedPref = chapterNum ? pmGetChapterAiPrefs(work)[String(chapterNum)] : '';
+
+  status.textContent =
+    selected === 'auto'
+      ? `${chapterLabel}${chapterNote} の既定執筆AIは ${effective === 'claude' ? 'Claude' : 'ChatGPT'} です` +
+        (savedPref
+          ? '（章設定を使用）'
+          : hasR18
+            ? '（R18ありのため自動でClaude）'
+            : '（未設定のため自動でChatGPT）')
+      : `今回は ${effective === 'claude' ? 'Claude' : 'ChatGPT'} を使う設定です（章既定より手動指定を優先）`;
+}
+
+async function renderPmChapterAiPreferenceList() {
+  const container = document.getElementById('pm-c-ai-pref-list');
+  if (!container || !currentWorkId) return;
+
+  const work = await dbGet(STORE_WORKS, currentWorkId);
+  if (!work) return;
+
+  const prefs = pmGetChapterAiPrefs(work);
+  const sectionMap = {};
+  parsedSections.forEach(section => {
+    sectionMap[String(section.num)] = section;
+  });
+
+  const chapterKeys = parsedSections.length
+    ? parsedSections.map(section => String(section.num))
+    : Object.keys(prefs).sort((a,b)=>Number(a)-Number(b));
+
+  if (!chapterKeys.length) {
+    container.innerHTML = `
+      <div class="form-hint">
+        章テーブルがまだ読めていないため、一覧表示はできません。  
+        先にプロット設計の記録を選ぶか、章番号を入力して「この章の既定AIを保存」を使ってください。
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = chapterKeys.map(chapterKey => {
+    const section = sectionMap[chapterKey];
+    const saved = prefs[chapterKey] || '';
+    const autoModel = saved || (section?.hasR18 ? 'claude' : 'chatgpt');
+    const sourceText = saved
+      ? '保存済み設定'
+      : section?.hasR18
+        ? 'R18ありのため自動でClaude'
+        : '未設定のため自動でChatGPT';
+
+    return `
+      <div class="card">
+        <div class="card-body" style="padding:14px 16px">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap">
+            <div>
+              <div style="font-size:0.82rem;font-weight:700;color:var(--text-primary)">
+                第${chapterKey}章${section?.heading ? `：${esc(section.heading)}` : ''}
+              </div>
+              <div class="form-hint" style="margin-top:4px">${esc(sourceText)}</div>
+            </div>
+            <span class="status-badge ${autoModel === 'claude' ? 'status-wip' : 'status-done'}">
+              ${autoModel === 'claude' ? 'Claude' : 'ChatGPT'}
+            </span>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function savePmCurrentChapterAiPreference() {
+  if (!currentWorkId) return;
+
+  const work = await dbGet(STORE_WORKS, currentWorkId);
+  if (!work) {
+    showToast('作品データが見つかりません', 'error');
+    return;
+  }
+
+  const chapterNum = pmGetSelectedChapterNumber();
+  if (!chapterNum) {
+    showToast('先に章を選ぶか、章番号を入力してください', 'error');
+    return;
+  }
+
+  const selected = document.getElementById('pm-c-draft-model')?.value || 'auto';
+  if (selected !== 'chatgpt' && selected !== 'claude') {
+    showToast('保存するときは「ChatGPT」か「Claude」を明示的に選んでください', 'error');
+    return;
+  }
+
+  work.pmChapterAiPrefs = {
+    ...pmGetChapterAiPrefs(work),
+    [String(chapterNum)]: selected
+  };
+  work.updatedAt = Date.now();
+
+  await dbPut(STORE_WORKS, work);
+  currentWork = work;
+
+  await renderPmChapterAiPreferenceList();
+  await refreshPmDraftModelUi();
+  showToast(`第${chapterNum}章の既定執筆AIを ${selected === 'claude' ? 'Claude' : 'ChatGPT'} に保存しました ✓`);
+}
+
+async function pmGetSelectedRecords(requirePlot = true, requireChar = true) {
+  const plotId = document.getElementById('pm-c-plot-select')?.value || '';
+  const charId = document.getElementById('pm-c-char-select')?.value || '';
+
+  if (requirePlot && !plotId) {
+    showToast('プロット設計の記録を選択してください', 'error');
+    return null;
+  }
+  if (requireChar && !charId) {
+    showToast('キャラ設定シートの記録を選択してください', 'error');
+    return null;
+  }
+
+  const plotRec = plotId ? await dbGet(STORE_RECORDS, plotId) : null;
+  const charRec = charId ? await dbGet(STORE_RECORDS, charId) : null;
+
+  if (requirePlot && !plotRec) {
+    showToast('プロット設計の記録取得に失敗しました', 'error');
+    return null;
+  }
+  if (requireChar && !charRec) {
+    showToast('キャラ設定シートの記録取得に失敗しました', 'error');
+    return null;
+  }
+
+  return { plotRec, charRec };
+}
+
+async function pmGetOutlineBlock() {
+  const outlineId = (document.getElementById('pm-c-outline-select')?.value || '').trim();
+  if (!outlineId) return '（章アウトライン未選択）';
+
+  const outlineItem = await dbGet(STORE_WRITING_VAULT, outlineId);
+  if (!outlineItem || outlineItem.workId !== currentWorkId) {
+    showToast('章アウトラインメモの取得に失敗しました', 'error');
+    return null;
+  }
+
+  return `### ${outlineItem.title || '無題メモ'}\n\n${outlineItem.body || '（本文なし）'}`;
+}
+
+async function pmGetSelectedRulesMarkdown() {
+  const checkedIds = [
+    ...document.querySelectorAll('#pm-c-rules input[type=checkbox]:checked')
+  ].map(cb => cb.dataset.ruleId);
+
+  const allRules = await dbGetAll(STORE_RULES);
+  allRules.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+
+  const selectedRules = allRules.filter(rule => checkedIds.includes(rule.id));
+  if (selectedRules.length === 0) {
+    return '（ルール未選択）';
+  }
+
+  return selectedRules.map((rule, index) => {
+    return [
+      `## 第${index + 1}則：${rule.title}`,
+      '',
+      rule.body || '（本文なし）'
+    ].join('\n');
+  }).join('\n\n---\n\n');
+}
+
+async function pmGetWritingBaseData() {
+  if (!currentWorkId) {
+    showToast('作品が選択されていません', 'error');
+    return null;
+  }
+
+  const work = await dbGet(STORE_WORKS, currentWorkId);
+  if (!work) {
+    showToast('作品データが見つかりません', 'error');
+    return null;
+  }
+
+  const selectedRecords = await pmGetSelectedRecords(true, true);
+  if (!selectedRecords) return null;
+
+  const outlineBlock = await pmGetOutlineBlock();
+  if (outlineBlock === null) return null;
+
+  const chapterNum = pmGetSelectedChapterNumber();
+  const selectedChapterText = pmGetSelectedChapterText();
+  const chapterLabel = chapterNum ? `第${chapterNum}章` : '章未指定';
+  const partLabel = pmGetPartLabel();
+  const hasR18 = (document.getElementById('pm-c-has-r18')?.value || 'no') === 'yes';
+  const prevText = pmText('pm-c-prev-text');
   const nMin = gv('pm-c-normal-min', 5500);
   const nMax = gv('pm-c-normal-max', 11000);
   const rMin = gv('pm-c-r18-min', 5500);
@@ -7882,148 +8351,433 @@ async function pmC(records) {
   const mMax = gv('pm-c-metaphor-max', 2);
   const dialogRatio = gv('pm-c-dialog-ratio', '6:4〜4:6');
 
-  const checkedIds =
-    [...document.querySelectorAll('#pm-c-rules input[type=checkbox]:checked')]
-      .map(cb => cb.dataset.ruleId);
+  const workScene = work.scene || '';
+  const effectiveModel = (() => {
+    const selected = document.getElementById('pm-c-draft-model')?.value || 'auto';
+    return selected === 'auto'
+      ? pmGetAutoDraftModel(work, chapterNum, hasR18)
+      : selected;
+  })();
 
-  const allRules = await dbGetAll(STORE_RULES);
-  allRules.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+  return {
+    work,
+    plotRec: selectedRecords.plotRec,
+    charRec: selectedRecords.charRec,
+    outlineBlock,
+    chapterNum,
+    chapterLabel,
+    selectedChapterText,
+    partLabel,
+    hasR18,
+    prevText,
+    nMin,
+    nMax,
+    rMin,
+    rMax,
+    mMin,
+    mMax,
+    dialogRatio,
+    workScene,
+    effectiveModel,
+    rulesMarkdown: await pmGetSelectedRulesMarkdown()
+  };
+}
 
-  const selRules =
-    allRules.filter(r => checkedIds.includes(r.id));
+async function pmDraftChatGPT() {
+  const ctx = await pmGetWritingBaseData();
+  if (!ctx) return null;
 
-  let md =
-`# 役割定義
-
-あなたはTL／BL／ポルノ小説の執筆に精通した作家です。
-以下のプロット、章アウトライン、キャラクター設定シートに基づいて、
-指定された章内Partの小説本文を執筆してください。
-
----
-
-# 入力
-
-## プロット
-
-${plotRec.content || ''}
-
-## 章アウトライン
-
-${outlineBlock}
-
-## キャラクター設定シート
-
-${charRec.content || ''}
-
-## 執筆対象
-
-- 章：${chapterLabel}
-${selectedChapterText ? `- 選択中の章見出し：${selectedChapterText}\n` : ''}- Part：${partLabel}
-- R18シーン：${hasR18 ? 'あり' : 'なし'}
-
-`;
-
-  if (prevText) {
-    md +=
-`## 前Part・前章までの接続資料
-
-${prevText}
-
-`;
+  if (ctx.hasR18) {
+    showToast('R18ありの章は ChatGPT 初稿用ではなく Claude 初稿用を使ってください', 'error');
+    return null;
   }
 
-  md +=
-`---
+  return [
+    '# 役割定義',
+    '',
+    'あなたはBL / TL 長編小説の初稿作成担当です。',
+    '以下の設計資料に厳密に従い、この章内Partの本文初稿だけを書いてください。',
+    '',
+    '## 重要制約',
+    '- 分析しない',
+    '- プロットを再設計しない',
+    '- 前置きしない',
+    '- 見出しを付けない',
+    '- 箇条書きを出さない',
+    '- 本文だけを出力する',
+    '- R18本番描写は行わない',
+    '- 露骨な性描写へ踏み込まず、必要なら手前で止める',
+    '',
+    '---',
+    '',
+    '# 入力',
+    '',
+    '## プロット',
+    '',
+    ctx.plotRec.content || '（本文なし）',
+    '',
+    '## 章アウトライン',
+    '',
+    ctx.outlineBlock,
+    '',
+    '## キャラクター設定シート',
+    '',
+    ctx.charRec.content || '（本文なし）',
+    '',
+    '## 執筆対象',
+    `- 章：${ctx.chapterLabel}`,
+    ctx.selectedChapterText ? `- 選択中の章見出し：${ctx.selectedChapterText}` : '',
+    `- Part：${ctx.partLabel}`,
+    '- 使用AI：ChatGPT',
+    '- R18本番：禁止（必要な場合は手前で止める）',
+    ctx.workScene ? `- 描きたいシーン：${ctx.workScene}` : '',
+    '',
+    ctx.prevText ? '## 前Part・前章までの接続資料\n\n' + ctx.prevText + '\n' : '',
+    '## マイルール集',
+    '',
+    ctx.rulesMarkdown,
+    '',
+    '---',
+    '',
+    '# 執筆指示',
+    '',
+    '- プロットと章アウトラインの役割を最優先で守ること',
+    '- キャラクター設定シートの口調、一人称、価値観、反応を厳守すること',
+    '- 長編の一部として、前後のつながりを壊さないこと',
+    `- 文字数目安：${ctx.nMin}〜${ctx.nMax}字`,
+    `- 会話と地の文のバランス目安：${ctx.dialogRatio}`,
+    `- 比喩は1場面あたり ${ctx.mMin}〜${ctx.mMax} 個まで`,
+    '- 感情の方向、距離感、緊張の残り方を丁寧に扱うこと',
+    '- 露骨な性的本番へ入る必要がある場合は、その直前で自然に止めること',
+    '',
+    '# 出力',
+    '',
+    '本文のみを出力すること。'
+  ].filter(Boolean).join('\n');
+}
 
-# マイルール集
+async function pmDraftClaude() {
+  const ctx = await pmGetWritingBaseData();
+  if (!ctx) return null;
 
-`;
+  return [
+    '# 役割定義',
+    '',
+    'あなたはBL / TL 長編小説の初稿作成担当です。',
+    '以下の設計資料に厳密に従い、この章内Partの本文初稿だけを書いてください。',
+    '',
+    '## 重要制約',
+    '- 分析しない',
+    '- プロットを再設計しない',
+    '- 前置きしない',
+    '- 見出しを付けない',
+    '- 箇条書きを出さない',
+    '- 本文だけを出力する',
+    '',
+    '---',
+    '',
+    '# 入力',
+    '',
+    '## プロット',
+    '',
+    ctx.plotRec.content || '（本文なし）',
+    '',
+    '## 章アウトライン',
+    '',
+    ctx.outlineBlock,
+    '',
+    '## キャラクター設定シート',
+    '',
+    ctx.charRec.content || '（本文なし）',
+    '',
+    '## 執筆対象',
+    `- 章：${ctx.chapterLabel}`,
+    ctx.selectedChapterText ? `- 選択中の章見出し：${ctx.selectedChapterText}` : '',
+    `- Part：${ctx.partLabel}`,
+    '- 使用AI：Claude',
+    `- R18本番：${ctx.hasR18 ? 'あり' : 'なし'}`,
+    ctx.workScene ? `- 描きたいシーン：${ctx.workScene}` : '',
+    '',
+    ctx.prevText ? '## 前Part・前章までの接続資料\n\n' + ctx.prevText + '\n' : '',
+    '## マイルール集',
+    '',
+    ctx.rulesMarkdown,
+    '',
+    '---',
+    '',
+    '# 執筆指示',
+    '',
+    '- プロットと章アウトラインの役割を最優先で守ること',
+    '- キャラクター設定シートの口調、一人称、価値観、反応を厳守すること',
+    '- 長編の一部として、前後のつながりを壊さないこと',
+    `- 文字数目安：${ctx.hasR18 ? `${ctx.rMin}〜${ctx.rMax}` : `${ctx.nMin}〜${ctx.nMax}`}字`,
+    `- 会話と地の文のバランス目安：${ctx.dialogRatio}`,
+    `- 比喩は1場面あたり ${ctx.mMin}〜${ctx.mMax} 個まで`,
+    '- 感情の方向、距離感、緊張の残り方を丁寧に扱うこと',
+    ctx.hasR18
+      ? '- R18場面では、関係性の成熟度、心理的同意、余波の残り方を必ず本文へ反映すること'
+      : '- R18がない章では、感情や関係性の積み上がりを主軸にすること',
+    '',
+    '# 出力',
+    '',
+    '本文のみを出力すること。'
+  ].filter(Boolean).join('\n');
+}
 
-  if (selRules.length === 0) {
-    md += '（ルール未選択）\n\n';
-  } else {
-    selRules.forEach((r, i) => {
-      md +=
-`## 第${i + 1}則：${r.title}
+async function pmClaudeRevisionPrompt() {
+  const ctx = await pmGetWritingBaseData();
+  if (!ctx) return null;
 
-${r.body}
+  const draftText = pmText('pm-d-revision-text');
+  const goalText = pmText('pm-d-revision-goal');
 
----
-
-`;
-    });
+  if (!draftText) {
+    showToast('推敲したい本文を貼り付けてください', 'error');
+    return null;
   }
 
-  md +=
-`---
+  return [
+    '# 役割定義',
+    '',
+    'あなたはBL / TL 長編小説の文芸推敲担当です。',
+    '以下の初稿を、小説としてより読ませる文章に整えてください。',
+    '',
+    '## 強い制約',
+    '- 新設定を追加しない',
+    '- 大きな時系列変更をしない',
+    '- 重大な意思決定を勝手に変えない',
+    '- シーンの結末を変えない',
+    '- 構造分析を始めない',
+    '- 前置きしない',
+    '',
+    '---',
+    '',
+    '# 参照資料',
+    '',
+    '## プロット',
+    '',
+    ctx.plotRec.content || '（本文なし）',
+    '',
+    '## キャラクター設定シート',
+    '',
+    ctx.charRec.content || '（本文なし）',
+    '',
+    '## 推敲対象本文',
+    '',
+    draftText,
+    '',
+    goalText ? '## 今回特に見てほしいこと\n\n' + goalText + '\n' : '',
+    '---',
+    '',
+    '# 推敲指示',
+    '',
+    '- 心理描写、会話温度、余韻、文の流れを改善すること',
+    '- キャラクターの口調を設定に合わせて整えること',
+    '- 情報の順番を読みやすくすること',
+    '- 過剰な説明や重複を必要に応じて削ること',
+    '- 骨格を守ったまま、完成度だけを上げること',
+    '',
+    '# 出力',
+    '',
+    '推敲後の本文のみを出力すること。'
+  ].filter(Boolean).join('\n');
+}
 
-# 執筆指示
+async function pmConsistencyCheckPrompt() {
+  const selected = await pmGetSelectedRecords(false, false);
+  const checkText = pmText('pm-e-check-text');
+  const extraText = pmText('pm-e-check-extra');
+  const chapterNum = pmGetSelectedChapterNumber();
+  const chapterLabel = chapterNum ? `第${chapterNum}章` : '章未指定';
+  const partLabel = pmGetPartLabel();
+  const hasR18 = (document.getElementById('pm-c-has-r18')?.value || 'no') === 'yes';
 
-## 基本方針
-- プロットの当該章に記載された「要約」「物語上の役割」
-  「感情の方向」に従って執筆すること
-- 章アウトラインが指定されている場合は、
-  当該Partの役割・前後関係・章内での位置を最優先で反映すること
-- 章アウトラインが未選択の場合は、
-  プロットから当該章の位置づけを読み取り、
-  指定されたPart番号にふさわしい進行として補完すること
-- キャラクター設定シートのE（口調）を厳守すること。
-  一人称、語尾の癖、話し方の特徴が設定と一致していることを確認せよ
-- R18シーンのあるPartでは、プロットまたは章アウトラインのR18設計に従いつつ、
-  マイルール集のルールを適用せよ
-- R18シーンのないPartでは、マイルール集の中で適用範囲が
-  「全セクション」「通常シーン」「会話」「地の文」等のルールを適用せよ
-
-## 章内Partとしての接続
-- この本文は単独短編ではなく、長編内の一部として書くこと
-- 前Part・前章までの接続資料が入力されている場合は、
-  情報、感情、距離感、身体状態、未解決の緊張を自然に引き継ぐこと
-- 当該Partの終わりでは、次Partへ続く読後感を作ること。
-  ただし、毎回あからさまなクリフハンガーにしないこと
-- 章全体の中でこのPartが担う役割を意識し、
-  導入・転換・深化・解放・余韻のどれにあたるかを本文に反映すること
-
-## 視点
-- プロットまたは章アウトラインに視点の指定がある場合はそれに従う
-- 指定がない場合は三人称限定視点（主人公寄り）をデフォルトとする
-- 視点切替が指定されている場合、
-  切替の前に「§」を挿入し、切替直後の1段落で
-  新しい視点人物を自然に明示すること
-
-## 分量
-`;
-
-  if (hasR18) {
-    md +=
-`- このPartはR18シーンを含むため、${rMin}～${rMax}文字を目安とする
-`;
-  } else {
-    md +=
-`- このPartは通常シーンのため、${nMin}～${nMax}文字を目安とする
-`;
+  if (!checkText) {
+    showToast('チェックしたい本文を貼り付けてください', 'error');
+    return null;
   }
 
-  md +=
-`- 章アウトライン上で感情曲線が大きく動くPart、
-  または章の山場にあたるPartは、目安より長くなってよい
+  return [
+    '# 役割定義',
+    '',
+    'あなたはBL / TL 長編小説の整合性チェッカーです。',
+    '以下の本文を、作品の一貫性が崩れていないかという観点でチェックしてください。',
+    '',
+    '---',
+    '',
+    '# 参照資料',
+    '',
+    selected?.plotRec ? '## プロット\n\n' + (selected.plotRec.content || '（本文なし）') + '\n' : '',
+    selected?.charRec ? '## キャラクター設定シート\n\n' + (selected.charRec.content || '（本文なし）') + '\n' : '',
+    '## 対象本文',
+    '',
+    checkText,
+    '',
+    '## 対象メモ',
+    '',
+    `- 章：${chapterLabel}`,
+    `- Part：${partLabel}`,
+    `- R18：${hasR18 ? 'あり' : 'なし'}`,
+    extraText ? `- 補足：${extraText}` : '',
+    '',
+    '---',
+    '',
+    '# チェック観点',
+    '',
+    '1. キャラクター一貫性',
+    '2. 口調・呼称',
+    '3. 知識矛盾',
+    '4. 時系列',
+    '5. 伏線・回収',
+    '6. 関係性の熟れ方',
+    '7. R18 / 接近速度',
+    '8. シーン目的の維持',
+    '',
+    '# 出力形式',
+    '',
+    '以下の見出しで出力してください。',
+    '',
+    '## 全体判定',
+    '## 観点別所見',
+    '## 問題点一覧',
+    '## 推奨修正'
+  ].filter(Boolean).join('\n');
+}
 
-## 文体（R18シーン以外）
-- 地の文は簡潔だが体温がある文体。
-  過剰な装飾は避けるが、無味乾燥にもしない
-- 比喩は一場面に${mMin}～${mMax}個まで。
-  使うなら鮮烈で具体的なものを選ぶこと
-- 会話文と地の文のバランスは${dialogRatio}の範囲内
-- キャラクターの内面描写は、感情を名詞で要約するのではなく、
-  身体の反応や行動の選択として表出させること
-  （×「不安を感じた」→○「指先が無意識にシャツの裾を掴んでいた」）
+async function pmSummaryUpdatePrompt() {
+  const summaryText = pmText('pm-f-summary-text');
+  const chapterNum = pmGetSelectedChapterNumber();
+  const chapterLabel = chapterNum ? `第${chapterNum}章` : '章未指定';
+  const partLabel = pmGetPartLabel();
 
-## 出力形式
-- 本文のみを出力すること
-- 解説、注釈、プロットの再掲、チェックリストは出力しないこと
-- Markdown見出しは使わないこと
-`;
+  if (!summaryText) {
+    showToast('要約元の本文を貼り付けてください', 'error');
+    return null;
+  }
 
-  return md;
+  return [
+    '# 役割定義',
+    '',
+    'あなたは長編小説運用用の引き継ぎ要約作成担当です。',
+    '以下の本文から、次回AIへ渡すための短い要約を作ってください。',
+    '',
+    '---',
+    '',
+    '# 入力',
+    '',
+    `- 対象：${chapterLabel} / ${partLabel}`,
+    '',
+    '## 本文',
+    '',
+    summaryText,
+    '',
+    '---',
+    '',
+    '# 依頼',
+    '',
+    '- 全文要約ではなく、次回の執筆に必要な文脈だけを抽出すること',
+    '- キャラの現在位置、感情、関係性、未解決要素を優先すること',
+    '- 冗長な説明は削ること',
+    '',
+    '# 出力形式',
+    '',
+    '## 引き継ぎ要約本文',
+    '## 箇条書き',
+    '## 次回重点'
+  ].join('\n');
+}
+
+async function pmCanonReflectionPrompt() {
+  const canonText = pmText('pm-g-canon-text');
+  const chapterNum = pmGetSelectedChapterNumber();
+  const chapterLabel = chapterNum ? `第${chapterNum}章` : '章未指定';
+  const partLabel = pmGetPartLabel();
+
+  if (!canonText) {
+    showToast('正史反映したい本文を貼り付けてください', 'error');
+    return null;
+  }
+
+  return [
+    '# 役割定義',
+    '',
+    'あなたは長編小説の正史反映整理担当です。',
+    '以下の本文から、確定設定へ反映すべき事実だけを抽出してください。',
+    '',
+    '---',
+    '',
+    '# 入力',
+    '',
+    `- 対象：${chapterLabel} / ${partLabel}`,
+    '',
+    '## 本文',
+    '',
+    canonText,
+    '',
+    '---',
+    '',
+    '# 依頼',
+    '',
+    '- 本文中の「確定した事実」だけを抽出すること',
+    '- 推測や解釈だけの情報は分けて扱うこと',
+    '- 確定設定に入れやすいよう、カテゴリ候補も付けること',
+    '',
+    '# 出力形式',
+    '',
+    '## 確定した事実',
+    '## まだ確定とは言い切れない候補',
+    '## 推奨カテゴリ',
+    '## 反映メモ'
+  ].join('\n');
+}
+
+async function pmDiffEvaluationPrompt() {
+  const originalText = pmText('pm-h-diff-original');
+  const revisedText = pmText('pm-h-diff-revised');
+  const chapterNum = pmGetSelectedChapterNumber();
+  const chapterLabel = chapterNum ? `第${chapterNum}章` : '章未指定';
+  const partLabel = pmGetPartLabel();
+
+  if (!originalText || !revisedText) {
+    showToast('比較元本文と比較先本文の両方を貼り付けてください', 'error');
+    return null;
+  }
+
+  return [
+    '# 役割定義',
+    '',
+    'あなたは長編小説の差分評価担当です。',
+    '比較元と比較先を見比べて、改善点と変わりすぎた点を整理してください。',
+    '',
+    '---',
+    '',
+    '# 入力',
+    '',
+    `- 対象：${chapterLabel} / ${partLabel}`,
+    '',
+    '## 比較元本文',
+    '',
+    originalText,
+    '',
+    '## 比較先本文',
+    '',
+    revisedText,
+    '',
+    '---',
+    '',
+    '# 依頼',
+    '',
+    '- 何が改善されたかを具体的に示すこと',
+    '- 骨格を守れているか判定すること',
+    '- 変わりすぎて危険な箇所があれば指摘すること',
+    '',
+    '# 出力形式',
+    '',
+    '## 改善された点',
+    '## 変わりすぎた点',
+    '## 骨格維持判定',
+    '## 採用判断メモ'
+  ].join('\n');
 }
 
 // ╔═══════════════════════════════════════════════════════
