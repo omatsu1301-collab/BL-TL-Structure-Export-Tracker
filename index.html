@@ -707,6 +707,122 @@ textarea { resize: vertical; }
   font-style: italic;
 }
 
+.pm-writing-stack-tight {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pm-compact-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.pm-compact-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+}
+
+.pm-compact-card-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--purple-300);
+  margin-bottom: 8px;
+}
+
+.pm-compact-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pm-outline-summary {
+  margin-top: 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.pm-outline-summary strong {
+  color: var(--purple-300);
+}
+
+.pm-part-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pm-part-inline input[type="number"] {
+  width: 88px;
+}
+
+.pm-part-inline .count-badge {
+  min-width: auto;
+}
+
+.pm-detail-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+}
+
+.pm-detail-box summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.pm-detail-box summary::-webkit-details-marker {
+  display: none;
+}
+
+.pm-detail-box summary::before {
+  content: '▸';
+  display: inline-block;
+  margin-right: 6px;
+  color: var(--purple-400);
+  transition: transform 0.2s ease;
+}
+
+.pm-detail-box[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.pm-detail-box[open] summary {
+  margin-bottom: 10px;
+}
+
+.pm-writing-copy-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.pm-muted-copy {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+@media (max-width: 820px) {
+  .pm-compact-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 820px) {
   .pm-role-grid {
     grid-template-columns: 1fr;
@@ -1880,7 +1996,10 @@ textarea { resize: vertical; }
               <button type="button" class="pm-nav-btn" data-pm-view-btn="plot" onclick="setPromptMakerView('plot')">🗺 プロンプトA：プロット生成</button>
               <button type="button" class="pm-nav-btn" data-pm-view-btn="outline" onclick="setPromptMakerView('outline')">📋 プロンプトA-2：章アウトライン生成</button>
               <button type="button" class="pm-nav-btn" data-pm-view-btn="character" onclick="setPromptMakerView('character')">👥 キャラクター設計</button>
-              <button type="button" class="pm-nav-btn active" data-pm-view-btn="writing" onclick="setPromptMakerView('writing')">✍️ 執筆系プロンプト</button>
+              <button type="button" class="pm-nav-btn active" data-pm-view-btn="writing" onclick="setPromptMakerView('writing')">✍️ 執筆プロンプト</button>
+              <button type="button" class="pm-nav-btn" data-pm-view-btn="revision" onclick="setPromptMakerView('revision')">🪄 Claude推敲用</button>
+              <button type="button" class="pm-nav-btn" data-pm-view-btn="consistency" onclick="setPromptMakerView('consistency')">🧪 整合性チェック</button>
+              <button type="button" class="pm-nav-btn" data-pm-view-btn="diff" onclick="setPromptMakerView('diff')">🧩 差分評価用</button>
             </div>
           </aside>
 
@@ -2041,402 +2160,391 @@ textarea { resize: vertical; }
               </div>
             </div>
 
+            
             <div class="pm-pane active" data-pm-view="writing">
               <div class="pm-pane-intro">
-                <strong>一番よく使う項目だけをまとめた画面です。</strong><br>
-                ここでは Claude 初稿 / Claude 推敲 / 整合性チェック / 差分評価 をまとめて扱います。
+                <strong>初稿生成に必要な項目だけを残した短い画面です。</strong><br>
+                ここでは章アウトライン / 固定条件 / 直前接続資料を中心に、Claudeで1Partずつ初稿を出します。
               </div>
 
-              <div class="pm-pane-stack">
-                <div class="form-section">
-                  <div class="form-section-header">
-                    <div class="form-section-title"><span>✍️</span> 執筆系プロンプト</div>
+              <div class="form-section">
+                <div class="form-section-header">
+                  <div class="form-section-title"><span>✍️</span> 執筆プロンプト</div>
+                </div>
+                <div class="form-section-body pm-writing-stack-tight">
+                  <p class="pm-muted-copy">
+                    推敲・整合性チェック・差分評価は左メニューへ分離しました。ここは初稿生成専用です。
+                  </p>
+
+                  <div class="pm-record-select" id="pm-c-plot-select-area">
+                    <label>プロット設計の記録を選択</label>
+                    <select id="pm-c-plot-select" onchange="onPlotSelectChange()">
+                      <option value="">（プロット設計の記録がありません）</option>
+                    </select>
                   </div>
-                  <div class="form-section-body">
-                    <p style="font-size:0.78rem;color:var(--text-muted)">
-                      ここでは Claude 前提で「初稿」「推敲」「整合性チェック」「差分評価」に使うプロンプトを作ります。
-                      初稿は常に1Partずつ出力し、先頭行に <code>pt1</code> のようなタグを付ける形式に統一します。
-                    </p>
 
-                    <div class="pm-record-select" id="pm-c-plot-select-area">
-                      <label>プロット設計の記録を選択</label>
-                      <select id="pm-c-plot-select" onchange="onPlotSelectChange()">
-                        <option value="">（プロット設計の記録がありません）</option>
-                      </select>
-                    </div>
+                  <div class="pm-record-select" id="pm-c-char-select-area">
+                    <label>キャラ設定シートの記録を選択</label>
+                    <select id="pm-c-char-select">
+                      <option value="">（キャラ設定シートの記録がありません）</option>
+                    </select>
+                  </div>
 
-                    <div class="pm-record-select" id="pm-c-char-select-area">
-                      <label>キャラ設定シートの記録を選択</label>
-                      <select id="pm-c-char-select">
-                        <option value="">（キャラ設定シートの記録がありません）</option>
-                      </select>
-                    </div>
-
-                    <div class="form-row form-row-2">
-                      <div class="form-group">
-                        <label class="form-label">執筆対象：章</label>
-                        <div id="pm-c-section-area">
-                          <select id="pm-c-section-select" style="display:none" onchange="onSectionSelect()">
-                            <option value="">（プロットを選択してください）</option>
-                          </select>
-                          <input type="number" id="pm-c-section-num" min="1" placeholder="章番号 例：1" style="display:none">
-                          <div id="pm-c-section-hint" class="form-hint" style="margin-top:4px"></div>
-                        </div>
+                  <div class="form-row form-row-2">
+                    <div class="form-group">
+                      <label class="form-label">執筆対象：章</label>
+                      <div id="pm-c-section-area">
+                        <select id="pm-c-section-select" style="display:none" onchange="onSectionSelect()">
+                          <option value="">（プロットを選択してください）</option>
+                        </select>
+                        <input type="number" id="pm-c-section-num" min="1" placeholder="章番号 例：1" style="display:none">
+                        <div id="pm-c-section-hint" class="form-hint" style="margin-top:4px"></div>
                       </div>
+                    </div>
 
+                    <div class="form-group">
+                      <label class="form-label">R18シーンの有無</label>
+                      <select id="pm-c-has-r18">
+                        <option value="no">なし（通常Part）</option>
+                        <option value="yes">あり（R18 Part）</option>
+                      </select>
+                      <div id="pm-c-r18-hint" class="form-hint" style="margin-top:4px"></div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">章アウトライン（執筆保管庫から選択）</label>
+                    <select id="pm-c-outline-select" onchange="handlePmOutlineSelectChange()">
+                      <option value="">（選択なし — 保管庫にアウトラインメモがない場合）</option>
+                    </select>
+                    <div class="form-hint" style="margin-top:4px">
+                      執筆保管庫のアウトラインを選ぶと、この章が何Part構成かを推定表示します。
+                    </div>
+                    <div id="pm-c-outline-part-summary" class="pm-outline-summary">章アウトラインを選ぶと Part 構成をここに表示します。</div>
+                  </div>
+
+                  <div class="pm-detail-box">
+                    <div class="pm-writing-stack-tight">
                       <div class="form-group">
-                        <label class="form-label">執筆対象：Part番号</label>
-                        <div style="display:flex;gap:8px;align-items:center">
-                          <input type="number" id="pm-c-part-num" min="1" max="20" placeholder="例：1" style="width:80px">
-                          <span style="font-size:0.78rem;color:var(--text-muted)">／</span>
-                          <input type="number" id="pm-c-part-total" min="1" max="20" placeholder="全Part数 例：5" style="width:80px">
-                          <span style="font-size:0.72rem;color:var(--text-muted)">Part中</span>
+                        <label class="form-label">Part指定</label>
+                        <div class="pm-part-inline">
+                          <input type="number" id="pm-c-part-num" min="1" max="20" placeholder="例：1">
+                          <span style="font-size:0.78rem;color:var(--text-muted)">を書く</span>
+                          <span class="count-badge" id="pm-c-part-total-badge">総Part 未検出</span>
                         </div>
                         <div class="form-hint" style="margin-top:4px">
-                          例：5Part構成の1番目 → 1 ／ 5。出力は常に <code>pt1</code> のような表記で始めます。
+                          出力は常に <code>pt1</code> のようなタグで始まります。総Part数は章アウトラインから自動推定し、必要なら下の詳細で上書きできます。
+                        </div>
+                      </div>
+
+                      <details class="pm-detail-box">
+                        <summary>詳細指定</summary>
+                        <div class="pm-writing-stack-tight">
+                          <div class="form-group">
+                            <label class="form-label">総Part数の手動上書き</label>
+                            <input type="number" id="pm-c-part-total" min="1" max="20" placeholder="全Part数 例：5">
+                          </div>
+
+                          <div class="pm-param-row">
+                            <div class="pm-param-item">
+                              <label>比喩の上限</label>
+                              <div style="display:flex;gap:4px;align-items:center">
+                                <input type="number" id="pm-c-metaphor-min" value="1" min="0" max="20">
+                                <span style="font-size:0.78rem;color:var(--text-muted)">〜</span>
+                                <input type="number" id="pm-c-metaphor-max" value="2" min="0" max="20">
+                                <span style="font-size:0.72rem;color:var(--text-muted)">個/場面</span>
+                              </div>
+                            </div>
+
+                            <div class="pm-param-item">
+                              <label>会話:地の文バランス</label>
+                              <div style="display:flex;gap:4px;align-items:center">
+                                <input type="text" id="pm-c-dialog-ratio" value="6:4〜4:6" style="width:120px">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </details>
+                    </div>
+                  </div>
+
+                  <div class="pm-compact-grid-2">
+                    <div class="pm-compact-card">
+                      <div class="pm-compact-card-title">🔒 確定設定（固定条件）</div>
+                      <div class="pm-compact-card-body">
+                        <div class="form-group">
+                          <label class="form-label">反映モード</label>
+                          <select id="pm-c-canon-mode">
+                            <option value="core">重要事項のみ反映（推奨）</option>
+                            <option value="full">保存済み確定設定を広めに反映</option>
+                            <option value="off">反映しない</option>
+                          </select>
+                        </div>
+
+                        <div style="display:flex;gap:8px;flex-wrap:wrap">
+                          <button class="btn btn-secondary btn-sm" onclick="previewCanonPromptForWriting()">固定条件をプレビュー</button>
+                          <button class="btn btn-ghost btn-sm" onclick="copyCanonPromptForWriting()">固定条件だけコピー</button>
+                        </div>
+
+                        <details class="pm-detail-box">
+                          <summary>固定条件の詳細調整</summary>
+                          <div class="pm-writing-stack-tight">
+                            <div class="form-row form-row-3">
+                              <div class="form-group">
+                                <label class="form-label">絞り込み章番号</label>
+                                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                                  <input type="number" id="pm-c-canon-chapter-num" min="1" placeholder="例：2">
+                                  <label style="display:inline-flex;gap:6px;align-items:center;font-size:0.78rem;color:var(--text-secondary);cursor:pointer">
+                                    <input type="checkbox" id="pm-c-canon-auto-chapter" checked onchange="syncCanonChapterFilterFromWriting(true)">
+                                    執筆対象章から自動反映
+                                  </label>
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                                <label class="form-label">章まわりの範囲</label>
+                                <select id="pm-c-canon-scope">
+                                  <option value="chapter">その章に直接関係するもの中心</option>
+                                  <option value="near">前後の章も少し含める</option>
+                                  <option value="wide">広めに拾う</option>
+                                </select>
+                              </div>
+
+                              <div class="form-group">
+                                <label class="form-label">重点人物（任意）</label>
+                                <input type="text" id="pm-c-canon-character-focus" placeholder="例：朝比奈 湊, 榊 原">
+                              </div>
+                            </div>
+
+                            <div class="form-group">
+                              <label class="form-label">重点キーワード（任意）</label>
+                              <input type="text" id="pm-c-canon-keyword-focus" placeholder="例：首飾り, 再会, 片想い, 夏祭り">
+                              <div class="form-hint" style="margin-top:4px">
+                                伏線、場所、アイテム、イベント名など、今回重視したい語をカンマ区切りで入力してください。
+                              </div>
+                              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+                                <button class="btn btn-secondary btn-sm" onclick="syncCanonChapterFilterFromWriting(true)">執筆対象章を反映</button>
+                              </div>
+                            </div>
+                          </div>
+                        </details>
+
+                        <div class="form-group" id="pm-c-canon-preview-wrap" style="display:none">
+                          <label class="form-label">固定条件の差し込みプレビュー</label>
+                          <div id="pm-c-canon-preview" class="pm-scene-preview pm-scene-empty">（ここに固定条件を表示します）</div>
                         </div>
                       </div>
                     </div>
 
-                    <div class="form-row form-row-2">
+                    <div class="pm-compact-card">
+                      <div class="pm-compact-card-title">🧩 圧縮メモ（直前接続資料）</div>
+                      <div class="pm-compact-card-body">
+                        <div class="form-group">
+                          <label class="form-label">直前接続メモを選択</label>
+                          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                            <select id="pm-c-compressed-select" onchange="refreshPromptMakerMemoPreview('c'); handlePmCompressedMemoSelectChange('c')">
+                              <option value="">（選択なし）</option>
+                            </select>
+                            <button class="btn btn-secondary btn-sm" onclick="insertVaultMemoToCPrevText(false)">追記</button>
+                            <button class="btn btn-ghost btn-sm" onclick="insertVaultMemoToCPrevText(true)">置換</button>
+                          </div>
+                          <div class="pm-memo-help">
+                            ここには「直前接続用」の圧縮メモだけを表示します。今回書くPartへ入る直前の流れをつなぐための欄です。
+                          </div>
+                        </div>
+
+                        <div class="pm-memo-preview-wrap">
+                          <div class="pm-memo-preview-label">選択中の直前接続メモ</div>
+                          <div id="pm-c-compressed-preview" class="pm-memo-preview-box empty">（まだ直前接続メモを選択していません）</div>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="form-label">直前接続資料（前Part・前章までの流れ）</label>
+                          <textarea id="pm-c-prev-text" rows="6" placeholder="全文ではなく、直前までの状況、感情、距離感、身体状態、未解決の緊張などを貼り付けてください…"></textarea>
+                          <div class="pm-inline-note">
+                            ここは固定設定ではありません。今回書くPartの直前に何が残っているかを渡す場所です。
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">出力方式</label>
+                    <div class="pm-auto-source" style="margin:0">
+                      Claudeで1Partずつ出力します。次Partへ勝手に進ませません。
+                    </div>
+                  </div>
+
+                  <div class="pm-writing-copy-row">
+                    <button class="btn btn-export" onclick="generatePrompt('C_CLAUDE')">📋 Claude初稿用をコピー</button>
+                    <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('C_CLAUDE')">↓ .md</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pm-pane" data-pm-view="revision">
+              <div class="pm-pane-intro">
+                初稿を磨くための推敲専用画面です。執筆プロンプトから分離し、本文の改善だけに集中できます。
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-header">
+                  <div class="form-section-title"><span>🪄</span> Claude推敲用</div>
+                </div>
+                <div class="form-section-body">
+                  <p style="font-size:0.78rem;color:var(--text-muted)">
+                    初稿を小説として磨くための推敲プロンプトです。設定追加や大きな展開変更はさせず、文芸的な改善に限定します。
+                  </p>
+                  <div class="form-group">
+                    <label class="form-label">推敲したい本文</label>
+                    <textarea id="pm-d-revision-text" rows="10" placeholder="Claude初稿または作者修正版をここへ貼り付けてください"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">今回の推敲で特に見てほしいこと（任意）</label>
+                    <textarea id="pm-d-revision-goal" rows="4" placeholder="例：心理描写を厚くしたい / 台詞温度を上げたい / 地の文をなめらかにしたい"></textarea>
+                  </div>
+                  <div class="export-btn-group">
+                    <button class="btn btn-export" onclick="generatePrompt('D')">📋 Claude推敲用をコピー</button>
+                    <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('D')">↓ .md</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pm-pane" data-pm-view="consistency">
+              <div class="pm-pane-intro">
+                整合性チェック専用画面です。章単体チェックと2章比較チェックをここで切り替えます。
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-header">
+                  <div class="form-section-title"><span>🧪</span> 整合性チェック</div>
+                </div>
+                <div class="form-section-body">
+                  <p style="font-size:0.78rem;color:var(--text-muted)">
+                    ここでは、1章の内部整合性を確認する「章単体チェック」と、前章と次章のブレを見る「2章比較チェック」を使い分けます。
+                  </p>
+
+                  <div style="display:flex;flex-direction:column;gap:16px">
+                    <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px">
+                      <div style="font-size:0.86rem;font-weight:700;color:var(--purple-300);margin-bottom:10px">① 章単体チェック</div>
+
+                      <div class="form-row form-row-2">
+                        <div class="form-group">
+                          <label class="form-label">対象章ラベル</label>
+                          <input type="text" id="pm-e-single-label" placeholder="例：第2章 / 第2章 pt3 / 第1話">
+                        </div>
+
+                        <div class="form-group">
+                          <label class="form-label">重点確認項目</label>
+                          <select id="pm-e-single-focus">
+                            <option value="general">全体</option>
+                            <option value="character">キャラブレ</option>
+                            <option value="tone">口調・文体</option>
+                            <option value="emotion">感情推移</option>
+                            <option value="logic">論理・因果</option>
+                            <option value="foreshadow">伏線・情報開示</option>
+                            <option value="r18">R18進行</option>
+                          </select>
+                        </div>
+                      </div>
+
                       <div class="form-group">
-                        <label class="form-label">R18シーンの有無</label>
-                        <select id="pm-c-has-r18">
-                          <option value="no">なし（通常Part）</option>
-                          <option value="yes">あり（R18 Part）</option>
+                        <label class="form-label">前章までの補足（任意）</label>
+                        <textarea id="pm-e-single-prev" rows="4" placeholder="例：第1章終盤で両片想いが明確化。まだ肉体関係はなし。攻めは敬語寄り。受けは警戒が解けきっていない。"></textarea>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="form-label">チェックしたい章本文</label>
+                        <textarea id="pm-e-single-text" rows="10" placeholder="ここに対象章の本文を貼り付けてください"></textarea>
+                      </div>
+
+                      <div class="export-btn-group">
+                        <button class="btn btn-export" onclick="generatePrompt('E_SINGLE')">📋 章単体チェック用をコピー</button>
+                        <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('E_SINGLE')">↓ .md</button>
+                      </div>
+                    </div>
+
+                    <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px">
+                      <div style="font-size:0.86rem;font-weight:700;color:var(--purple-300);margin-bottom:10px">② 2章比較チェック</div>
+
+                      <div class="form-row form-row-2">
+                        <div class="form-group">
+                          <label class="form-label">比較元ラベル</label>
+                          <input type="text" id="pm-e-compare-a-label" placeholder="例：第1章">
+                        </div>
+
+                        <div class="form-group">
+                          <label class="form-label">比較先ラベル</label>
+                          <input type="text" id="pm-e-compare-b-label" placeholder="例：第2章">
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="form-label">重点確認項目</label>
+                        <select id="pm-e-compare-focus">
+                          <option value="general">全体</option>
+                          <option value="character">キャラブレ</option>
+                          <option value="tone">口調・温度感</option>
+                          <option value="emotion">感情進行</option>
+                          <option value="logic">論理・因果</option>
+                          <option value="foreshadow">伏線・情報開示順</option>
+                          <option value="r18">R18進行</option>
                         </select>
-                        <div id="pm-c-r18-hint" class="form-hint" style="margin-top:4px"></div>
                       </div>
 
-                      <div class="form-group">
-                        <label class="form-label">出力方式</label>
-                        <div class="pm-auto-source" style="margin:0">
-                          Claudeで1Partずつ出力します。次Partへ勝手に進ませません。
+                      <div class="form-row form-row-2">
+                        <div class="form-group">
+                          <label class="form-label">比較元本文</label>
+                          <textarea id="pm-e-compare-a-text" rows="10" placeholder="前の章の本文を貼り付けてください"></textarea>
                         </div>
-                      </div>
-                    </div>
 
-                   <div class="pm-role-grid">
-  <div class="pm-role-card">
-    <div class="pm-role-card-title pm-role-fixed">🔒 確定設定 = 毎回守る固定条件</div>
-    <div class="pm-role-card-body">
-      キャラクターの核、関係性、伏線、未解決事項、世界設定など、<strong>本文のたびにブレさせてはいけない内容</strong>です。<br>
-      作品全体の整合性を守るために使います。
-    </div>
-  </div>
-
-  <div class="pm-role-card">
-    <div class="pm-role-card-title pm-role-bridge">🧩 圧縮メモ = 直前の接続資料</div>
-    <div class="pm-role-card-body">
-      前Partの感情、距離感、身体状態、未解決の緊張など、<strong>今このPartへつなぐための直前情報</strong>です。<br>
-      固定設定ではなく、執筆のたびに入れ替わる前提です。
-    </div>
-  </div>
-</div>
-
-<div class="form-group">
-  <label class="form-label">章アウトライン（執筆保管庫から選択）</label>
-  <select id="pm-c-outline-select">
-    <option value="">（選択なし — 保管庫にアウトラインメモがない場合）</option>
-  </select>
-  <div class="form-hint" style="margin-top:4px">
-    執筆保管庫に保存した章アウトラインメモを選択すると、プロンプトに全Part構造が差し込まれます。
-  </div>
-</div>
-
-<div class="form-group">
-  <label class="form-label">確定設定（毎回渡す固定条件）</label>
-  <select id="pm-c-canon-mode">
-    <option value="core">重要事項のみ反映（推奨）</option>
-    <option value="full">保存済み確定設定を広めに反映</option>
-    <option value="off">反映しない</option>
-  </select>
-  <div class="form-hint" style="margin-top:4px">
-    キャラクターの核、関係性、伏線、未解決事項、世界設定などを、本文執筆のたびに守る固定条件として差し込みます。
-  </div>
-</div>
-
-<div class="form-row form-row-3">
-  <div class="form-group">
-    <label class="form-label">固定条件の絞り込み章番号</label>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-      <input type="number" id="pm-c-canon-chapter-num" min="1" placeholder="例：2">
-      <label style="display:inline-flex;gap:6px;align-items:center;font-size:0.78rem;color:var(--text-secondary);cursor:pointer">
-        <input type="checkbox" id="pm-c-canon-auto-chapter" checked onchange="syncCanonChapterFilterFromWriting(true)">
-        執筆対象章から自動反映
-      </label>
-    </div>
-    <div class="form-hint" style="margin-top:4px">
-      執筆対象の章番号を使って、今回の本文に関係が深い固定条件を優先表示します。
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="form-label">章まわりの範囲</label>
-    <select id="pm-c-canon-scope">
-      <option value="chapter">その章に直接関係するもの中心</option>
-      <option value="near">前後の章も少し含める</option>
-      <option value="wide">広めに拾う</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label class="form-label">重点人物（任意）</label>
-    <input type="text" id="pm-c-canon-character-focus" placeholder="例：朝比奈 湊, 榊 原">
-    <div class="form-hint" style="margin-top:4px">
-      カンマ区切りで入力してください。
-    </div>
-  </div>
-</div>
-
-<div class="form-group">
-  <label class="form-label">重点キーワード（任意）</label>
-  <input type="text" id="pm-c-canon-keyword-focus" placeholder="例：首飾り, 再会, 片想い, 夏祭り">
-  <div class="form-hint" style="margin-top:4px">
-    伏線、場所、アイテム、イベント名など、今回重視したい語をカンマ区切りで入力してください。
-  </div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-    <button class="btn btn-secondary btn-sm" onclick="syncCanonChapterFilterFromWriting(true)">執筆対象章を反映</button>
-    <button class="btn btn-secondary btn-sm" onclick="previewCanonPromptForWriting()">固定条件をプレビュー</button>
-    <button class="btn btn-ghost btn-sm" onclick="copyCanonPromptForWriting()">固定条件だけコピー</button>
-  </div>
-</div>
-
-<div class="form-group" id="pm-c-canon-preview-wrap" style="display:none">
-  <label class="form-label">固定条件の差し込みプレビュー</label>
-  <div id="pm-c-canon-preview" class="pm-scene-preview pm-scene-empty">（ここに固定条件を表示します）</div>
-</div>
-
-<div class="form-group">
-  <label class="form-label">直前接続メモを接続資料に挿入</label>
-  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-    <select id="pm-c-compressed-select" onchange="refreshPromptMakerMemoPreview('c'); handlePmCompressedMemoSelectChange('c')">
-      <option value="">（選択なし）</option>
-    </select>
-    <button class="btn btn-secondary btn-sm" onclick="insertVaultMemoToCPrevText(false)">追記</button>
-    <button class="btn btn-ghost btn-sm" onclick="insertVaultMemoToCPrevText(true)">置換</button>
-  </div>
-  <div class="pm-memo-help">
-    ここには「直前接続用」の圧縮メモだけを表示します。今回書くPartへ入る直前の流れをつなぐための欄です。
-  </div>
-
-  <div class="pm-memo-preview-wrap">
-    <div class="pm-memo-preview-label">選択中の直前接続メモ</div>
-    <div id="pm-c-compressed-preview" class="pm-memo-preview-box empty">（まだ直前接続メモを選択していません）</div>
-  </div>
-</div>
-
-<div class="form-group">
-  <label class="form-label">直前接続資料（前Part・前章までの流れ）</label>
-  <textarea id="pm-c-prev-text" rows="6" placeholder="全文ではなく、直前までの状況、感情、距離感、身体状態、未解決の緊張などを貼り付けてください…"></textarea>
-  <div class="pm-inline-note">
-    ここは固定設定ではありません。今回書くPartの直前に何が残っているかを渡す場所です。
-  </div>
-</div>
-
-                    </div>
-
-                    <div class="pm-param-row">
-                      <div class="pm-param-item">
-                        <label>比喩の上限</label>
-                        <div style="display:flex;gap:4px;align-items:center">
-                          <input type="number" id="pm-c-metaphor-min" value="1" min="0" max="20">
-                          <span style="font-size:0.78rem;color:var(--text-muted)">〜</span>
-                          <input type="number" id="pm-c-metaphor-max" value="2" min="0" max="20">
-                          <span style="font-size:0.72rem;color:var(--text-muted)">個/場面</span>
+                        <div class="form-group">
+                          <label class="form-label">比較先本文</label>
+                          <textarea id="pm-e-compare-b-text" rows="10" placeholder="次の章の本文を貼り付けてください"></textarea>
                         </div>
                       </div>
 
-                      <div class="pm-param-item">
-                        <label>会話:地の文バランス</label>
-                        <div style="display:flex;gap:4px;align-items:center">
-                          <input type="text" id="pm-c-dialog-ratio" value="6:4〜4:6" style="width:120px">
-                        </div>
+                      <div class="export-btn-group">
+                        <button class="btn btn-export" onclick="generatePrompt('E_COMPARE')">📋 2章比較チェック用をコピー</button>
+                        <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('E_COMPARE')">↓ .md</button>
                       </div>
-                    </div>
-
-                    <div class="pm-assist-area" style="margin-top:12px">
-                      <div class="pm-assist-title"><span>🤖</span> ルール選別アシスタント</div>
-                      <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:10px">
-                        プロット＋キャラ設定＋全ルールをClaudeに渡して、今回の章 / Part に適用すべきルールを選別してもらいます。
-                      </p>
-                      <div class="export-btn-group" style="margin-bottom:12px">
-                        <button class="btn btn-export" onclick="generateRuleSelectionPrompt()">📋 ルール選別プロンプトをコピー</button>
-                        <button class="btn btn-secondary btn-sm" onclick="downloadRuleSelectionPrompt()">↓ .md</button>
-                      </div>
-                      <div style="display:flex;gap:8px;margin-bottom:10px">
-                        <button class="btn btn-secondary btn-sm" onclick="openAddPresetModal()">💾 Claudeの回答からプリセット保存</button>
-                      </div>
-                      <div id="pm-c-presets-area">
-                        <div style="font-size:0.75rem;color:var(--text-muted)">保存済みプリセットはありません</div>
-                      </div>
-                    </div>
-
-                    <div style="margin-top:12px">
-                      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-                        <label class="form-label" style="margin:0">適用するマイルール</label>
-                        <div style="display:flex;gap:6px">
-                          <button class="btn btn-ghost btn-sm" onclick="pmRuleSelectAll(true)">全選択</button>
-                          <button class="btn btn-ghost btn-sm" onclick="pmRuleSelectAll(false)">全解除</button>
-                        </div>
-                      </div>
-                      <div class="pm-rule-checks" id="pm-c-rules"></div>
-                    </div>
-
-                    <div class="export-btn-group" style="margin-top:12px;flex-wrap:wrap">
-                      <button class="btn btn-export" onclick="generatePrompt('C_CLAUDE')">📋 Claude初稿用をコピー</button>
-                      <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('C_CLAUDE')">↓ .md</button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="form-section">
-                  <div class="form-section-header">
-                    <div class="form-section-title"><span>🪄</span> Claude推敲用</div>
-                  </div>
-                  <div class="form-section-body">
-                    <p style="font-size:0.78rem;color:var(--text-muted)">
-                      初稿を小説として磨くための推敲プロンプトです。設定追加や大きな展開変更はさせず、文芸的な改善に限定します。
-                    </p>
-                    <div class="form-group">
-                      <label class="form-label">推敲したい本文</label>
-                      <textarea id="pm-d-revision-text" rows="10" placeholder="Claude初稿または作者修正版をここへ貼り付けてください"></textarea>
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label">今回の推敲で特に見てほしいこと（任意）</label>
-                      <textarea id="pm-d-revision-goal" rows="4" placeholder="例：心理描写を厚くしたい / 台詞温度を上げたい / 地の文をなめらかにしたい"></textarea>
-                    </div>
-                    <div class="export-btn-group">
-                      <button class="btn btn-export" onclick="generatePrompt('D')">📋 Claude推敲用をコピー</button>
-                      <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('D')">↓ .md</button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="form-section">
-  <div class="form-section-header">
-    <div class="form-section-title"><span>🧪</span> 整合性チェック</div>
-  </div>
-  <div class="form-section-body">
-    <p style="font-size:0.78rem;color:var(--text-muted)">
-      ここでは、1章の内部整合性を確認する「章単体チェック」と、前章と次章のブレを見る「2章比較チェック」を使い分けます。
-    </p>
-
-    <div style="display:flex;flex-direction:column;gap:16px">
-      <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px">
-        <div style="font-size:0.86rem;font-weight:700;color:var(--purple-300);margin-bottom:10px">① 章単体チェック</div>
-
-        <div class="form-row form-row-2">
-          <div class="form-group">
-            <label class="form-label">対象章ラベル</label>
-            <input type="text" id="pm-e-single-label" placeholder="例：第2章 / 第2章 pt3 / 第1話">
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">重点確認項目</label>
-            <select id="pm-e-single-focus">
-              <option value="general">全体</option>
-              <option value="character">キャラブレ</option>
-              <option value="tone">口調・文体</option>
-              <option value="emotion">感情推移</option>
-              <option value="logic">論理・因果</option>
-              <option value="foreshadow">伏線・情報開示</option>
-              <option value="r18">R18進行</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">前章までの補足（任意）</label>
-          <textarea id="pm-e-single-prev" rows="4" placeholder="例：第1章終盤で両片想いが明確化。まだ肉体関係はなし。攻めは敬語寄り。受けは警戒が解けきっていない。"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">チェックしたい章本文</label>
-          <textarea id="pm-e-single-text" rows="10" placeholder="ここに対象章の本文を貼り付けてください"></textarea>
-        </div>
-
-        <div class="export-btn-group">
-          <button class="btn btn-export" onclick="generatePrompt('E_SINGLE')">📋 章単体チェック用をコピー</button>
-          <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('E_SINGLE')">↓ .md</button>
-        </div>
-      </div>
-
-      <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px">
-        <div style="font-size:0.86rem;font-weight:700;color:var(--purple-300);margin-bottom:10px">② 2章比較チェック</div>
-
-        <div class="form-row form-row-2">
-          <div class="form-group">
-            <label class="form-label">比較元ラベル</label>
-            <input type="text" id="pm-e-compare-a-label" placeholder="例：第1章">
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">比較先ラベル</label>
-            <input type="text" id="pm-e-compare-b-label" placeholder="例：第2章">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">重点確認項目</label>
-          <select id="pm-e-compare-focus">
-            <option value="general">全体</option>
-            <option value="character">キャラブレ</option>
-            <option value="tone">口調・温度感</option>
-            <option value="emotion">感情進行</option>
-            <option value="logic">論理・因果</option>
-            <option value="foreshadow">伏線・情報開示順</option>
-            <option value="r18">R18進行</option>
-          </select>
-        </div>
-
-        <div class="form-row form-row-2">
-          <div class="form-group">
-            <label class="form-label">比較元本文</label>
-            <textarea id="pm-e-compare-a-text" rows="10" placeholder="前の章の本文を貼り付けてください"></textarea>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">比較先本文</label>
-            <textarea id="pm-e-compare-b-text" rows="10" placeholder="次の章の本文を貼り付けてください"></textarea>
-          </div>
-        </div>
-
-        <div class="export-btn-group">
-          <button class="btn btn-export" onclick="generatePrompt('E_COMPARE')">📋 2章比較チェック用をコピー</button>
-          <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('E_COMPARE')">↓ .md</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-                <div class="form-section">
-                  <div class="form-section-header">
-                    <div class="form-section-title"><span>🧩</span> 差分評価用</div>
-                  </div>
-                  <div class="form-section-body">
-                    <p style="font-size:0.78rem;color:var(--text-muted)">
-                      Claude初稿とClaude推敲稿、または作者修正版の差分を評価し、改善された点と変わりすぎた点を洗い出します。
-                    </p>
-                    <div class="form-group">
-                      <label class="form-label">比較元本文</label>
-                      <textarea id="pm-h-diff-original" rows="8" placeholder="元になった本文を貼り付けてください"></textarea>
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label">比較先本文</label>
-                      <textarea id="pm-h-diff-revised" rows="8" placeholder="比較したい改稿本文を貼り付けてください"></textarea>
-                    </div>
-                    <div class="export-btn-group">
-                      <button class="btn btn-export" onclick="generatePrompt('H')">📋 差分評価用をコピー</button>
-                      <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('H')">↓ .md</button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+
+            <div class="pm-pane" data-pm-view="diff">
+              <div class="pm-pane-intro">
+                差分評価専用画面です。初稿と改稿の変化だけを切り出して確認できます。
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-header">
+                  <div class="form-section-title"><span>🧩</span> 差分評価用</div>
+                </div>
+                <div class="form-section-body">
+                  <p style="font-size:0.78rem;color:var(--text-muted)">
+                    Claude初稿とClaude推敲稿、または作者修正版の差分を評価し、改善された点と変わりすぎた点を洗い出します。
+                  </p>
+                  <div class="form-group">
+                    <label class="form-label">比較元本文</label>
+                    <textarea id="pm-h-diff-original" rows="8" placeholder="元になった本文を貼り付けてください"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">比較先本文</label>
+                    <textarea id="pm-h-diff-revised" rows="8" placeholder="比較したい改稿本文を貼り付けてください"></textarea>
+                  </div>
+                  <div class="export-btn-group">
+                    <button class="btn btn-export" onclick="generatePrompt('H')">📋 差分評価用をコピー</button>
+                    <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('H')">↓ .md</button>
+                  </div>
+                </div>
+              </div>
+            </div>
 
      <!-- TAB: 執筆保管庫 -->
       <div class="tab-panel" id="tab-vault">
@@ -8388,7 +8496,7 @@ function pmRuleSelectAll(on){document.querySelectorAll('#pm-c-rules input[type=c
 let currentPromptMakerView = 'writing';
 
 function setPromptMakerView(view) {
-  const allowed = ['title', 'scene', 'plot', 'outline', 'character', 'writing'];
+  const allowed = ['title', 'scene', 'plot', 'outline', 'character', 'writing', 'revision', 'consistency', 'diff'];
   const nextView = allowed.includes(view) ? view : 'writing';
   currentPromptMakerView = nextView;
 
@@ -8412,7 +8520,10 @@ async function populatePromptMakerOutlineSelect() {
   const currentValue = outlineSel.value || '';
   outlineSel.innerHTML = '<option value="">（選択なし — 保管庫にアウトラインメモがない場合）</option>';
 
-  if (!currentWorkId) return;
+  if (!currentWorkId) {
+    await updatePmOutlinePartSummary();
+    return;
+  }
 
   const vaultItems = await getWritingVaultItems(currentWorkId);
   const outlineItems = vaultItems.filter(item => {
@@ -8425,6 +8536,7 @@ async function populatePromptMakerOutlineSelect() {
 
   if (outlineItems.length === 0) {
     outlineSel.innerHTML = '<option value="">（保管庫にアウトラインメモがありません）</option>';
+    await updatePmOutlinePartSummary();
     return;
   }
 
@@ -8439,6 +8551,91 @@ async function populatePromptMakerOutlineSelect() {
   if (currentValue && outlineItems.some(item => item.id === currentValue)) {
     outlineSel.value = currentValue;
   }
+
+  await updatePmOutlinePartSummary();
+}
+
+function estimateOutlinePartCountFromText(body) {
+  const raw = String(body || '');
+  const normalized = raw.replace(/\r\n/g, '\n');
+  const detectedNumbers = new Set();
+  const explicitTotals = [];
+
+  const collect = (regex, extractor) => {
+    for (const match of normalized.matchAll(regex)) {
+      const num = Number(extractor(match));
+      if (Number.isFinite(num) && num > 0 && num <= 200) {
+        detectedNumbers.add(num);
+      }
+    }
+  };
+
+  collect(/(?:^|\n)\s{0,3}#{1,6}\s*(?:pt|PT|Part|PART)\s*[-:：#]?\s*(\d{1,3})\b/g, match => match[1]);
+  collect(/(?:^|\n)\s{0,3}#{1,6}\s*第\s*(\d{1,3})\s*Part\b/gi, match => match[1]);
+  collect(/(?:^|\n)\s*(?:pt|PT|Part|PART)\s*(\d{1,3})\b/g, match => match[1]);
+  collect(/(?:^|\n)\s*第\s*(\d{1,3})\s*Part\b/gi, match => match[1]);
+  collect(/\bpt\s*(\d{1,3})\b/gi, match => match[1]);
+  collect(/\bPart\s*(\d{1,3})\b/gi, match => match[1]);
+
+  for (const match of normalized.matchAll(/(?:全|総)\s*(\d{1,3})\s*Part\b/gi)) explicitTotals.push(Number(match[1]));
+  for (const match of normalized.matchAll(/(\d{1,3})\s*Part構成/gi)) explicitTotals.push(Number(match[1]));
+  for (const match of normalized.matchAll(/\b1\s*\/\s*(\d{1,3})\b/g)) explicitTotals.push(Number(match[1]));
+
+  const detectedList = Array.from(detectedNumbers).sort((a, b) => a - b);
+  const explicitList = explicitTotals.filter(num => Number.isFinite(num) && num > 0 && num <= 200);
+  const total = explicitList.length
+    ? Math.max(...explicitList)
+    : (detectedList.length ? detectedList[detectedList.length - 1] : 0);
+
+  return {
+    total,
+    detectedParts: detectedList,
+    explicitTotals: explicitList
+  };
+}
+
+function setPmPartSummaryDisplay(summaryText, badgeText) {
+  const summary = document.getElementById('pm-c-outline-part-summary');
+  const badge = document.getElementById('pm-c-part-total-badge');
+  if (summary) summary.innerHTML = summaryText;
+  if (badge) badge.textContent = badgeText;
+}
+
+async function updatePmOutlinePartSummary() {
+  const outlineSel = document.getElementById('pm-c-outline-select');
+  const totalInput = document.getElementById('pm-c-part-total');
+
+  if (!outlineSel) return;
+
+  const outlineId = (outlineSel.value || '').trim();
+  if (!outlineId) {
+    if (totalInput && !totalInput.value) totalInput.value = '';
+    setPmPartSummaryDisplay('章アウトラインを選ぶと <strong>Part 構成</strong> をここに表示します。', '総Part 未検出');
+    return;
+  }
+
+  const outlineItem = await dbGet(STORE_WRITING_VAULT, outlineId);
+  if (!outlineItem || outlineItem.workId !== currentWorkId) {
+    setPmPartSummaryDisplay('選択中の章アウトラインを読み込めませんでした。', '総Part 不明');
+    return;
+  }
+
+  const estimate = estimateOutlinePartCountFromText(outlineItem.body || '');
+  if (estimate.total) {
+    if (totalInput) totalInput.value = String(estimate.total);
+    const partsLabel = estimate.detectedParts.length
+      ? ` / 検出: ${estimate.detectedParts.map(num => `pt${num}`).join(', ')}`
+      : '';
+    setPmPartSummaryDisplay(`推定: <strong>全${estimate.total}Part</strong>${partsLabel}`, `総Part ${estimate.total}`);
+    return;
+  }
+
+  if (totalInput) totalInput.value = '';
+  setPmPartSummaryDisplay('Part数を推定できませんでした。必要なら詳細指定で総Part数を入力してください。', '総Part 不明');
+}
+
+async function handlePmOutlineSelectChange() {
+  await updatePmOutlinePartSummary();
 }
 
 // ======================================================
@@ -9649,10 +9846,9 @@ async function pmDraftClaude() {
     ctx.workScene ? `- 描きたいシーン：${ctx.workScene}` : '',
     '',
     ctx.prevText ? '## 直前接続資料\n\n' + ctx.prevText + '\n' : '',
-    '## マイルール集',
-    '',
-    ctx.rulesMarkdown,
-    '',
+    ctx.rulesMarkdown && ctx.rulesMarkdown !== '（ルール未選択）'
+      ? '## マイルール集\n\n' + ctx.rulesMarkdown + '\n'
+      : '',
     '---',
     '',
     '# 執筆指示',
