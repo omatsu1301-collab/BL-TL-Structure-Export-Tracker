@@ -832,6 +832,9 @@ textarea { resize: vertical; }
       <button class="nav-item active" id="nav-list" onclick="showPage('list')">
         <span class="nav-icon">📋</span> 作品リスト
       </button>
+      <button class="nav-item" id="nav-dashboard" onclick="showPage('dashboard', currentWorkId)">
+        <span class="nav-icon">📊</span> 制作ダッシュボード
+      </button>
       <button class="nav-item" id="nav-rules" onclick="showPage('rules')">
         <span class="nav-icon">📐</span> マイルール集
       </button>
@@ -858,14 +861,30 @@ textarea { resize: vertical; }
       </div>
     </section>
 
+    <!-- PAGE 2: 制作ダッシュボード -->
+    <section class="page" id="page-dashboard">
+      <div class="breadcrumb">
+        <a onclick="showPage('list')">← 作品リスト</a>
+        <span>/</span>
+        <span id="dashboard-breadcrumb-title">制作ダッシュボード</span>
+      </div>
+      <div id="dashboard-root"></div>
+    </section>
+
     <!-- PAGE 2: 作品編集 -->
     <section class="page" id="page-work">
       <div class="breadcrumb"><a onclick="showPage('list')">← 作品リスト</a><span>/</span><span id="breadcrumb-title">作品詳細</span></div>
-     <div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('meta')">メタ情報・本文</button>
-  <button class="tab-btn" onclick="switchTab('analysis')">分析結果・エクスポート</button>
-  <button class="tab-btn" onclick="switchTab('promptmaker')">プロンプトメーカー</button>
-  <button class="tab-btn" onclick="switchTab('vault')">執筆保管庫</button>
+   <div class="tab-bar">
+  <button class="tab-btn active" data-tab="meta" onclick="switchTab('meta')">メタ情報・本文</button>
+  <button class="tab-btn" data-tab="drafts" onclick="switchTab('drafts')">初稿・差分・採用</button>
+  <button class="tab-btn" data-tab="canon" onclick="switchTab('canon')">確定設定</button>
+  <button class="tab-btn" data-tab="consistency" onclick="switchTab('consistency')">整合性チェック</button>
+  <button class="tab-btn" data-tab="summaries" onclick="switchTab('summaries')">引き継ぎ要約</button>
+  <button class="tab-btn" data-tab="reflection" onclick="switchTab('reflection')">正史反映アシスト</button>
+  <button class="tab-btn" data-tab="backup" onclick="switchTab('backup')">バックアップ</button>
+  <button class="tab-btn" data-tab="analysis" onclick="switchTab('analysis')">分析結果・エクスポート</button>
+  <button class="tab-btn" data-tab="promptmaker" onclick="switchTab('promptmaker')">プロンプトメーカー</button>
+  <button class="tab-btn" data-tab="vault" onclick="switchTab('vault')">執筆保管庫</button>
 </div>
 
       <!-- TAB: メタ情報・本文 -->
@@ -903,7 +922,25 @@ textarea { resize: vertical; }
         </div>
         <div class="form-section">
           <div class="form-section-header">
-            <div class="form-section-title"><span>📖</span> セクションB：本文入力</div>
+            <div class="form-section-title"><span>🗂️</span> セクションB：章・話設計</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span style="font-size:0.75rem;color:var(--text-muted)">章の追加と、各話の所属整理を行います</span>
+              <button class="btn btn-primary btn-sm" onclick="addChapter()">章を追加</button>
+            </div>
+          </div>
+          <div class="form-section-body">
+            <div class="form-hint">章タイトルや章メモはここで保存します。各話をどの章に入れるかは、下の「話本文」で各話保存すると反映されます。</div>
+            <div id="chapter-planner-container" style="display:flex;flex-direction:column;gap:12px;margin-top:14px">
+              <div class="empty-state" style="padding:32px">
+                <div class="empty-icon" style="font-size:2rem">🗂️</div>
+                <p style="font-size:0.85rem">章情報を読み込み中です…</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-section">
+          <div class="form-section-header">
+                        <div class="form-section-title"><span>📖</span> セクションC：話本文</div>
             <div style="display:flex;gap:8px;align-items:center">
               <span style="font-size:0.75rem;color:var(--text-muted)">話数を入力すると自動生成されます</span>
               <button class="btn btn-primary btn-sm" onclick="saveAllEpisodes()">全話を保存</button>
@@ -912,6 +949,133 @@ textarea { resize: vertical; }
           <div class="form-section-body"><div id="episodes-container">
             <div class="empty-state" style="padding:32px"><div class="empty-icon" style="font-size:2rem">📝</div><p style="font-size:0.85rem">メタ情報の「話数」を入力すると<br>テキストエリアが自動生成されます</p></div>
           </div></div>
+        </div>
+      </div>
+      <!-- TAB: 初稿・差分・採用 -->
+      <div class="tab-panel" id="tab-drafts">
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-title"><span>📝</span> 本文バージョン管理</div>
+            <button class="btn btn-secondary btn-sm" onclick="switchTab('meta')">メタ情報・本文へ戻る</button>
+          </div>
+          <div class="form-section-body">
+            <div class="form-hint">
+              ChatGPT初稿、Claude推敲稿、作者修正版、採用稿を別々に保存できます。
+              この画面で比較して、必要な版だけを現行本文へ反映します。
+            </div>
+            <div id="draft-studio-root" style="margin-top:16px">
+              <div class="empty-state" style="padding:32px">
+                <div class="empty-icon" style="font-size:2rem">📝</div>
+                <p style="font-size:0.85rem">本文バージョン管理を読み込み中です…</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: 整合性チェック -->
+      <div class="tab-panel" id="tab-consistency">
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-title"><span>🧪</span> 物語整合性チェック</div>
+            <button class="btn btn-secondary btn-sm" onclick="switchTab('meta')">メタ情報・本文へ戻る</button>
+          </div>
+          <div class="form-section-body">
+            <div class="form-hint">
+              ClaudeやChatGPTで確認した「キャラ」「口調」「時系列」「伏線」「関係性」「R18進行」などのチェック結果を、話ごとに保存します。
+            </div>
+            <div id="consistency-studio-root" style="margin-top:16px">
+              <div class="empty-state" style="padding:32px">
+                <div class="empty-icon" style="font-size:2rem">🧪</div>
+                <p style="font-size:0.85rem">整合性チェック画面を読み込み中です…</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: 確定設定 -->
+      <div class="tab-panel" id="tab-canon">
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-title"><span>🧭</span> 確定設定</div>
+            <button class="btn btn-secondary btn-sm" onclick="switchTab('meta')">メタ情報・本文へ戻る</button>
+          </div>
+          <div class="form-section-body">
+            <div class="form-hint">
+              本文ではなく、この作品で確定した事実を保存します。キャラ、関係性、時系列、伏線、未解決事項、世界設定、場所、アイテムをここで管理します。
+            </div>
+            <div id="canon-studio-root" style="margin-top:16px">
+              <div class="empty-state" style="padding:32px">
+                <div class="empty-icon" style="font-size:2rem">🧭</div>
+                <p style="font-size:0.85rem">確定設定を読み込み中です…</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: 引き継ぎ要約 -->
+      <div class="tab-panel" id="tab-summaries">
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-title"><span>📦</span> 引き継ぎ要約・正史反映準備</div>
+            <button class="btn btn-secondary btn-sm" onclick="switchTab('meta')">メタ情報・本文へ戻る</button>
+          </div>
+          <div class="form-section-body">
+            <div class="form-hint">
+              章ごと・話ごとの引き継ぎ要約、次回用コンテキスト要約、正史反映候補メモを保存します。保存した内容はコピーして、そのままClaudeやChatGPTへ貼れます。
+            </div>
+            <div id="summary-studio-root" style="margin-top:16px">
+              <div class="empty-state" style="padding:32px">
+                <div class="empty-icon" style="font-size:2rem">📦</div>
+                <p style="font-size:0.85rem">引き継ぎ要約画面を読み込み中です…</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: 正史反映アシスト -->
+      <div class="tab-panel" id="tab-reflection">
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-title"><span>🪄</span> 正史反映アシスト</div>
+            <button class="btn btn-secondary btn-sm" onclick="switchTab('summaries')">引き継ぎ要約へ戻る</button>
+          </div>
+          <div class="form-section-body">
+            <div class="form-hint">
+              「正史反映候補メモ」を見ながら、確定設定へ移すための補助画面です。候補メモを確認し、カテゴリ別の転記テンプレートをコピーしてから、確定設定タブへ移動できます。
+            </div>
+            <div id="reflection-studio-root" style="margin-top:16px">
+              <div class="empty-state" style="padding:32px">
+                <div class="empty-icon" style="font-size:2rem">🪄</div>
+                <p style="font-size:0.85rem">正史反映アシストを読み込み中です…</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: バックアップ -->
+      <div class="tab-panel" id="tab-backup">
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-title"><span>💾</span> 作品バックアップ</div>
+            <button class="btn btn-secondary btn-sm" onclick="switchTab('meta')">メタ情報・本文へ戻る</button>
+          </div>
+          <div class="form-section-body">
+            <div class="form-hint">
+              現在の作品データを1つのJSONにまとめて出力し、このアプリへ復元できます。
+              このフェーズの復元は「同じ作品IDを持つデータを更新・復元する方式」です。別作品として複製はまだ行いません。
+            </div>
+            <div id="backup-studio-root" style="margin-top:16px">
+              <div class="empty-state" style="padding:32px">
+                <div class="empty-icon" style="font-size:2rem">💾</div>
+                <p style="font-size:0.85rem">バックアップ画面を読み込み中です…</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1649,16 +1813,315 @@ textarea { resize: vertical; }
 // ======================================================
 //  DB LAYER : IndexedDB
 // ======================================================
-const DB_NAME='NovelAnalysisDB';const DB_VERSION=5;
-const STORE_WORKS='works';const STORE_EPISODES='episodes';const STORE_RECORDS='records';const STORE_RULES='rules';
-const STORE_RULE_HISTORY='ruleHistory';
-const STORE_WRITING_VAULT='writingVault';let db;
-function initDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,DB_VERSION);req.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains(STORE_WORKS)){const ws=d.createObjectStore(STORE_WORKS,{keyPath:'id'});ws.createIndex('updatedAt','updatedAt');}if(!d.objectStoreNames.contains(STORE_EPISODES)){const es=d.createObjectStore(STORE_EPISODES,{keyPath:'id'});es.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RECORDS)){const rs=d.createObjectStore(STORE_RECORDS,{keyPath:'id'});rs.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RULES)){d.createObjectStore(STORE_RULES,{keyPath:'id'});}if(!d.objectStoreNames.contains('rulePresets')){const ps=d.createObjectStore('rulePresets',{keyPath:'id'});ps.createIndex('workId','workId');}if(!d.objectStoreNames.contains(STORE_RULE_HISTORY)){const hs=d.createObjectStore(STORE_RULE_HISTORY,{keyPath:'id'});hs.createIndex('sessionId','sessionId');hs.createIndex('appliedAt','appliedAt');}if(!d.objectStoreNames.contains(STORE_WRITING_VAULT)){const vs=d.createObjectStore(STORE_WRITING_VAULT,{keyPath:'id'});vs.createIndex('workId','workId',{unique:false});vs.createIndex('type','type',{unique:false});vs.createIndex('updatedAt','updatedAt',{unique:false});vs.createIndex('includeInAiExport','includeInAiExport',{unique:false});}};req.onsuccess=e=>{db=e.target.result;resolve();};req.onerror=e=>reject(e.target.error);});}function dbGet(s,k){return new Promise((r,j)=>{const tx=db.transaction(s,'readonly');const rq=tx.objectStore(s).get(k);rq.onsuccess=()=>r(rq.result);rq.onerror=()=>j(rq.error);});}
-function dbGetAll(s){return new Promise((r,j)=>{const tx=db.transaction(s,'readonly');const rq=tx.objectStore(s).getAll();rq.onsuccess=()=>r(rq.result);rq.onerror=()=>j(rq.error);});}
-function dbGetByIndex(s,i,v){return new Promise((r,j)=>{const tx=db.transaction(s,'readonly');const rq=tx.objectStore(s).index(i).getAll(v);rq.onsuccess=()=>r(rq.result);rq.onerror=()=>j(rq.error);});}
-function dbPut(s,o){return new Promise((r,j)=>{const tx=db.transaction(s,'readwrite');const rq=tx.objectStore(s).put(o);rq.onsuccess=()=>r(rq.result);rq.onerror=()=>j(rq.error);});}
-function dbDelete(s,k){return new Promise((r,j)=>{const tx=db.transaction(s,'readwrite');const rq=tx.objectStore(s).delete(k);rq.onsuccess=()=>r();rq.onerror=()=>j(rq.error);});}
-function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+const DB_NAME = 'NovelAnalysisDB';
+const DB_VERSION = 6;
+
+const STORE_WORKS = 'works';
+const STORE_EPISODES = 'episodes';
+const STORE_RECORDS = 'records';
+const STORE_RULES = 'rules';
+const STORE_RULE_HISTORY = 'ruleHistory';
+const STORE_WRITING_VAULT = 'writingVault';
+
+const STORE_CHAPTERS = 'chapters';
+const STORE_CANON_CHARACTERS = 'canonCharacters';
+const STORE_CANON_RELATIONS = 'canonRelations';
+const STORE_CANON_TIMELINE_EVENTS = 'canonTimelineEvents';
+const STORE_CANON_FORESHADOWINGS = 'canonForeshadowings';
+const STORE_CANON_OPEN_QUESTIONS = 'canonOpenQuestions';
+const STORE_CANON_WORLD_RULES = 'canonWorldRules';
+const STORE_CANON_LOCATIONS = 'canonLocations';
+const STORE_CANON_ITEMS = 'canonItems';
+const STORE_EPISODE_DRAFTS = 'episodeDrafts';
+const STORE_CONSISTENCY_REPORTS = 'consistencyReports';
+const STORE_PROMPT_SNAPSHOTS = 'promptSnapshots';
+const STORE_PIPELINE_SESSIONS = 'pipelineSessions';
+const STORE_WORK_SUMMARIES = 'workSummaries';
+
+let db;
+
+function initDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+
+    req.onupgradeneeded = (e) => {
+      const d = e.target.result;
+
+      if (!d.objectStoreNames.contains(STORE_WORKS)) {
+        const ws = d.createObjectStore(STORE_WORKS, { keyPath: 'id' });
+        ws.createIndex('updatedAt', 'updatedAt');
+      }
+
+      if (!d.objectStoreNames.contains(STORE_EPISODES)) {
+        const es = d.createObjectStore(STORE_EPISODES, { keyPath: 'id' });
+        es.createIndex('workId', 'workId');
+      }
+
+      if (!d.objectStoreNames.contains(STORE_RECORDS)) {
+        const rs = d.createObjectStore(STORE_RECORDS, { keyPath: 'id' });
+        rs.createIndex('workId', 'workId');
+      }
+
+      if (!d.objectStoreNames.contains(STORE_RULES)) {
+        d.createObjectStore(STORE_RULES, { keyPath: 'id' });
+      }
+
+      if (!d.objectStoreNames.contains('rulePresets')) {
+        const ps = d.createObjectStore('rulePresets', { keyPath: 'id' });
+        ps.createIndex('workId', 'workId');
+      }
+
+      if (!d.objectStoreNames.contains(STORE_RULE_HISTORY)) {
+        const hs = d.createObjectStore(STORE_RULE_HISTORY, { keyPath: 'id' });
+        hs.createIndex('sessionId', 'sessionId');
+        hs.createIndex('appliedAt', 'appliedAt');
+      }
+
+      if (!d.objectStoreNames.contains(STORE_WRITING_VAULT)) {
+        const vs = d.createObjectStore(STORE_WRITING_VAULT, { keyPath: 'id' });
+        vs.createIndex('workId', 'workId', { unique: false });
+        vs.createIndex('type', 'type', { unique: false });
+        vs.createIndex('updatedAt', 'updatedAt', { unique: false });
+        vs.createIndex('includeInAiExport', 'includeInAiExport', { unique: false });
+      }
+
+      if (!d.objectStoreNames.contains(STORE_CHAPTERS)) {
+        const store = d.createObjectStore(STORE_CHAPTERS, { keyPath: 'id' });
+        store.createIndex('workId', 'workId', { unique: false });
+        store.createIndex('number', 'number', { unique: false });
+        store.createIndex('status', 'status', { unique: false });
+        store.createIndex('updatedAt', 'updatedAt', { unique: false });
+      }
+
+      if (!d.objectStoreNames.contains(STORE_CANON_CHARACTERS)) {
+        const store = d.createObjectStore(STORE_CANON_CHARACTERS, { keyPath: 'id' });
+        store.createIndex('workId', 'workId', { unique: false });
+        store.createIndex('name', 'name', { unique: false });
+        store.createIndex('updatedAt', 'updatedAt', { unique: false });
+      }
+
+      if (!d.objectStoreNames.contains(STORE_CANON_RELATIONS)) {
+        const store = d.createObjectStore(STORE_CANON_RELATIONS, { keyPath: 'id' });
+        store.createIndex('workId', 'workId', { unique: false });
+        store.createIndex('fromCharacterId', 'fromCharacterId', { unique: false });
+        store.createIndex('toCharacterId', 'toCharacterId', { unique: false });
+        store.createIndex('updatedAt', 'updatedAt', { unique: false });
+      }
+
+      if (!d.objectStoreNames.contains(STORE_CANON_TIMELINE_EVENTS)) {
+        const store = d.createObjectStore(STORE_CANON_TIMELINE_EVENTS, { keyPath: 'id' });
+        store.createIndex('workId', 'workId', { unique: false });
+        store.createIndex('inStoryOrder', 'inStoryOrder', { unique: false });
+        store.createIndex('publicEpisodeRef', 'publicEpisodeRef', { unique: false });
+      }
+
+      if (!d.objectStoreNames.contains(STORE_CANON_FORESHADOWINGS)) {
+        const store = d.createObjectStore(STORE_CANON_FORESHADOWINGS, { keyPath: 'id' });
+        store.createIndex('workId', 'workId', { unique: false });
+        store.createIndex('status', 'status', { unique: false });
+        store.createIndex('plannedResolveAtEpisode', 'plannedResolveAtEpisode', { unique: false });
+      }
+
+      if (!d.objectStoreNames.contains(STORE_CANON_OPEN_QUESTIONS)) {
+        const store = d.createObjectStore(STORE_CANON_OPEN_QUESTIONS, { keyPath: 'id' });
+        store.createIndex('workId', 'workId', { unique: false });
+        store.createIndex('urgency', 'urgency', { unique: false });
+        store.createIndex('category', 'category', { unique: false });
+      }
+
+      if (!d.objectStoreNames.contains(STORE_CANON_WORLD_RULES)) {
+        const store = d.createObjectStore(STORE_CANON_WORLD_RULES, { keyPath: 'id' });
+        store.createIndex('workId', 'workId', { unique: false });
+        store.createIndex('category', 'category', { unique: false });
+        store.createIndex('certainty', 'certainty', { unique: false });
+      }
+
+      if (!d.objectStoreNames.contains(STORE_CANON_LOCATIONS)) {
+        const store = d.createObjectStore(STORE_CANON_LOCATIONS, { keyPath: 'id' });
+        store.createIndex('workId', 'workId', { unique: false });
+        store.createIndex('name', 'name', { unique: false });
+      }
+
+      if (!d.objectStoreNames.contains(STORE_CANON_ITEMS)) {
+        const store = d.createObjectStore(STORE_CANON_ITEMS, { keyPath: 'id' });
+        store.createIndex('workId', 'workId', { unique: false });
+        store.createIndex('name', 'name', { unique: false });
+        store.createIndex('status', 'status', { unique: false });
+      }
+
+      if (!d.objectStoreNames.contains(STORE_EPISODE_DRAFTS)) {
+        const store = d.createObjectStore(STORE_EPISODE_DRAFTS, { keyPath: 'id' });
+        store.createIndex('workId', 'workId', { unique: false });
+        store.createIndex('chapterId', 'chapterId', { unique: false });
+        store.createIndex('episodeId', 'episodeId', { unique: false });
+        store.createIndex('versionType', 'versionType', { unique: false });
+        store.createIndex('createdAt', 'createdAt', { unique: false });
+      }
+
+      if (!d.objectStoreNames.contains(STORE_CONSISTENCY_REPORTS)) {
+        const store = d.createObjectStore(STORE_CONSISTENCY_REPORTS, { keyPath: 'id' });
+        store.createIndex('workId', 'workId', { unique: false });
+        store.createIndex('chapterId', 'chapterId', { unique: false });
+        store.createIndex('episodeId', 'episodeId', { unique: false });
+        store.createIndex('createdAt', 'createdAt', { unique: false });
+      }
+
+      if (!d.objectStoreNames.contains(STORE_PROMPT_SNAPSHOTS)) {
+        const store = d.createObjectStore(STORE_PROMPT_SNAPSHOTS, { keyPath: 'id' });
+        store.createIndex('workId', 'workId', { unique: false });
+        store.createIndex('promptType', 'promptType', { unique: false });
+        store.createIndex('createdAt', 'createdAt', { unique: false });
+      }
+
+      if (!d.objectStoreNames.contains(STORE_PIPELINE_SESSIONS)) {
+        const store = d.createObjectStore(STORE_PIPELINE_SESSIONS, { keyPath: 'id' });
+        store.createIndex('workId', 'workId', { unique: false });
+        store.createIndex('episodeId', 'episodeId', { unique: false });
+        store.createIndex('stepKey', 'stepKey', { unique: false });
+        store.createIndex('updatedAt', 'updatedAt', { unique: false });
+      }
+
+      if (!d.objectStoreNames.contains(STORE_WORK_SUMMARIES)) {
+        const store = d.createObjectStore(STORE_WORK_SUMMARIES, { keyPath: 'id' });
+        store.createIndex('workId', 'workId', { unique: false });
+        store.createIndex('chapterId', 'chapterId', { unique: false });
+        store.createIndex('summaryType', 'summaryType', { unique: false });
+        store.createIndex('updatedAt', 'updatedAt', { unique: false });
+      }
+    };
+
+    req.onsuccess = async (e) => {
+      db = e.target.result;
+      try {
+        await runPhase1DataMigration();
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
+    };
+
+    req.onerror = (e) => reject(e.target.error);
+  });
+}
+
+function dbGet(s, k) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(s, 'readonly');
+    const rq = tx.objectStore(s).get(k);
+    rq.onsuccess = () => resolve(rq.result);
+    rq.onerror = () => reject(rq.error);
+  });
+}
+
+function dbGetAll(s) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(s, 'readonly');
+    const rq = tx.objectStore(s).getAll();
+    rq.onsuccess = () => resolve(rq.result);
+    rq.onerror = () => reject(rq.error);
+  });
+}
+
+function dbGetByIndex(s, i, v) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(s, 'readonly');
+    const rq = tx.objectStore(s).index(i).getAll(v);
+    rq.onsuccess = () => resolve(rq.result);
+    rq.onerror = () => reject(rq.error);
+  });
+}
+
+function dbPut(s, o) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(s, 'readwrite');
+    const rq = tx.objectStore(s).put(o);
+    rq.onsuccess = () => resolve(rq.result);
+    rq.onerror = () => reject(rq.error);
+  });
+}
+
+function dbDelete(s, k) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(s, 'readwrite');
+    const rq = tx.objectStore(s).delete(k);
+    rq.onsuccess = () => resolve();
+    rq.onerror = () => reject(rq.error);
+  });
+}
+
+function genId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+function buildDefaultChapterForMigration(work) {
+  const now = Date.now();
+
+  return {
+    id: 'chapter_' + genId(),
+    workId: work.id,
+    number: 1,
+    title: '第1章',
+    summary: '既存データ移行時に自動作成した仮の章です。既存の各話は、いったんこの章にまとめています。',
+    status: 'drafting',
+    createdAt: now,
+    updatedAt: now,
+    isMigratedDefault: true
+  };
+}
+
+async function ensureWorkChapterLinks(workId) {
+  if (!workId) return null;
+
+  const work = await dbGet(STORE_WORKS, workId);
+  if (!work) return null;
+
+  let chapters = await dbGetByIndex(STORE_CHAPTERS, 'workId', workId);
+  chapters.sort((a, b) => (a.number || 0) - (b.number || 0));
+
+  let firstChapter = chapters[0] || null;
+
+  if (!firstChapter) {
+    firstChapter = buildDefaultChapterForMigration(work);
+    await dbPut(STORE_CHAPTERS, firstChapter);
+  }
+
+  const episodes = await dbGetByIndex(STORE_EPISODES, 'workId', workId);
+
+  for (const ep of episodes) {
+    let changed = false;
+    const stamp = ep.updatedAt || Date.now();
+
+    if (!ep.chapterId) {
+      ep.chapterId = firstChapter.id;
+      changed = true;
+    }
+
+    if (!ep.status) {
+      ep.status = String(ep.content || '').trim() ? 'drafted' : 'unplanned';
+      changed = true;
+    }
+
+    if (!ep.createdAt) {
+      ep.createdAt = stamp;
+      changed = true;
+    }
+
+    if (changed) {
+      ep.updatedAt = ep.updatedAt || stamp;
+      await dbPut(STORE_EPISODES, ep);
+    }
+  }
+
+  return firstChapter;
+}
+
+async function runPhase1DataMigration() {
+  const works = await dbGetAll(STORE_WORKS);
+
+  for (const work of works) {
+    await ensureWorkChapterLinks(work.id);
+  }
+}
 
 // ======================================================
 //  STATE
@@ -1695,17 +2158,40 @@ async function seedRules(){
 function showPage(page,workId){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+
+  const targetWorkId = workId || currentWorkId || null;
+
   if(page==='list'){
     document.getElementById('page-list').classList.add('active');
     document.getElementById('nav-list').classList.add('active');
     document.getElementById('top-bar-title').textContent='分析対象作品リスト';
     document.getElementById('top-bar-actions').innerHTML='';
-    currentWorkId=null;currentWork=null;renderWorksList();
-  }else if(page==='work'&&workId){
-    currentWorkId=workId;
+    currentWorkId=null;
+    currentWork=null;
+    renderWorksList();
+  }else if(page==='dashboard'){
+    document.getElementById('page-dashboard').classList.add('active');
+    document.getElementById('nav-dashboard').classList.add('active');
+    document.getElementById('top-bar-title').textContent='制作ダッシュボード';
+    document.getElementById('top-bar-actions').innerHTML=targetWorkId
+      ? `<button class="btn btn-secondary btn-sm" onclick="showPage('work','${targetWorkId}')">作品詳細へ戻る</button>`
+      : '';
+    currentWorkId=targetWorkId;
+    if(targetWorkId){
+      updateNavWorksList(targetWorkId);
+      renderDashboardPage(targetWorkId);
+    }else{
+      renderDashboardEmpty();
+    }
+  }else if(page==='work'&&targetWorkId){
+    currentWorkId=targetWorkId;
     document.getElementById('page-work').classList.add('active');
     document.getElementById('top-bar-title').textContent='作品詳細';
-    loadWorkPage(workId);switchTab('meta');updateNavWorksList(workId);
+    document.getElementById('top-bar-actions').innerHTML=
+      `<button class="btn btn-secondary btn-sm" onclick="showPage('dashboard','${targetWorkId}')">📊 制作ダッシュボード</button>`;
+    loadWorkPage(targetWorkId);
+    switchTab('meta');
+    updateNavWorksList(targetWorkId);
   }else if(page==='rules'){
     document.getElementById('page-rules').classList.add('active');
     document.getElementById('nav-rules').classList.add('active');
@@ -1716,22 +2202,598 @@ function showPage(page,workId){
 }
 
 function switchTab(tab){
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
-    b.classList.toggle('active',
-      (i===0&&tab==='meta')||
-      (i===1&&tab==='analysis')||
-      (i===2&&tab==='promptmaker')||
-      (i===3&&tab==='vault')
-    );
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.tab===tab);
   });
-  document.getElementById('tab-meta').classList.toggle('active',tab==='meta');
-  document.getElementById('tab-analysis').classList.toggle('active',tab==='analysis');
-  document.getElementById('tab-promptmaker').classList.toggle('active',tab==='promptmaker');
-  document.getElementById('tab-vault').classList.toggle('active',tab==='vault');
-  if(tab==='analysis'&&currentWorkId){loadRecords(currentWorkId);renderEpisodeChecks();}
-  if(tab==='promptmaker'&&currentWorkId){loadPromptMakerTab();}
-  if(tab==='vault'&&currentWorkId){loadWritingVaultTab();}
+
+  ['meta','drafts','canon','consistency','summaries','reflection','backup','analysis','promptmaker','vault'].forEach(name=>{
+    const panel = document.getElementById(`tab-${name}`);
+    if(panel){
+      panel.classList.toggle('active', name===tab);
+    }
+  });
+
+  if(tab==='drafts'&&currentWorkId){
+    renderDraftStudio(currentWorkId);
+  }
+  if(tab==='canon'&&currentWorkId){
+    renderCanonStudio(currentWorkId);
+  }
+  if(tab==='consistency'&&currentWorkId){
+    renderConsistencyStudio(currentWorkId);
+  }
+  if(tab==='summaries'&&currentWorkId){
+    renderSummaryStudio(currentWorkId);
+  }
+  if(tab==='reflection'&&currentWorkId){
+    renderReflectionStudio(currentWorkId);
+  }
+  if(tab==='backup'&&currentWorkId){
+    renderBackupStudio(currentWorkId);
+  }
+  if(tab==='analysis'&&currentWorkId){
+    loadRecords(currentWorkId);
+    renderEpisodeChecks();
+  }
+  if(tab==='promptmaker'&&currentWorkId){
+    loadPromptMakerTab();
+  }
+  if(tab==='vault'&&currentWorkId){
+    loadWritingVaultTab();
+  }
 }
+
+const CHAPTER_STATUS_LABELS = {
+  untouched: '未着手',
+  planning: '設計中',
+  drafting: '執筆中',
+  revising: '推敲中',
+  fixed: '確定',
+  published: '公開済み'
+};
+
+function openWorkTabFromDashboard(workId, tab) {
+  showPage('work', workId);
+  setTimeout(() => switchTab(tab), 0);
+}
+
+function dashboardStateMeta(state) {
+  if (state === 'done') {
+    return { className: 'status-done', label: '完了' };
+  }
+  if (state === 'wip') {
+    return { className: 'status-wip', label: '進行中' };
+  }
+  return { className: 'status-new', label: '未着手' };
+}
+
+function getChapterStatusLabel(status) {
+  return CHAPTER_STATUS_LABELS[status] || '未着手';
+}
+
+function countEpisodesWithContent(episodes) {
+  return episodes.filter(ep => String(ep.content || '').trim()).length;
+}
+
+function hasDesignRecords(records) {
+  return records.some(record =>
+    (record.tags || []).some(tag =>
+      ['プロット設計', 'キャラ設定シート', 'キャラクター抽出', 'R18配置', '感情曲線', '転換点'].includes(tag)
+    )
+  );
+}
+
+async function getDashboardExtendedData(workId) {
+  const [
+    drafts,
+    consistencyReports,
+    summaries,
+    canonCharacters,
+    canonRelations,
+    canonTimelineEvents,
+    canonForeshadowings,
+    canonOpenQuestions,
+    canonWorldRules,
+    canonLocations,
+    canonItems
+  ] = await Promise.all([
+    dbGetByIndex(STORE_EPISODE_DRAFTS, 'workId', workId),
+    dbGetByIndex(STORE_CONSISTENCY_REPORTS, 'workId', workId),
+    dbGetByIndex(STORE_WORK_SUMMARIES, 'workId', workId),
+    dbGetByIndex(STORE_CANON_CHARACTERS, 'workId', workId),
+    dbGetByIndex(STORE_CANON_RELATIONS, 'workId', workId),
+    dbGetByIndex(STORE_CANON_TIMELINE_EVENTS, 'workId', workId),
+    dbGetByIndex(STORE_CANON_FORESHADOWINGS, 'workId', workId),
+    dbGetByIndex(STORE_CANON_OPEN_QUESTIONS, 'workId', workId),
+    dbGetByIndex(STORE_CANON_WORLD_RULES, 'workId', workId),
+    dbGetByIndex(STORE_CANON_LOCATIONS, 'workId', workId),
+    dbGetByIndex(STORE_CANON_ITEMS, 'workId', workId)
+  ]);
+
+  const canonTotal =
+    canonCharacters.length +
+    canonRelations.length +
+    canonTimelineEvents.length +
+    canonForeshadowings.length +
+    canonOpenQuestions.length +
+    canonWorldRules.length +
+    canonLocations.length +
+    canonItems.length;
+
+  const readySummaryCount = summaries.filter(item => item.status === 'ready').length;
+  const unresolvedReportCount = consistencyReports.filter(item =>
+    item.reviewStatus === 'open' || item.reviewStatus === 'reviewing'
+  ).length;
+  const seriousReportCount = consistencyReports.filter(item =>
+    item.overallRisk === 'warning' || item.overallRisk === 'critical'
+  ).length;
+  const adoptedDraftCount = drafts.filter(item => item.versionType === 'adopted').length;
+  const chapterFixedCount = 0;
+
+  return {
+    drafts,
+    consistencyReports,
+    summaries,
+    canonTotal,
+    readySummaryCount,
+    unresolvedReportCount,
+    seriousReportCount,
+    adoptedDraftCount,
+    chapterFixedCount
+  };
+}
+
+function buildDashboardNextAction(metrics, workId) {
+  if (!metrics.records.length) {
+    return {
+      title: '最初に分析ログを入れる',
+      summary: '参考作品分析や既存作品分析の結果を保存すると、この作品の設計土台ができます。',
+      actionHtml: `<button class="btn btn-primary" onclick="openWorkTabFromDashboard('${workId}','analysis')">分析結果・エクスポートを開く</button>`
+    };
+  }
+
+  if (!hasDesignRecords(metrics.records)) {
+    return {
+      title: '次に設計整理を進める',
+      summary: 'キャラ設計、プロット設計、R18配置など、設計系の記録を増やす段階です。',
+      actionHtml: `<button class="btn btn-primary" onclick="openWorkTabFromDashboard('${workId}','promptmaker')">プロンプトメーカーを開く</button>`
+    };
+  }
+
+  if (!metrics.chapters.length || !metrics.episodes.length) {
+    return {
+      title: '章と話の土台を整える',
+      summary: '章タイトル、章メモ、各話の所属章を整理して、制作の骨格を固定します。',
+      actionHtml: `<button class="btn btn-primary" onclick="openWorkTabFromDashboard('${workId}','meta')">メタ情報・本文を開く</button>`
+    };
+  }
+
+  if (!metrics.drafts.length) {
+    return {
+      title: '初稿または推敲版を保存する',
+      summary: 'ChatGPT初稿、Claude推敲稿、作者修正版のどれかを保存すると、差分比較が使いやすくなります。',
+      actionHtml: `<button class="btn btn-primary" onclick="openWorkTabFromDashboard('${workId}','drafts')">初稿・差分・採用を開く</button>`
+    };
+  }
+
+  if (!metrics.canonTotal) {
+    return {
+      title: '確定設定を作り始める',
+      summary: '本文で確定した事実を、キャラ・関係性・伏線などの項目に分けて保存します。',
+      actionHtml: `<button class="btn btn-primary" onclick="openWorkTabFromDashboard('${workId}','canon')">確定設定を開く</button>`
+    };
+  }
+
+  if (!metrics.consistencyReports.length) {
+    return {
+      title: '整合性チェックを保存する',
+      summary: 'キャラ、口調、時系列、伏線、R18進行などの確認結果を、話ごとに保存する段階です。',
+      actionHtml: `<button class="btn btn-primary" onclick="openWorkTabFromDashboard('${workId}','consistency')">整合性チェックを開く</button>`
+    };
+  }
+
+  if (metrics.unresolvedReportCount > 0) {
+    return {
+      title: '未対応の整合性チェックを確認する',
+      summary: `未対応または確認中のチェックが ${metrics.unresolvedReportCount} 件あります。先にここを片づけると後工程が安定します。`,
+      actionHtml: `<button class="btn btn-primary" onclick="openWorkTabFromDashboard('${workId}','consistency')">整合性チェックを開く</button>`
+    };
+  }
+
+  if (!metrics.summaries.length || metrics.readySummaryCount === 0) {
+    return {
+      title: '次回用の引き継ぎ要約を作る',
+      summary: '章要約、話要約、次回コンテキスト要約、正史反映候補メモを整理する段階です。',
+      actionHtml: `<button class="btn btn-primary" onclick="openWorkTabFromDashboard('${workId}','summaries')">引き継ぎ要約を開く</button>`
+    };
+  }
+
+  return {
+    title: 'バックアップを作成して安全に保管する',
+    summary: '主要データは揃っています。いまの状態を JSON で持ち出して、ブラウザ保存以外にも逃がしておくと安心です。',
+    actionHtml: `<button class="btn btn-primary" onclick="openWorkTabFromDashboard('${workId}','backup')">バックアップを開く</button>`
+  };
+}
+
+function buildDashboardOverviewCards(metrics) {
+  return `
+    <div class="card">
+      <div class="card-body">
+        <div class="form-label">本文バージョン</div>
+        <div style="font-size:1rem;font-weight:700;margin-top:6px">${metrics.drafts.length}件</div>
+        <div class="form-hint" style="margin-top:6px">採用稿 ${metrics.adoptedDraftCount}件</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="form-label">確定設定</div>
+        <div style="font-size:1rem;font-weight:700;margin-top:6px">${metrics.canonTotal}件</div>
+        <div class="form-hint" style="margin-top:6px">キャラ / 関係 / 伏線 などの合計</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="form-label">整合性チェック</div>
+        <div style="font-size:1rem;font-weight:700;margin-top:6px">${metrics.consistencyReports.length}件</div>
+        <div class="form-hint" style="margin-top:6px">未対応 ${metrics.unresolvedReportCount}件</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="form-label">危険な指摘</div>
+        <div style="font-size:1rem;font-weight:700;margin-top:6px">${metrics.seriousReportCount}件</div>
+        <div class="form-hint" style="margin-top:6px">要修正 / 重大注意</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="form-label">引き継ぎ要約</div>
+        <div style="font-size:1rem;font-weight:700;margin-top:6px">${metrics.summaries.length}件</div>
+        <div class="form-hint" style="margin-top:6px">次回貼り付け可 ${metrics.readySummaryCount}件</div>
+      </div>
+    </div>
+  `;
+}
+
+function buildDashboardSteps({
+  workId,
+  records,
+  chapters,
+  episodes,
+  writtenEpisodesCount,
+  drafts,
+  canonTotal,
+  consistencyReports,
+  summaries,
+  readySummaryCount,
+  unresolvedReportCount
+}) {
+  const hasAnalysis = records.length > 0;
+  const hasDesign = hasDesignRecords(records);
+  const hasChapterBase = chapters.length > 0;
+  const hasEpisodeBase = episodes.length > 0;
+  const hasDraftBody = writtenEpisodesCount > 0;
+  const hasSavedDraftVersions = drafts.length > 0;
+  const hasCanon = canonTotal > 0;
+  const hasConsistency = consistencyReports.length > 0;
+  const hasSummaries = summaries.length > 0;
+
+  return [
+    {
+      title: 'Step 1 参考分析',
+      state: hasAnalysis ? 'done' : 'new',
+      summary: hasAnalysis
+        ? `分析ログが ${records.length} 件あります`
+        : 'まずは参考作品分析や既存分析のログを保存します',
+      actionHtml: `<button class="btn btn-secondary btn-sm" onclick="openWorkTabFromDashboard('${workId}','analysis')">分析ログを開く</button>`
+    },
+    {
+      title: 'Step 2 設計整理',
+      state: hasDesign ? 'done' : (hasAnalysis ? 'wip' : 'new'),
+      summary: hasDesign
+        ? '設計系ログが入っています'
+        : '現行UIでは分析ログとプロンプトメーカーを使って設計をためます',
+      actionHtml: `<button class="btn btn-secondary btn-sm" onclick="openWorkTabFromDashboard('${workId}','promptmaker')">プロンプトメーカーを開く</button>`
+    },
+    {
+      title: 'Step 3 章・話の土台',
+      state: (hasChapterBase && hasEpisodeBase) ? 'done' : 'new',
+      summary: (hasChapterBase && hasEpisodeBase)
+        ? `章 ${chapters.length} 件 / 話 ${episodes.length} 件を管理中`
+        : '章と話の土台を用意します',
+      actionHtml: `<button class="btn btn-secondary btn-sm" onclick="openWorkTabFromDashboard('${workId}','meta')">章・話を整理する</button>`
+    },
+    {
+      title: 'Step 4 初稿・差分保存',
+      state: hasSavedDraftVersions ? 'done' : (hasDraftBody ? 'wip' : 'new'),
+      summary: hasSavedDraftVersions
+        ? `保存済み本文バージョンが ${drafts.length} 件あります`
+        : hasDraftBody
+          ? '本文はありますが、差分保存用の版がまだ少ない状態です'
+          : 'まだ本文や版の保存が少ない状態です',
+      actionHtml: `<button class="btn btn-secondary btn-sm" onclick="openWorkTabFromDashboard('${workId}','drafts')">初稿・差分・採用を開く</button>`
+    },
+    {
+      title: 'Step 5 確定設定',
+      state: hasCanon ? 'done' : (hasSavedDraftVersions ? 'wip' : 'new'),
+      summary: hasCanon
+        ? `確定設定が ${canonTotal} 件あります`
+        : '本文で確定した事実を、キャラ・関係性・伏線などへ移します',
+      actionHtml: `<button class="btn btn-secondary btn-sm" onclick="openWorkTabFromDashboard('${workId}','canon')">確定設定を開く</button>`
+    },
+    {
+      title: 'Step 6 整合性チェック',
+      state: hasConsistency ? (unresolvedReportCount > 0 ? 'wip' : 'done') : 'new',
+      summary: hasConsistency
+        ? `チェック ${consistencyReports.length} 件 / 未対応 ${unresolvedReportCount} 件`
+        : 'キャラ、口調、時系列、伏線、R18進行などを確認して保存します',
+      actionHtml: `<button class="btn btn-secondary btn-sm" onclick="openWorkTabFromDashboard('${workId}','consistency')">整合性チェックを開く</button>`
+    },
+    {
+      title: 'Step 7 引き継ぎ要約',
+      state: readySummaryCount > 0 ? 'done' : (hasSummaries ? 'wip' : 'new'),
+      summary: readySummaryCount > 0
+        ? `次回貼り付け可の要約が ${readySummaryCount} 件あります`
+        : hasSummaries
+          ? '要約はありますが、まだ「次回貼り付け可」に整っていません'
+          : '章ごとの引き継ぎ要約や正史反映候補メモを整理します',
+      actionHtml: `<button class="btn btn-secondary btn-sm" onclick="openWorkTabFromDashboard('${workId}','summaries')">引き継ぎ要約を開く</button>`
+    },
+    {
+      title: 'Step 8 バックアップ',
+      state: readySummaryCount > 0 ? 'wip' : 'new',
+      summary: '完成前でも、節目ごとに作品全体をJSONで持ち出して保管できます',
+      actionHtml: `<button class="btn btn-secondary btn-sm" onclick="openWorkTabFromDashboard('${workId}','backup')">バックアップを開く</button>`
+    }
+  ];
+}
+
+function buildChapterEpisodeRangeText(episodesInChapter) {
+  if (!episodesInChapter.length) return '話の割り当てなし';
+  const numbers = episodesInChapter
+    .map(ep => Number(ep.number) || 0)
+    .filter(Boolean)
+    .sort((a, b) => a - b);
+
+  if (!numbers.length) return '話番号なし';
+
+  const first = numbers[0];
+  const last = numbers[numbers.length - 1];
+  return first === last ? `第${first}話` : `第${first}話〜第${last}話`;
+}
+
+function buildDashboardChapterCards(chapters, episodes) {
+  if (!chapters.length) {
+    return `
+      <div class="empty-state" style="padding:32px">
+        <div class="empty-icon" style="font-size:2rem">🗂️</div>
+        <h3>章データがまだありません</h3>
+        <p>このフェーズでは、旧データ用の仮章を自動作成します。</p>
+      </div>
+    `;
+  }
+
+  const sortedChapters = [...chapters].sort((a, b) => (a.number || 0) - (b.number || 0));
+
+  return sortedChapters.map(chapter => {
+    const episodesInChapter = episodes
+      .filter(ep => ep.chapterId === chapter.id)
+      .sort((a, b) => (a.number || 0) - (b.number || 0));
+
+    const writtenCount = episodesInChapter.filter(ep => String(ep.content || '').trim()).length;
+    const statusLabel = getChapterStatusLabel(chapter.status || 'untouched');
+    const rangeLabel = buildChapterEpisodeRangeText(episodesInChapter);
+    const summaryText = String(chapter.summary || '').trim() || '章要約はまだ未入力です。';
+
+    return `
+      <div class="card">
+        <div class="card-body">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap">
+            <div>
+              <div class="section-title" style="font-size:1rem">
+                <span class="icon">🗂️</span>${esc(chapter.title || `第${chapter.number || '?'}章`)}
+              </div>
+              <div class="form-hint" style="margin-top:6px">
+                ${esc(rangeLabel)} / 状態：${esc(statusLabel)}
+              </div>
+            </div>
+            <span class="status-badge ${writtenCount > 0 ? 'status-wip' : 'status-new'}">
+              本文入力 ${writtenCount}/${episodesInChapter.length}
+            </span>
+          </div>
+          <div class="record-content" style="margin-top:14px;max-height:none">${esc(summaryText)}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderDashboardEmpty() {
+  const root = document.getElementById('dashboard-root');
+  if (!root) return;
+
+  document.getElementById('dashboard-breadcrumb-title').textContent = '制作ダッシュボード';
+
+  root.innerHTML = `
+    <div class="empty-state">
+      <div class="empty-icon">📊</div>
+      <h3>先に作品を1つ選んでください</h3>
+      <p>作品詳細を開いたあと、このダッシュボードに戻ると進行状況が表示されます。</p>
+    </div>
+  `;
+}
+
+async function renderDashboardPage(workId) {
+  const root = document.getElementById('dashboard-root');
+  if (!root) return;
+
+  if (!workId) {
+    renderDashboardEmpty();
+    return;
+  }
+
+  await ensureWorkChapterLinks(workId);
+
+  const work = await dbGet(STORE_WORKS, workId);
+  if (!work) {
+    renderDashboardEmpty();
+    return;
+  }
+
+  currentWorkId = workId;
+  currentWork = work;
+  updateNavWorksList(workId);
+
+  const chapters = await dbGetByIndex(STORE_CHAPTERS, 'workId', workId);
+  const episodes = await dbGetByIndex(STORE_EPISODES, 'workId', workId);
+  const records = await dbGetByIndex(STORE_RECORDS, 'workId', workId);
+
+  const writtenEpisodesCount = countEpisodesWithContent(episodes);
+
+  const extended = await getDashboardExtendedData(workId);
+
+  const metrics = {
+    workId,
+    records,
+    chapters,
+    episodes,
+    writtenEpisodesCount,
+    drafts: extended.drafts,
+    canonTotal: extended.canonTotal,
+    consistencyReports: extended.consistencyReports,
+    summaries: extended.summaries,
+    readySummaryCount: extended.readySummaryCount,
+    unresolvedReportCount: extended.unresolvedReportCount,
+    seriousReportCount: extended.seriousReportCount,
+    adoptedDraftCount: extended.adoptedDraftCount
+  };
+
+  const steps = buildDashboardSteps(metrics);
+  const nextAction = buildDashboardNextAction(metrics, workId);
+
+  document.getElementById('dashboard-breadcrumb-title').textContent =
+    `${work.title || '（無題）'} の制作ダッシュボード`;
+
+  root.innerHTML = `
+    <div class="section-header">
+      <div class="section-title">
+        <span class="icon">📊</span> 制作ダッシュボード
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-secondary" onclick="showPage('work','${workId}')">作品詳細を開く</button>
+        <button class="btn btn-ghost" onclick="showPage('rules')">マイルール集を開く</button>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title"><span>💜</span> いまの整理状況</div>
+      </div>
+      <div class="form-section-body">
+        <div class="form-row form-row-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="form-label">作品</div>
+              <div style="font-size:1rem;font-weight:700;margin-top:6px">${esc(work.title || '（無題）')}</div>
+              <div class="form-hint" style="margin-top:6px">${esc(work.genre || 'ジャンル未設定')}</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <div class="form-label">章 / 話</div>
+              <div style="font-size:1rem;font-weight:700;margin-top:6px">${chapters.length}章 / ${episodes.length}話</div>
+              <div class="form-hint" style="margin-top:6px">本文入力済み ${writtenEpisodesCount}話</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <div class="form-label">分析ログ</div>
+              <div style="font-size:1rem;font-weight:700;margin-top:6px">${records.length}件</div>
+              <div class="form-hint" style="margin-top:6px">設計系ログ ${hasDesignRecords(records) ? 'あり' : 'まだ少なめ'}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title"><span>🧭</span> 最優先の次の一手</div>
+      </div>
+      <div class="form-section-body">
+        <div class="card">
+          <div class="card-body">
+            <div style="font-size:1rem;font-weight:700">${esc(nextAction.title)}</div>
+            <div class="form-hint" style="margin-top:8px">${esc(nextAction.summary)}</div>
+          </div>
+          <div class="card-footer">
+            ${nextAction.actionHtml}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title"><span>🧩</span> 創作OS全体の状況</div>
+      </div>
+      <div class="form-section-body">
+        ${metrics.seriousReportCount > 0 ? `
+        <div class="proposal-error-msg" style="margin-bottom:12px">
+          要修正または重大注意の整合性チェックが ${metrics.seriousReportCount} 件あります。
+          先に「整合性チェック」タブで確認すると安全です。
+        </div>
+        ` : ''}
+
+        <div class="works-grid" style="margin-top:0">
+          ${buildDashboardOverviewCards(metrics)}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title"><span>🪜</span> 工程順フロー</div>
+      </div>
+      <div class="form-section-body">
+        ${steps.map(step => {
+          const meta = dashboardStateMeta(step.state);
+          return `
+            <div class="card">
+              <div class="card-body">
+                <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap">
+                  <div>
+                    <div style="font-size:0.95rem;font-weight:700">${esc(step.title)}</div>
+                    <div class="form-hint" style="margin-top:6px">${esc(step.summary)}</div>
+                  </div>
+                  <span class="status-badge ${meta.className}">${meta.label}</span>
+                </div>
+              </div>
+              <div class="card-footer">
+                ${step.actionHtml}
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title"><span>🗂️</span> 章の配置確認</div>
+      </div>
+      <div class="form-section-body">
+        <div class="form-hint">
+          旧データの話本文を壊さないため、この画面では既存話を章へひも付けした状態を一覧で確認できます。
+        </div>
+        <div class="works-grid" style="margin-top:0">
+          ${buildDashboardChapterCards(chapters, episodes)}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 // ======================================================
 //  WORKS LIST
 // ======================================================
@@ -1772,38 +2834,493 @@ async function createNewWork(){
 // ======================================================
 //  WORK PAGE — META
 // ======================================================
-async function loadWorkPage(workId){
-  const work=await dbGet(STORE_WORKS,workId);if(!work){showPage('list');return;}currentWork=work;
-  document.getElementById('breadcrumb-title').textContent=work.title||'（無題）';
-  document.getElementById('top-bar-title').textContent=work.title||'（無題）';
-  document.getElementById('meta-title').value=work.title||'';
-  document.getElementById('meta-url').value=work.url||'';
-  document.getElementById('meta-author').value=work.author||'';
-  document.getElementById('meta-genre').value=work.genre||'';
-  document.getElementById('meta-episodes').value=work.episodes||'';
-  document.getElementById('meta-synopsis').value=work.synopsis||'';
-  document.getElementById('meta-bookmarks').value=work.bookmarks||'';
-  document.getElementById('meta-score').value=work.score||'';
-  document.getElementById('meta-status').value=work.status||'new';
-  document.getElementById('meta-reason').value=work.reason||'';
-  document.getElementById('meta-scene').value=work.scene||'';
-   syncWritingTitleInputs(work.writingTitle || '');
-  currentTags=[...(work.tags||[])];renderTags();
-  currentEpisodesCount=parseInt(work.episodes)||0;
-  await renderEpisodesAccordion(workId,currentEpisodesCount);
+
+const CHAPTER_STATUS_OPTIONS = [
+  { value: 'untouched', label: '未着手' },
+  { value: 'planning', label: '設計中' },
+  { value: 'drafting', label: '執筆中' },
+  { value: 'revising', label: '推敲中' },
+  { value: 'fixed', label: '確定' },
+  { value: 'published', label: '公開済み' }
+];
+
+const EPISODE_STATUS_OPTIONS = [
+  { value: 'unplanned', label: '未設計' },
+  { value: 'planned', label: '設計済み' },
+  { value: 'drafted', label: '初稿生成済み' },
+  { value: 'revised', label: '推敲済み' },
+  { value: 'author_review', label: '作者確認中' },
+  { value: 'adopted', label: '採用済み' },
+  { value: 'published', label: '公開済み' },
+  { value: 'needs_fix', label: '要修正' },
+  { value: 'consistency_warning', label: '整合性注意' }
+];
+
+function buildOptionTags(options, selectedValue) {
+  return options.map(option => {
+    const selected = option.value === selectedValue ? 'selected' : '';
+    return `<option value="${esc(option.value)}" ${selected}>${esc(option.label)}</option>`;
+  }).join('');
 }
-async function saveMeta(){
-  if(!currentWorkId)return;const work=await dbGet(STORE_WORKS,currentWorkId);if(!work)return;
-  const title=document.getElementById('meta-title').value.trim();
-  if(!title){showToast('タイトルを入力してください','error');return;}
-  const newEp=parseInt(document.getElementById('meta-episodes').value)||0;const oldEp=parseInt(work.episodes)||0;
-  Object.assign(work,{title,url:document.getElementById('meta-url').value.trim(),author:document.getElementById('meta-author').value.trim(),genre:document.getElementById('meta-genre').value,episodes:newEp,synopsis:document.getElementById('meta-synopsis').value.trim(),bookmarks:document.getElementById('meta-bookmarks').value,score:document.getElementById('meta-score').value,status:document.getElementById('meta-status').value,reason:document.getElementById('meta-reason').value.trim(),scene:document.getElementById('meta-scene').value.trim(),tags:[...currentTags],updatedAt:Date.now()});
-  await dbPut(STORE_WORKS,work);currentWork=work;
-  document.getElementById('breadcrumb-title').textContent=title;document.getElementById('top-bar-title').textContent=title;
-  if(newEp!==oldEp){currentEpisodesCount=newEp;await renderEpisodesAccordion(currentWorkId,newEp);}
-  renderSidebarWorksFromDB();showToast('保存しました ✓');
+
+function getVisibleEpisodeLimit() {
+  const input = document.getElementById('meta-episodes');
+  return Number(input && input.value) || currentEpisodesCount || 0;
 }
-async function syncEpisodes(){const n=parseInt(document.getElementById('meta-episodes').value)||0;if(n!==currentEpisodesCount){currentEpisodesCount=n;await renderEpisodesAccordion(currentWorkId,n);}}
+
+function filterEpisodesByVisibleLimit(episodes) {
+  const limit = getVisibleEpisodeLimit();
+  if (!limit) return [];
+  return episodes.filter(ep => (Number(ep.number) || 0) <= limit);
+}
+
+async function getSortedChapters(workId) {
+  await ensureWorkChapterLinks(workId);
+  const chapters = await dbGetByIndex(STORE_CHAPTERS, 'workId', workId);
+  chapters.sort((a, b) => (a.number || 0) - (b.number || 0));
+  return chapters;
+}
+
+function getChapterLabel(chapter) {
+  const chapterNumber = chapter.number || '?';
+  return chapter.title || `第${chapterNumber}章`;
+}
+
+function getChapterRangeText(episodesInChapter) {
+  if (!episodesInChapter.length) return 'まだ話が割り当てられていません';
+  const numbers = episodesInChapter
+    .map(ep => Number(ep.number) || 0)
+    .filter(Boolean)
+    .sort((a, b) => a - b);
+
+  if (!numbers.length) return '話番号なし';
+  const first = numbers[0];
+  const last = numbers[numbers.length - 1];
+  return first === last ? `第${first}話` : `第${first}話〜第${last}話`;
+}
+
+async function renumberChaptersForWork(workId) {
+  const chapters = await getSortedChapters(workId);
+  for (let i = 0; i < chapters.length; i += 1) {
+    const chapter = chapters[i];
+    const newNumber = i + 1;
+    if (chapter.number !== newNumber) {
+      chapter.number = newNumber;
+      chapter.updatedAt = Date.now();
+      await dbPut(STORE_CHAPTERS, chapter);
+    }
+  }
+}
+
+async function renderChapterPlanner(workId) {
+  const container = document.getElementById('chapter-planner-container');
+  if (!container || !workId) return;
+
+  const chapters = await getSortedChapters(workId);
+  const episodes = filterEpisodesByVisibleLimit(await dbGetByIndex(STORE_EPISODES, 'workId', workId));
+
+  if (!chapters.length) {
+    container.innerHTML = `
+      <div class="empty-state" style="padding:32px">
+        <div class="empty-icon" style="font-size:2rem">🗂️</div>
+        <p style="font-size:0.85rem">章がまだありません。「章を追加」から始めてください。</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = chapters.map((chapter, index) => {
+    const episodesInChapter = episodes
+      .filter(ep => ep.chapterId === chapter.id)
+      .sort((a, b) => (a.number || 0) - (b.number || 0));
+
+    const chapterStatus = chapter.status || 'untouched';
+    const chapterSummary = chapter.summary || '';
+    const rangeText = getChapterRangeText(episodesInChapter);
+    const savedCount = episodesInChapter.filter(ep => String(ep.content || '').trim()).length;
+
+    return `
+      <div class="card">
+        <div class="card-body">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px">
+            <div>
+              <div class="form-label">章 ${index + 1}</div>
+              <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px">
+                ${esc(rangeText)} / 本文入力 ${savedCount}/${episodesInChapter.length}
+              </div>
+            </div>
+            <span class="status-badge ${savedCount > 0 ? 'status-wip' : 'status-new'}">${episodesInChapter.length}話</span>
+          </div>
+
+          <div class="form-row form-row-2">
+            <div class="form-group">
+              <label class="form-label">章タイトル</label>
+              <input type="text" id="chapter-title-${chapter.id}" value="${esc(chapter.title || '')}" placeholder="例：すれ違いの幕開け">
+            </div>
+            <div class="form-group">
+              <label class="form-label">章ステータス</label>
+              <select id="chapter-status-${chapter.id}">
+                ${buildOptionTags(CHAPTER_STATUS_OPTIONS, chapterStatus)}
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top:14px">
+            <label class="form-label">章メモ / 章要約</label>
+            <textarea id="chapter-summary-${chapter.id}" rows="4" placeholder="この章で進めたい感情、見せたい転換点、章末の着地などを書いてください">${esc(chapterSummary)}</textarea>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-secondary btn-sm" onclick="saveChapter('${chapter.id}')">この章を保存</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteChapter('${chapter.id}')">この章を削除</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function addChapter() {
+  if (!currentWorkId) return;
+
+  const chapters = await getSortedChapters(currentWorkId);
+  const now = Date.now();
+  const nextNumber = chapters.length + 1;
+
+  const newChapter = {
+    id: 'chapter_' + genId(),
+    workId: currentWorkId,
+    number: nextNumber,
+    title: `第${nextNumber}章`,
+    summary: '',
+    status: 'planning',
+    createdAt: now,
+    updatedAt: now,
+    isMigratedDefault: false
+  };
+
+  await dbPut(STORE_CHAPTERS, newChapter);
+  await renderChapterPlanner(currentWorkId);
+  await renderEpisodesAccordion(currentWorkId, currentEpisodesCount);
+  showToast(`第${nextNumber}章を追加しました ✓`);
+}
+
+async function saveChapter(chapterId) {
+  if (!currentWorkId) return;
+
+  const chapter = await dbGet(STORE_CHAPTERS, chapterId);
+  if (!chapter) {
+    showToast('保存対象の章が見つかりません', 'error');
+    return;
+  }
+
+  chapter.title = document.getElementById(`chapter-title-${chapterId}`).value.trim() || `第${chapter.number || '?'}章`;
+  chapter.status = document.getElementById(`chapter-status-${chapterId}`).value || 'untouched';
+  chapter.summary = document.getElementById(`chapter-summary-${chapterId}`).value.trim();
+  chapter.updatedAt = Date.now();
+
+  await dbPut(STORE_CHAPTERS, chapter);
+  await renderChapterPlanner(currentWorkId);
+  await renderEpisodesAccordion(currentWorkId, currentEpisodesCount);
+  showToast('章を保存しました ✓');
+}
+
+async function deleteChapter(chapterId) {
+  if (!currentWorkId) return;
+
+  const chapters = await getSortedChapters(currentWorkId);
+  if (chapters.length <= 1) {
+    showToast('章は最低1件必要です。先に別の章を作ってから削除してください。', 'error');
+    return;
+  }
+
+  const targetChapter = chapters.find(chapter => chapter.id === chapterId);
+  const fallbackChapter = chapters.find(chapter => chapter.id !== chapterId);
+
+  if (!targetChapter || !fallbackChapter) {
+    showToast('削除対象の章が見つかりません', 'error');
+    return;
+  }
+
+  const ok = confirm(`「${getChapterLabel(targetChapter)}」を削除します。\nこの章に入っている話は「${getChapterLabel(fallbackChapter)}」へ移動します。`);
+  if (!ok) return;
+
+  const episodes = await dbGetByIndex(STORE_EPISODES, 'workId', currentWorkId);
+  const targetEpisodes = episodes.filter(ep => ep.chapterId === chapterId);
+
+  for (const episode of targetEpisodes) {
+    episode.chapterId = fallbackChapter.id;
+    episode.updatedAt = Date.now();
+    await dbPut(STORE_EPISODES, episode);
+  }
+
+  await dbDelete(STORE_CHAPTERS, chapterId);
+  await renumberChaptersForWork(currentWorkId);
+  await renderChapterPlanner(currentWorkId);
+  await renderEpisodesAccordion(currentWorkId, currentEpisodesCount);
+  showToast('章を削除しました ✓');
+}
+
+function buildChapterSelectOptions(chapters, selectedChapterId) {
+  return chapters.map(chapter => {
+    const selected = chapter.id === selectedChapterId ? 'selected' : '';
+    return `<option value="${esc(chapter.id)}" ${selected}>${esc(getChapterLabel(chapter))}</option>`;
+  }).join('');
+}
+
+async function loadWorkPage(workId) {
+  const work = await dbGet(STORE_WORKS, workId);
+  if (!work) {
+    showPage('list');
+    return;
+  }
+
+  currentWork = work;
+  await ensureWorkChapterLinks(workId);
+
+  document.getElementById('breadcrumb-title').textContent = work.title || '（無題）';
+  document.getElementById('top-bar-title').textContent = work.title || '（無題）';
+  document.getElementById('meta-title').value = work.title || '';
+  document.getElementById('meta-url').value = work.url || '';
+  document.getElementById('meta-author').value = work.author || '';
+  document.getElementById('meta-genre').value = work.genre || '';
+  document.getElementById('meta-episodes').value = work.episodes || '';
+  document.getElementById('meta-synopsis').value = work.synopsis || '';
+  document.getElementById('meta-bookmarks').value = work.bookmarks || '';
+  document.getElementById('meta-score').value = work.score || '';
+  document.getElementById('meta-status').value = work.status || 'new';
+  document.getElementById('meta-reason').value = work.reason || '';
+  document.getElementById('meta-scene').value = work.scene || '';
+  syncWritingTitleInputs(work.writingTitle || '');
+
+  currentTags = [...(work.tags || [])];
+  renderTags();
+
+  currentEpisodesCount = parseInt(work.episodes) || 0;
+
+  await renderChapterPlanner(workId);
+  await renderEpisodesAccordion(workId, currentEpisodesCount);
+}
+
+async function saveMeta() {
+  if (!currentWorkId) return;
+
+  const work = await dbGet(STORE_WORKS, currentWorkId);
+  if (!work) return;
+
+  const title = document.getElementById('meta-title').value.trim();
+  if (!title) {
+    showToast('タイトルを入力してください', 'error');
+    return;
+  }
+
+  const newEp = parseInt(document.getElementById('meta-episodes').value) || 0;
+  const oldEp = parseInt(work.episodes) || 0;
+
+  Object.assign(work, {
+    title,
+    url: document.getElementById('meta-url').value.trim(),
+    author: document.getElementById('meta-author').value.trim(),
+    genre: document.getElementById('meta-genre').value,
+    episodes: newEp,
+    synopsis: document.getElementById('meta-synopsis').value.trim(),
+    bookmarks: document.getElementById('meta-bookmarks').value,
+    score: document.getElementById('meta-score').value,
+    status: document.getElementById('meta-status').value,
+    reason: document.getElementById('meta-reason').value.trim(),
+    scene: document.getElementById('meta-scene').value.trim(),
+    tags: [...currentTags],
+    updatedAt: Date.now()
+  });
+
+  await dbPut(STORE_WORKS, work);
+  currentWork = work;
+
+  document.getElementById('breadcrumb-title').textContent = title;
+  document.getElementById('top-bar-title').textContent = title;
+
+  currentEpisodesCount = newEp;
+
+  await ensureWorkChapterLinks(currentWorkId);
+  await renderChapterPlanner(currentWorkId);
+  await renderEpisodesAccordion(currentWorkId, newEp);
+  await renderSidebarWorksFromDB();
+
+  if (newEp !== oldEp) {
+    showToast('メタ情報と話数を保存しました ✓');
+  } else {
+    showToast('保存しました ✓');
+  }
+}
+
+async function syncEpisodes() {
+  if (!currentWorkId) return;
+
+  const count = parseInt(document.getElementById('meta-episodes').value) || 0;
+  currentEpisodesCount = count;
+
+  await ensureWorkChapterLinks(currentWorkId);
+  await renderChapterPlanner(currentWorkId);
+  await renderEpisodesAccordion(currentWorkId, count);
+}
+
+// ======================================================
+//  EPISODES
+// ======================================================
+async function renderEpisodesAccordion(workId, count) {
+  const container = document.getElementById('episodes-container');
+  if (!container) return;
+
+  await ensureWorkChapterLinks(workId);
+
+  if (!count || count === 0) {
+    container.innerHTML = '<div class="empty-state" style="padding:32px"><div class="empty-icon" style="font-size:2rem">📝</div><p style="font-size:0.85rem">メタ情報の「話数」を入力すると<br>話ごとの入力欄が自動生成されます</p></div>';
+    return;
+  }
+
+  const chapters = await getSortedChapters(workId);
+  const existing = await dbGetByIndex(STORE_EPISODES, 'workId', workId);
+  const episodeMap = {};
+  existing.forEach(episode => {
+    episodeMap[episode.number] = episode;
+  });
+
+  const firstChapterId = chapters[0] ? chapters[0].id : '';
+
+  let html = '';
+  for (let i = 1; i <= count; i += 1) {
+    const episode = episodeMap[i] || {};
+    const subtitle = episode.subtitle || '';
+    const content = episode.content || '';
+    const chapterId = episode.chapterId || firstChapterId;
+    const episodeStatus = episode.status || (String(content).trim() ? 'drafted' : 'unplanned');
+    const previewSubtitle = subtitle || '（サブタイトル未設定）';
+
+    html += `
+      <div class="accordion-item" id="acc-${i}">
+        <div class="accordion-header" onclick="toggleAccordion(${i})">
+          <span class="accordion-number">第${i}話</span>
+          <span class="accordion-subtitle ${subtitle ? '' : 'accordion-subtitle-empty'}" id="acc-sub-${i}">${esc(previewSubtitle)}</span>
+          <span class="accordion-arrow">▼</span>
+        </div>
+        <div class="accordion-body" id="acc-body-${i}">
+          <div class="form-row form-row-2">
+            <div class="form-group">
+              <label class="form-label">所属章</label>
+              <select id="ep-chapter-${i}">
+                ${buildChapterSelectOptions(chapters, chapterId)}
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">話ステータス</label>
+              <select id="ep-status-${i}">
+                ${buildOptionTags(EPISODE_STATUS_OPTIONS, episodeStatus)}
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">サブタイトル（任意）</label>
+            <input type="text" id="ep-subtitle-${i}" value="${esc(subtitle)}" placeholder="第${i}話のサブタイトル…" oninput="updateAccordionSubtitle(${i})">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">本文</label>
+            <textarea id="ep-content-${i}" class="episode-textarea" placeholder="第${i}話の本文を貼り付けてください…">${esc(content)}</textarea>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap">
+            <span class="form-hint">章の変更は「この話を保存」または「全話を保存」で反映されます。</span>
+            <button class="btn btn-secondary btn-sm" onclick="saveEpisode(${i})">この話を保存</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  container.innerHTML = html;
+}
+
+function toggleAccordion(n) {
+  document.getElementById(`acc-${n}`).classList.toggle('open');
+}
+
+function updateAccordionSubtitle(n) {
+  const value = document.getElementById(`ep-subtitle-${n}`).value.trim();
+  const subtitle = document.getElementById(`acc-sub-${n}`);
+  subtitle.textContent = value || '（サブタイトル未設定）';
+  subtitle.classList.toggle('accordion-subtitle-empty', !value);
+}
+
+async function saveEpisode(n) {
+  if (!currentWorkId) return;
+
+  await ensureWorkChapterLinks(currentWorkId);
+
+  const subtitle = document.getElementById(`ep-subtitle-${n}`).value.trim();
+  const content = document.getElementById(`ep-content-${n}`).value;
+  const chapterId = document.getElementById(`ep-chapter-${n}`).value;
+  const status = document.getElementById(`ep-status-${n}`).value || (String(content).trim() ? 'drafted' : 'unplanned');
+
+  const existing = await dbGetByIndex(STORE_EPISODES, 'workId', currentWorkId);
+  const episode = existing.find(item => item.number === n) || {
+    id: genId(),
+    workId: currentWorkId,
+    number: n,
+    createdAt: Date.now()
+  };
+
+  episode.subtitle = subtitle;
+  episode.content = content;
+  episode.chapterId = chapterId;
+  episode.status = status;
+  episode.updatedAt = Date.now();
+
+  await dbPut(STORE_EPISODES, episode);
+  await renderChapterPlanner(currentWorkId);
+  await renderEpisodesAccordion(currentWorkId, currentEpisodesCount);
+  showToast(`第${n}話を保存しました ✓`);
+}
+
+async function saveAllEpisodes() {
+  if (!currentWorkId || !currentEpisodesCount) return;
+
+  await ensureWorkChapterLinks(currentWorkId);
+
+  const existing = await dbGetByIndex(STORE_EPISODES, 'workId', currentWorkId);
+  const episodeMap = {};
+  existing.forEach(episode => {
+    episodeMap[episode.number] = episode;
+  });
+
+  for (let i = 1; i <= currentEpisodesCount; i += 1) {
+    const subtitleElement = document.getElementById(`ep-subtitle-${i}`);
+    const contentElement = document.getElementById(`ep-content-${i}`);
+    const chapterElement = document.getElementById(`ep-chapter-${i}`);
+    const statusElement = document.getElementById(`ep-status-${i}`);
+
+    if (!subtitleElement || !chapterElement || !statusElement) continue;
+
+    const content = contentElement ? contentElement.value : '';
+    const episode = episodeMap[i] || {
+      id: genId(),
+      workId: currentWorkId,
+      number: i,
+      createdAt: Date.now()
+    };
+
+    episode.subtitle = subtitleElement.value.trim();
+    episode.content = content;
+    episode.chapterId = chapterElement.value;
+    episode.status = statusElement.value || (String(content).trim() ? 'drafted' : 'unplanned');
+    episode.updatedAt = Date.now();
+
+    await dbPut(STORE_EPISODES, episode);
+  }
+
+  await renderChapterPlanner(currentWorkId);
+  await renderEpisodesAccordion(currentWorkId, currentEpisodesCount);
+  showToast('全話を保存しました ✓');
+}
 
 // ======================================================
 //  EPISODES
@@ -1829,6 +3346,3392 @@ async function saveAllEpisodes(){
   for(let i=1;i<=currentEpisodesCount;i++){const se=document.getElementById(`ep-subtitle-${i}`);const ce=document.getElementById(`ep-content-${i}`);if(!se)continue;
     const ep=epMap[i]||{id:genId(),workId:currentWorkId,number:i};ep.subtitle=se.value.trim();ep.content=ce?ce.value:'';ep.updatedAt=Date.now();await dbPut(STORE_EPISODES,ep);}
   showToast('全話を保存しました ✓');
+}
+
+const WORK_BACKUP_STORE_CONFIGS = [
+  { key: 'episodes', store: STORE_EPISODES, label: '話本文' },
+  { key: 'records', store: STORE_RECORDS, label: '分析記録' },
+  { key: 'rulePresets', store: 'rulePresets', label: 'ルールプリセット' },
+  { key: 'writingVault', store: STORE_WRITING_VAULT, label: '執筆保管庫' },
+  { key: 'chapters', store: STORE_CHAPTERS, label: '章' },
+  { key: 'canonCharacters', store: STORE_CANON_CHARACTERS, label: '確定設定 / キャラクター' },
+  { key: 'canonRelations', store: STORE_CANON_RELATIONS, label: '確定設定 / 関係性' },
+  { key: 'canonTimelineEvents', store: STORE_CANON_TIMELINE_EVENTS, label: '確定設定 / 時系列イベント' },
+  { key: 'canonForeshadowings', store: STORE_CANON_FORESHADOWINGS, label: '確定設定 / 伏線' },
+  { key: 'canonOpenQuestions', store: STORE_CANON_OPEN_QUESTIONS, label: '確定設定 / 未解決事項' },
+  { key: 'canonWorldRules', store: STORE_CANON_WORLD_RULES, label: '確定設定 / 世界設定' },
+  { key: 'canonLocations', store: STORE_CANON_LOCATIONS, label: '確定設定 / 場所' },
+  { key: 'canonItems', store: STORE_CANON_ITEMS, label: '確定設定 / アイテム' },
+  { key: 'episodeDrafts', store: STORE_EPISODE_DRAFTS, label: '本文バージョン' },
+  { key: 'consistencyReports', store: STORE_CONSISTENCY_REPORTS, label: '整合性チェック' },
+  { key: 'promptSnapshots', store: STORE_PROMPT_SNAPSHOTS, label: 'プロンプト保存' },
+  { key: 'pipelineSessions', store: STORE_PIPELINE_SESSIONS, label: '工程セッション' },
+  { key: 'workSummaries', store: STORE_WORK_SUMMARIES, label: '引き継ぎ要約' }
+];
+
+function backupFormatDate(timestamp) {
+  if (!timestamp) return '日時不明';
+  try {
+    return new Date(timestamp).toLocaleString('ja-JP');
+  } catch (_) {
+    return '日時不明';
+  }
+}
+
+async function buildWorkBackupBundle(workId) {
+  const work = await dbGet(STORE_WORKS, workId);
+  if (!work) {
+    throw new Error('作品データが見つかりません');
+  }
+
+  const stores = {};
+  for (const config of WORK_BACKUP_STORE_CONFIGS) {
+    stores[config.key] = await dbGetByIndex(config.store, 'workId', workId);
+  }
+
+  return {
+    meta: {
+      kind: 'bl_tl_creation_os_work_backup',
+      schemaVersion: 1,
+      exportedAt: Date.now(),
+      appName: 'BL/TL AI Longform Creation OS',
+      workId: work.id,
+      workTitle: work.title || ''
+    },
+    work,
+    stores
+  };
+}
+
+function backupBundleToJson(bundle) {
+  return JSON.stringify(bundle, null, 2);
+}
+
+function validateWorkBackupBundle(bundle) {
+  if (!bundle || typeof bundle !== 'object') {
+    throw new Error('JSONの形が正しくありません');
+  }
+  if (!bundle.work || typeof bundle.work !== 'object' || !bundle.work.id) {
+    throw new Error('作品データが入っていません');
+  }
+  if (!bundle.stores || typeof bundle.stores !== 'object') {
+    throw new Error('ストア一覧が入っていません');
+  }
+  return true;
+}
+
+function backupCountEntriesFromBundle(bundle) {
+  return WORK_BACKUP_STORE_CONFIGS.map(config => ({
+    key: config.key,
+    label: config.label,
+    count: Array.isArray(bundle.stores?.[config.key]) ? bundle.stores[config.key].length : 0
+  }));
+}
+
+function backupBuildCountCards(entries) {
+  return entries.map(entry => `
+    <div class="card">
+      <div class="card-body">
+        <div class="form-label">${esc(entry.label)}</div>
+        <div style="font-size:1rem;font-weight:700;margin-top:6px">${entry.count}件</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function backupBuildBundlePreviewHtml(bundle) {
+  const entries = backupCountEntriesFromBundle(bundle);
+  const totalRecords = entries.reduce((sum, entry) => sum + entry.count, 0);
+
+  return `
+    <div class="proposal-rationale" style="margin-bottom:12px">
+      <div class="proposal-rationale-label">バックアップ情報</div>
+      <div class="proposal-rationale-text">
+        作品名：${esc(bundle.work?.title || '（無題）')}
+        作品ID：${esc(bundle.work?.id || '')}
+        出力日時：${esc(backupFormatDate(bundle.meta?.exportedAt))}
+        合計レコード数：${totalRecords}件
+      </div>
+    </div>
+    <div class="works-grid" style="margin-top:0">
+      ${backupBuildCountCards(entries)}
+    </div>
+  `;
+}
+
+function backupParseTextareaBundle(textareaId) {
+  const textarea = document.getElementById(textareaId);
+  if (!textarea) {
+    throw new Error('テキスト欄が見つかりません');
+  }
+
+  const raw = textarea.value.trim();
+  if (!raw) {
+    throw new Error('JSONテキストを入力してください');
+  }
+
+  let bundle;
+  try {
+    bundle = JSON.parse(raw);
+  } catch (_) {
+    throw new Error('JSONの解析に失敗しました。全体をコピーできているか確認してください');
+  }
+
+  validateWorkBackupBundle(bundle);
+  return bundle;
+}
+
+function setBackupPreviewHtml(targetId, html) {
+  const target = document.getElementById(targetId);
+  if (target) {
+    target.innerHTML = html;
+  }
+}
+
+async function exportCurrentWorkBackup() {
+  if (!currentWorkId) return;
+
+  const bundle = await buildWorkBackupBundle(currentWorkId);
+  const jsonText = backupBundleToJson(bundle);
+
+  const textarea = document.getElementById('backup-export-text');
+  if (textarea) {
+    textarea.value = jsonText;
+  }
+
+  setBackupPreviewHtml('backup-export-preview', backupBuildBundlePreviewHtml(bundle));
+  showToast('バックアップJSONを作成しました ✓');
+}
+
+async function copyCurrentWorkBackup() {
+  const textarea = document.getElementById('backup-export-text');
+  if (!textarea || !textarea.value.trim()) {
+    showToast('先に「この作品のJSONを作成」を押してください', 'error');
+    return;
+  }
+
+  await copyToClipboard(textarea.value);
+  showToast('バックアップJSONをコピーしました');
+}
+
+function downloadCurrentWorkBackup() {
+  const textarea = document.getElementById('backup-export-text');
+  if (!textarea || !textarea.value.trim()) {
+    showToast('先に「この作品のJSONを作成」を押してください', 'error');
+    return;
+  }
+
+  const blob = new Blob([textarea.value], { type: 'application/json;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+
+  const safeTitle = String(currentWork?.title || 'work-backup')
+    .replace(/[\\/:*?"<>|]/g, '_')
+    .replace(/\s+/g, '_');
+
+  link.href = url;
+  link.download = `${safeTitle || 'work-backup'}-backup.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+
+  showToast('バックアップJSONをダウンロードしました');
+}
+
+function previewBackupImport() {
+  try {
+    const bundle = backupParseTextareaBundle('backup-import-text');
+    setBackupPreviewHtml('backup-import-preview', backupBuildBundlePreviewHtml(bundle));
+    showToast('復元前の内容を確認しました ✓');
+  } catch (error) {
+    setBackupPreviewHtml('backup-import-preview', `
+      <div class="proposal-error-msg">${esc(error.message || '確認に失敗しました')}</div>
+    `);
+    showToast(error.message || '確認に失敗しました', 'error');
+  }
+}
+
+async function importWorkBackupFromTextarea() {
+  let bundle;
+  try {
+    bundle = backupParseTextareaBundle('backup-import-text');
+  } catch (error) {
+    setBackupPreviewHtml('backup-import-preview', `
+      <div class="proposal-error-msg">${esc(error.message || '確認に失敗しました')}</div>
+    `);
+    showToast(error.message || '確認に失敗しました', 'error');
+    return;
+  }
+
+  const totalCount = backupCountEntriesFromBundle(bundle).reduce((sum, entry) => sum + entry.count, 0);
+  const ok = confirm(
+    `「${bundle.work?.title || '（無題）'}」のバックアップを復元します。\n` +
+    `作品データ1件と関連データ ${totalCount}件を、このブラウザの保存へ反映します。\n` +
+    `同じIDのデータがある場合は上書き更新されます。続行しますか？`
+  );
+  if (!ok) return;
+
+  await dbPut(STORE_WORKS, bundle.work);
+
+  for (const config of WORK_BACKUP_STORE_CONFIGS) {
+    const records = Array.isArray(bundle.stores?.[config.key]) ? bundle.stores[config.key] : [];
+    for (const record of records) {
+      await dbPut(config.store, record);
+    }
+  }
+
+  await ensureWorkChapterLinks(bundle.work.id);
+  await renderSidebarWorksFromDB();
+
+  showPage('work', bundle.work.id);
+  switchTab('backup');
+
+  const importTextarea = document.getElementById('backup-import-text');
+  if (importTextarea) {
+    importTextarea.value = '';
+  }
+
+  setBackupPreviewHtml('backup-import-preview', backupBuildBundlePreviewHtml(bundle));
+  showToast('バックアップを復元しました ✓');
+}
+
+async function renderBackupStudio(workId) {
+  const root = document.getElementById('backup-studio-root');
+  if (!root) return;
+
+  if (!workId) {
+    root.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">💾</div>
+        <h3>先に作品を選んでください</h3>
+        <p>作品詳細を開いてからこのタブを使います。</p>
+      </div>
+    `;
+    return;
+  }
+
+  const work = await dbGet(STORE_WORKS, workId);
+  if (!work) {
+    root.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">💾</div>
+        <h3>作品データが見つかりません</h3>
+        <p>作品一覧から開き直してください。</p>
+      </div>
+    `;
+    return;
+  }
+
+  const liveBundle = await buildWorkBackupBundle(workId);
+
+  root.innerHTML = `
+    <div class="section-header">
+      <div class="section-title">
+        <span class="icon">💾</span> 作品バックアップ
+      </div>
+      <div class="form-hint">
+        現在の作品「${esc(work.title || '（無題）')}」を、ひも付きデータごとまとめて扱います。
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title"><span>📌</span> 今の保存内容</div>
+      </div>
+      <div class="form-section-body">
+        ${backupBuildBundlePreviewHtml(liveBundle)}
+      </div>
+    </div>
+
+    <div class="form-row form-row-2">
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="form-section-title"><span>📤</span> JSONを出力する</div>
+        </div>
+        <div class="form-section-body">
+          <div class="form-hint">
+            まず「この作品のJSONを作成」を押してください。その後、コピーまたはダウンロードできます。
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="exportCurrentWorkBackup()">この作品のJSONを作成</button>
+            <button class="btn btn-secondary" onclick="copyCurrentWorkBackup()">コピー</button>
+            <button class="btn btn-ghost" onclick="downloadCurrentWorkBackup()">ダウンロード</button>
+          </div>
+          <div class="form-group" style="margin-top:14px">
+            <label class="form-label">出力されたJSON</label>
+            <textarea id="backup-export-text" rows="16" placeholder="ここにバックアップJSONが出力されます"></textarea>
+          </div>
+          <div id="backup-export-preview"></div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="form-section-title"><span>📥</span> JSONを復元する</div>
+        </div>
+        <div class="form-section-body">
+          <div class="form-hint">
+            このフェーズの復元は、同じ作品IDを持つデータを更新・復元する方式です。別作品としての複製ではありません。
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-secondary" onclick="previewBackupImport()">内容を確認</button>
+            <button class="btn btn-primary" onclick="importWorkBackupFromTextarea()">このブラウザへ復元</button>
+          </div>
+          <div class="form-group" style="margin-top:14px">
+            <label class="form-label">復元したいJSON</label>
+            <textarea id="backup-import-text" rows="16" placeholder="このアプリで出力した作品バックアップJSONを丸ごと貼り付けてください"></textarea>
+          </div>
+          <div id="backup-import-preview"></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+let reflectionUiState = {
+  selectedSummaryId: '',
+  targetCategory: 'characters'
+};
+
+const REFLECTION_CANON_CATEGORY_OPTIONS = [
+  { value: 'characters', label: 'キャラクター' },
+  { value: 'relations', label: '関係性' },
+  { value: 'timeline', label: '時系列イベント' },
+  { value: 'foreshadowings', label: '伏線' },
+  { value: 'questions', label: '未解決事項' },
+  { value: 'world', label: '世界設定' },
+  { value: 'locations', label: '場所' },
+  { value: 'items', label: 'アイテム' }
+];
+
+function reflectionCategoryLabel(categoryKey) {
+  const found = REFLECTION_CANON_CATEGORY_OPTIONS.find(option => option.value === categoryKey);
+  return found ? found.label : categoryKey;
+}
+
+function reflectionBuildCategoryOptions(selectedValue) {
+  return REFLECTION_CANON_CATEGORY_OPTIONS.map(option => {
+    const selected = option.value === selectedValue ? 'selected' : '';
+    return `<option value="${esc(option.value)}" ${selected}>${esc(option.label)}</option>`;
+  }).join('');
+}
+
+async function getReflectionStudioBaseData(workId) {
+  const { chapters, chapterMap, episodes, episodeMap, summaries } = await getSummaryStudioBaseData(workId);
+  const reflectionSummaries = summaries
+    .filter(item => item.summaryType === 'canon_reflection')
+    .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+
+  return { chapters, chapterMap, episodes, episodeMap, reflectionSummaries };
+}
+
+function reflectionTargetLabel(summary, chapterMap, episodeMap) {
+  if (summary.targetScope === 'episode') {
+    const episode = episodeMap[summary.episodeNumber];
+    return summaryEpisodeLabel(episode, chapterMap);
+  }
+  return summaryChapterLabel(chapterMap[summary.chapterId]);
+}
+
+function reflectionBuildSummaryOptions(reflectionSummaries, chapterMap, episodeMap, selectedId) {
+  return reflectionSummaries.map(summary => {
+    const selected = summary.id === selectedId ? 'selected' : '';
+    const targetLabel = reflectionTargetLabel(summary, chapterMap, episodeMap);
+    return `<option value="${esc(summary.id)}" ${selected}>${esc(summary.title || '無題')} / ${esc(targetLabel)}</option>`;
+  }).join('');
+}
+
+function reflectionSummaryCounts(reflectionSummaries) {
+  return {
+    total: reflectionSummaries.length,
+    ready: reflectionSummaries.filter(item => item.status === 'ready').length,
+    applied: reflectionSummaries.filter(item => item.status === 'applied').length
+  };
+}
+
+function reflectionBuildRawCopyText(summary, chapterMap, episodeMap) {
+  const targetLabel = reflectionTargetLabel(summary, chapterMap, episodeMap);
+
+  return [
+    `# ${summary.title || '正史反映候補メモ'}`,
+    '',
+    `- 種類：${summaryTypeLabel(summary.summaryType)}`,
+    `- 状態：${summaryStatusLabel(summary.status)}`,
+    `- 対象：${targetLabel}`,
+    '',
+    '## 本文',
+    summary.body || '（本文なし）',
+    '',
+    '## 箇条書き',
+    summaryListToText(summary.bulletPoints) || '（なし）',
+    '',
+    '## 次回重点',
+    summaryListToText(summary.nextFocus) || '（なし）',
+    '',
+    '## 参照元',
+    summaryListToText(summary.sourceRefs) || '（なし）'
+  ].join('\n');
+}
+
+function reflectionBuildTemplateText(summary, categoryKey, chapterMap, episodeMap) {
+  const targetLabel = reflectionTargetLabel(summary, chapterMap, episodeMap);
+  const baseSourceRefs = [
+    targetLabel,
+    summary.title || '正史反映候補メモ',
+    ...((summary.sourceRefs || []).filter(Boolean))
+  ].join('\n');
+
+  const bodyText = summary.body || '';
+  const bulletText = summaryListToText(summary.bulletPoints || []);
+  const nextFocusText = summaryListToText(summary.nextFocus || []);
+
+  if (categoryKey === 'characters') {
+    return [
+      `# 確定設定転記テンプレート / ${reflectionCategoryLabel(categoryKey)}`,
+      '',
+      '名前：',
+      '役割：',
+      '概要：',
+      '外見メモ：',
+      '性格：',
+      '価値観：',
+      '口調：',
+      '内的矛盾：',
+      '絶対に崩してはいけない核：',
+      '現在状態：',
+      'メモ：',
+      '',
+      '参照元：',
+      baseSourceRefs,
+      '',
+      '--- 候補メモ本文 ---',
+      bodyText || '（本文なし）',
+      '',
+      '--- 箇条書き ---',
+      bulletText || '（なし）',
+      '',
+      '--- 次回重点 ---',
+      nextFocusText || '（なし）'
+    ].join('\n');
+  }
+
+  if (categoryKey === 'relations') {
+    return [
+      `# 確定設定転記テンプレート / ${reflectionCategoryLabel(categoryKey)}`,
+      '',
+      '起点キャラ名またはID：',
+      '相手キャラ名またはID：',
+      '関係タイプ：',
+      '現在の関係要約：',
+      '信頼段階：',
+      '恋愛段階：',
+      '緊張段階：',
+      '飛ばしてはいけない段階：',
+      '更新理由メモ：',
+      '',
+      '参照元：',
+      baseSourceRefs,
+      '',
+      '--- 候補メモ本文 ---',
+      bodyText || '（本文なし）',
+      '',
+      '--- 箇条書き ---',
+      bulletText || '（なし）'
+    ].join('\n');
+  }
+
+  if (categoryKey === 'timeline') {
+    return [
+      `# 確定設定転記テンプレート / ${reflectionCategoryLabel(categoryKey)}`,
+      '',
+      '公開上の話参照：',
+      '作中順：',
+      'イベント名：',
+      '要約：',
+      '参加人物：',
+      'この出来事を知っている人物：',
+      '日付ラベル：',
+      'メモ：',
+      '',
+      '参照元：',
+      baseSourceRefs,
+      '',
+      '--- 候補メモ本文 ---',
+      bodyText || '（本文なし）',
+      '',
+      '--- 箇条書き ---',
+      bulletText || '（なし）'
+    ].join('\n');
+  }
+
+  if (categoryKey === 'foreshadowings') {
+    return [
+      `# 確定設定転記テンプレート / ${reflectionCategoryLabel(categoryKey)}`,
+      '',
+      '伏線名：',
+      '伏線の内容：',
+      '重要度：',
+      '提示章：',
+      '提示話：',
+      '回収予定章：',
+      '回収予定話：',
+      '関連人物：',
+      '関連場面：',
+      '状態：',
+      '実際の回収話：',
+      'メモ：',
+      '',
+      '参照元：',
+      baseSourceRefs,
+      '',
+      '--- 候補メモ本文 ---',
+      bodyText || '（本文なし）',
+      '',
+      '--- 箇条書き ---',
+      bulletText || '（なし）'
+    ].join('\n');
+  }
+
+  if (categoryKey === 'questions') {
+    return [
+      `# 確定設定転記テンプレート / ${reflectionCategoryLabel(categoryKey)}`,
+      '',
+      '項目名：',
+      '問いの内容：',
+      '主に抱えている人物：',
+      '分類：',
+      '解決予定範囲：',
+      '緊急度：',
+      'メモ：',
+      '',
+      '参照元：',
+      baseSourceRefs,
+      '',
+      '--- 候補メモ本文 ---',
+      bodyText || '（本文なし）',
+      '',
+      '--- 箇条書き ---',
+      bulletText || '（なし）'
+    ].join('\n');
+  }
+
+  if (categoryKey === 'world') {
+    return [
+      `# 確定設定転記テンプレート / ${reflectionCategoryLabel(categoryKey)}`,
+      '',
+      '分類：',
+      '設定名：',
+      '内容：',
+      '確度：',
+      '参照元：',
+      baseSourceRefs,
+      '',
+      'メモ：',
+      '',
+      '--- 候補メモ本文 ---',
+      bodyText || '（本文なし）',
+      '',
+      '--- 箇条書き ---',
+      bulletText || '（なし）'
+    ].join('\n');
+  }
+
+  if (categoryKey === 'locations') {
+    return [
+      `# 確定設定転記テンプレート / ${reflectionCategoryLabel(categoryKey)}`,
+      '',
+      '場所名：',
+      '場所の説明：',
+      '感情的な意味：',
+      '関連人物：',
+      'メモ：',
+      '',
+      '参照元：',
+      baseSourceRefs,
+      '',
+      '--- 候補メモ本文 ---',
+      bodyText || '（本文なし）',
+      '',
+      '--- 箇条書き ---',
+      bulletText || '（なし）'
+    ].join('\n');
+  }
+
+  if (categoryKey === 'items') {
+    return [
+      `# 確定設定転記テンプレート / ${reflectionCategoryLabel(categoryKey)}`,
+      '',
+      'アイテム名：',
+      '説明：',
+      '象徴的な意味：',
+      '関連人物：',
+      '現在状態：',
+      'メモ：',
+      '',
+      '参照元：',
+      baseSourceRefs,
+      '',
+      '--- 候補メモ本文 ---',
+      bodyText || '（本文なし）',
+      '',
+      '--- 箇条書き ---',
+      bulletText || '（なし）'
+    ].join('\n');
+  }
+
+  return [
+    `# 確定設定転記テンプレート / ${reflectionCategoryLabel(categoryKey)}`,
+    '',
+    '参照元：',
+    baseSourceRefs,
+    '',
+    '--- 候補メモ本文 ---',
+    bodyText || '（本文なし）',
+    '',
+    '--- 箇条書き ---',
+    bulletText || '（なし）',
+    '',
+    '--- 次回重点 ---',
+    nextFocusText || '（なし）'
+  ].join('\n');
+}
+
+function reflectionBuildCards(reflectionSummaries, chapterMap, episodeMap) {
+  if (!reflectionSummaries.length) {
+    return `
+      <div class="empty-state" style="padding:32px">
+        <div class="empty-icon" style="font-size:2rem">🪄</div>
+        <h3>正史反映候補メモがまだありません</h3>
+        <p>先に「引き継ぎ要約」タブで「正史反映候補メモ」を保存してください。</p>
+      </div>
+    `;
+  }
+
+  return reflectionSummaries.map((summary, index) => {
+    const targetLabel = reflectionTargetLabel(summary, chapterMap, episodeMap);
+    return `
+      <div class="proposal-card ${reflectionUiState.selectedSummaryId === summary.id ? 'proposal-applied' : ''}">
+        <div class="proposal-card-header">
+          <span class="proposal-num">#${index + 1}</span>
+          <span class="proposal-op-badge proposal-op-create">正史反映候補</span>
+          <span class="proposal-target">${esc(summary.title || '無題')} / ${esc(targetLabel)}</span>
+          <span class="status-badge ${summary.status === 'ready' || summary.status === 'applied' ? 'status-done' : 'status-wip'}">${esc(summaryStatusLabel(summary.status))}</span>
+        </div>
+        <div class="proposal-card-body">
+          <div class="proposal-rationale">
+            <div class="proposal-rationale-label">本文</div>
+            <div class="proposal-rationale-text">${esc(summaryCardPreview(summary.body || ''))}</div>
+          </div>
+          <div class="record-content" style="max-height:150px">
+            箇条書き:
+${esc(summaryListToText(summary.bulletPoints || [])) || '（なし）'}
+
+参照元:
+${esc(summaryListToText(summary.sourceRefs || [])) || '（なし）'}
+          </div>
+        </div>
+        <div class="proposal-card-footer">
+          <button class="btn btn-secondary btn-sm" onclick="selectReflectionSummary('${summary.id}')">この候補を見る</button>
+          <button class="btn btn-secondary btn-sm" onclick="copyReflectionRaw('${summary.id}')">候補メモをコピー</button>
+          <button class="btn btn-ghost btn-sm" onclick="switchTab('summaries')">要約タブで編集</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function selectReflectionSummary(summaryId) {
+  reflectionUiState.selectedSummaryId = summaryId;
+  await renderReflectionStudio(currentWorkId);
+}
+
+async function copyReflectionRaw(summaryId) {
+  const summary = await dbGet(STORE_WORK_SUMMARIES, summaryId);
+  if (!summary || summary.workId !== currentWorkId) {
+    showToast('候補メモが見つかりません', 'error');
+    return;
+  }
+
+  const { chapterMap, episodeMap } = await getReflectionStudioBaseData(currentWorkId);
+  const text = reflectionBuildRawCopyText(summary, chapterMap, episodeMap);
+  await copyToClipboard(text);
+  showToast('候補メモをコピーしました');
+}
+
+async function copyReflectionTemplate(summaryId, categoryKey) {
+  const summary = await dbGet(STORE_WORK_SUMMARIES, summaryId);
+  if (!summary || summary.workId !== currentWorkId) {
+    showToast('候補メモが見つかりません', 'error');
+    return;
+  }
+
+  const { chapterMap, episodeMap } = await getReflectionStudioBaseData(currentWorkId);
+  const text = reflectionBuildTemplateText(summary, categoryKey, chapterMap, episodeMap);
+  await copyToClipboard(text);
+  showToast(`${reflectionCategoryLabel(categoryKey)} 用テンプレートをコピーしました`);
+}
+
+async function openCanonFromReflection(categoryKey) {
+  reflectionUiState.targetCategory = categoryKey;
+
+  if (typeof openCanonCategory === 'function') {
+    await openCanonCategory(categoryKey);
+    switchTab('canon');
+    return;
+  }
+
+  switchTab('canon');
+}
+
+async function renderReflectionStudio(workId) {
+  const root = document.getElementById('reflection-studio-root');
+  if (!root) return;
+
+  if (!workId) {
+    root.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🪄</div>
+        <h3>先に作品を選んでください</h3>
+        <p>作品詳細を開いてからこのタブを使います。</p>
+      </div>
+    `;
+    return;
+  }
+
+  const { chapterMap, episodeMap, reflectionSummaries } = await getReflectionStudioBaseData(workId);
+  const counts = reflectionSummaryCounts(reflectionSummaries);
+
+  let selectedSummary = reflectionSummaries.find(item => item.id === reflectionUiState.selectedSummaryId) || null;
+  if (!selectedSummary && reflectionSummaries.length) {
+    selectedSummary = reflectionSummaries[0];
+    reflectionUiState.selectedSummaryId = selectedSummary.id;
+  }
+
+  root.innerHTML = `
+    <div class="section-header">
+      <div class="section-title">
+        <span class="icon">🪄</span> 正史反映アシスト
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-secondary" onclick="switchTab('summaries')">正史反映候補メモを開く</button>
+        <button class="btn btn-ghost" onclick="switchTab('canon')">確定設定を開く</button>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title"><span>📌</span> 候補メモの保存状況</div>
+      </div>
+      <div class="form-section-body">
+        <div class="form-row form-row-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="form-label">候補メモ総数</div>
+              <div style="font-size:1rem;font-weight:700;margin-top:6px">${counts.total}件</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <div class="form-label">次回貼り付け可</div>
+              <div style="font-size:1rem;font-weight:700;margin-top:6px">${counts.ready}件</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <div class="form-label">反映済み</div>
+              <div style="font-size:1rem;font-weight:700;margin-top:6px">${counts.applied}件</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    ${reflectionSummaries.length ? `
+    <div class="form-row form-row-2">
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="form-section-title"><span>🗃</span> 候補メモ一覧</div>
+        </div>
+        <div class="form-section-body">
+          ${reflectionBuildCards(reflectionSummaries, chapterMap, episodeMap)}
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="form-section-title"><span>🎯</span> 選択中の候補から転記準備</div>
+        </div>
+        <div class="form-section-body">
+          <div class="form-group">
+            <label class="form-label">候補メモ</label>
+            <select id="reflection-summary-select" onchange="selectReflectionSummary(this.value)">
+              ${reflectionBuildSummaryOptions(reflectionSummaries, chapterMap, episodeMap, selectedSummary?.id || '')}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">移したい確定設定カテゴリ</label>
+            <select id="reflection-category-select" onchange="reflectionUiState.targetCategory=this.value">
+              ${reflectionBuildCategoryOptions(reflectionUiState.targetCategory || 'characters')}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">対象情報</label>
+            <div class="record-content" style="max-height:none">
+              タイトル：${esc(selectedSummary?.title || '無題')}
+              種類：${esc(summaryTypeLabel(selectedSummary?.summaryType || 'canon_reflection'))}
+              対象：${esc(selectedSummary ? reflectionTargetLabel(selectedSummary, chapterMap, episodeMap) : '未選択')}
+              状態：${esc(selectedSummary ? summaryStatusLabel(selectedSummary.status) : '未選択')}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">候補メモ本文</label>
+            <div class="record-content" style="max-height:180px">${esc(selectedSummary?.body || '') || '（本文なし）'}</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">箇条書き</label>
+            <div class="record-content" style="max-height:150px">${esc(summaryListToText(selectedSummary?.bulletPoints || [])) || '（なし）'}</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">参照元</label>
+            <div class="record-content" style="max-height:120px">${esc(summaryListToText(selectedSummary?.sourceRefs || [])) || '（なし）'}</div>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-secondary" onclick="copyReflectionRaw('${selectedSummary?.id || ''}')" ${selectedSummary ? '' : 'disabled'}>候補メモをそのままコピー</button>
+            <button class="btn btn-primary" onclick="copyReflectionTemplate('${selectedSummary?.id || ''}', document.getElementById('reflection-category-select').value)" ${selectedSummary ? '' : 'disabled'}>カテゴリ用テンプレートをコピー</button>
+            <button class="btn btn-ghost" onclick="openCanonFromReflection(document.getElementById('reflection-category-select').value)" ${selectedSummary ? '' : 'disabled'}>確定設定の該当カテゴリを開く</button>
+          </div>
+
+          <div class="form-hint" style="margin-top:10px">
+            使い方のおすすめ順：
+            1. 候補メモを選ぶ
+            2. 移したいカテゴリを選ぶ
+            3. テンプレートをコピー
+            4. 「確定設定の該当カテゴリを開く」
+            5. コピー内容を見ながら確定設定へ転記
+          </div>
+        </div>
+      </div>
+    </div>
+    ` : `
+    <div class="empty-state">
+      <div class="empty-icon">🪄</div>
+      <h3>正史反映候補メモがまだありません</h3>
+      <p>先に「引き継ぎ要約」タブで「正史反映候補メモ」を保存してください。</p>
+    </div>
+    `}
+  `;
+}
+
+let summaryUiState = {
+  summaryType: 'chapter_handover',
+  selectedChapterId: '',
+  selectedEpisodeNumber: 0,
+  editingId: ''
+};
+
+const WORK_SUMMARY_TYPE_OPTIONS = [
+  { value: 'chapter_handover', label: '章の引き継ぎ要約', scope: 'chapter' },
+  { value: 'episode_handover', label: '話の引き継ぎ要約', scope: 'episode' },
+  { value: 'next_context', label: '次回用コンテキスト要約', scope: 'chapter' },
+  { value: 'canon_reflection', label: '正史反映候補メモ', scope: 'chapter' }
+];
+
+const WORK_SUMMARY_STATUS_OPTIONS = [
+  { value: 'draft', label: '下書き' },
+  { value: 'ready', label: '次回貼り付け可' },
+  { value: 'applied', label: '反映済み' }
+];
+
+function summaryTypeConfig(summaryType) {
+  return WORK_SUMMARY_TYPE_OPTIONS.find(option => option.value === summaryType) || WORK_SUMMARY_TYPE_OPTIONS[0];
+}
+
+function summaryTypeLabel(summaryType) {
+  return summaryTypeConfig(summaryType).label;
+}
+
+function summaryStatusLabel(status) {
+  const found = WORK_SUMMARY_STATUS_OPTIONS.find(option => option.value === status);
+  return found ? found.label : (status || '未設定');
+}
+
+function summaryBuildOptions(options, selectedValue, includeEmpty = false, emptyLabel = '（選択してください）') {
+  const parts = [];
+  if (includeEmpty) {
+    parts.push(`<option value="">${esc(emptyLabel)}</option>`);
+  }
+  options.forEach(option => {
+    const selected = String(option.value) === String(selectedValue) ? 'selected' : '';
+    parts.push(`<option value="${esc(option.value)}" ${selected}>${esc(option.label)}</option>`);
+  });
+  return parts.join('');
+}
+
+function summaryNormalizeList(rawValue) {
+  return String(rawValue || '')
+    .split('\n')
+    .map(value => value.trim())
+    .filter(Boolean);
+}
+
+function summaryListToText(value) {
+  if (Array.isArray(value)) return value.join('\n');
+  return String(value || '');
+}
+
+function summaryChapterLabel(chapter) {
+  if (!chapter) return '章未設定';
+  return chapter.title || `第${chapter.number || '?'}章`;
+}
+
+function summaryEpisodeLabel(episode, chapterMap) {
+  if (!episode) return '話未設定';
+  const chapter = chapterMap[episode.chapterId];
+  const chapterText = summaryChapterLabel(chapter);
+  const subtitleText = episode.subtitle ? ` / ${episode.subtitle}` : '';
+  return `第${episode.number}話 / ${chapterText}${subtitleText}`;
+}
+
+async function getSummaryStudioBaseData(workId) {
+  await ensureWorkChapterLinks(workId);
+
+  const work = await dbGet(STORE_WORKS, workId);
+  const chapters = await getSortedChapters(workId);
+  const { episodes } = await getDraftStudioBaseData(workId);
+  const summaries = await dbGetByIndex(STORE_WORK_SUMMARIES, 'workId', workId);
+
+  chapters.sort((a, b) => (a.number || 0) - (b.number || 0));
+  summaries.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+
+  const chapterMap = {};
+  chapters.forEach(chapter => {
+    chapterMap[chapter.id] = chapter;
+  });
+
+  const episodeMap = {};
+  episodes.forEach(episode => {
+    episodeMap[episode.number] = episode;
+  });
+
+  return { work, chapters, chapterMap, episodes, episodeMap, summaries };
+}
+
+function summaryCreateEmptyRecord(workId, summaryType, chapterId = '', episode = null) {
+  const now = Date.now();
+  const typeConfig = summaryTypeConfig(summaryType);
+
+  return {
+    id: `summary_${genId()}`,
+    workId,
+    chapterId: chapterId || episode?.chapterId || '',
+    episodeId: episode?.id || '',
+    episodeNumber: Number(episode?.number || 0),
+    summaryType,
+    targetScope: typeConfig.scope,
+    title: '',
+    body: '',
+    bulletPoints: [],
+    nextFocus: [],
+    sourceRefs: [],
+    status: 'draft',
+    createdAt: now,
+    updatedAt: now
+  };
+}
+
+function summaryDefaultTitle(summaryType, chapter, episode) {
+  if (summaryType === 'chapter_handover') {
+    return `${summaryChapterLabel(chapter)} 引き継ぎ要約`;
+  }
+  if (summaryType === 'episode_handover') {
+    return `第${episode?.number || '?'}話 引き継ぎ要約`;
+  }
+  if (summaryType === 'next_context') {
+    return `${summaryChapterLabel(chapter)} 次回用コンテキスト要約`;
+  }
+  if (summaryType === 'canon_reflection') {
+    return `${summaryChapterLabel(chapter)} 正史反映候補メモ`;
+  }
+  return '引き継ぎ要約';
+}
+
+function summaryFilterByCurrentTarget(summaries, summaryType, selectedChapterId, selectedEpisodeNumber) {
+  const typeConfig = summaryTypeConfig(summaryType);
+
+  return summaries.filter(item => {
+    if (item.summaryType !== summaryType) return false;
+    if (typeConfig.scope === 'chapter') {
+      return item.chapterId === selectedChapterId;
+    }
+    return Number(item.episodeNumber) === Number(selectedEpisodeNumber);
+  });
+}
+
+function summaryCounts(summaries) {
+  return {
+    total: summaries.length,
+    ready: summaries.filter(item => item.status === 'ready').length,
+    applied: summaries.filter(item => item.status === 'applied').length,
+    canonReflection: summaries.filter(item => item.summaryType === 'canon_reflection').length
+  };
+}
+
+function buildSummaryChapterOptions(chapters, selectedChapterId) {
+  return chapters.map(chapter => {
+    const selected = chapter.id === selectedChapterId ? 'selected' : '';
+    return `<option value="${esc(chapter.id)}" ${selected}>${esc(summaryChapterLabel(chapter))}</option>`;
+  }).join('');
+}
+
+function buildSummaryEpisodeOptions(episodes, chapterMap, selectedEpisodeNumber) {
+  return episodes.map(episode => {
+    const selected = Number(selectedEpisodeNumber) === Number(episode.number) ? 'selected' : '';
+    return `<option value="${episode.number}" ${selected}>${esc(summaryEpisodeLabel(episode, chapterMap))}</option>`;
+  }).join('');
+}
+
+function summaryCardPreview(text, max = 180) {
+  const normalized = String(text || '').trim();
+  if (!normalized) return '本文はまだありません';
+  return normalized.length > max ? normalized.slice(0, max) + '…' : normalized;
+}
+
+function buildSummaryCards(items, chapterMap) {
+  if (!items.length) {
+    return `
+      <div class="empty-state" style="padding:32px">
+        <div class="empty-icon" style="font-size:2rem">📦</div>
+        <h3>この対象の要約はまだありません</h3>
+        <p>右側のフォームに入力して保存すると、ここに履歴がたまります。</p>
+      </div>
+    `;
+  }
+
+  return items.map((item, index) => {
+    const targetLabel = item.targetScope === 'chapter'
+      ? summaryChapterLabel(chapterMap[item.chapterId])
+      : `第${item.episodeNumber}話`;
+
+    return `
+      <div class="proposal-card ${summaryUiState.editingId === item.id ? 'proposal-applied' : ''}">
+        <div class="proposal-card-header">
+          <span class="proposal-num">#${index + 1}</span>
+          <span class="proposal-op-badge proposal-op-create">${esc(summaryTypeLabel(item.summaryType))}</span>
+          <span class="proposal-target">${esc(item.title || '無題')} / ${esc(targetLabel)}</span>
+          <span class="status-badge ${item.status === 'ready' || item.status === 'applied' ? 'status-done' : 'status-wip'}">${esc(summaryStatusLabel(item.status))}</span>
+        </div>
+        <div class="proposal-card-body">
+          <div class="proposal-rationale">
+            <div class="proposal-rationale-label">本文</div>
+            <div class="proposal-rationale-text">${esc(summaryCardPreview(item.body || ''))}</div>
+          </div>
+          <div class="record-content" style="max-height:160px">
+            箇条書き:
+${esc(summaryListToText(item.bulletPoints || [])) || '（なし）'}
+
+次回重点:
+${esc(summaryListToText(item.nextFocus || [])) || '（なし）'}
+          </div>
+        </div>
+        <div class="proposal-card-footer">
+          <button class="btn btn-secondary btn-sm" onclick="editWorkSummary('${item.id}')">編集</button>
+          <button class="btn btn-secondary btn-sm" onclick="copyWorkSummary('${item.id}')">コピー</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteWorkSummary('${item.id}')">削除</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function summaryCollectFormRecord(editingId, workId, summaryType, chapterId, episode) {
+  const typeConfig = summaryTypeConfig(summaryType);
+
+  return {
+    id: editingId || `summary_${genId()}`,
+    workId,
+    chapterId: typeConfig.scope === 'chapter' ? chapterId : (episode?.chapterId || ''),
+    episodeId: typeConfig.scope === 'episode' ? (episode?.id || '') : '',
+    episodeNumber: typeConfig.scope === 'episode' ? Number(episode?.number || 0) : 0,
+    summaryType,
+    targetScope: typeConfig.scope,
+    title: document.getElementById('summary-title')?.value.trim() || '',
+    body: document.getElementById('summary-body')?.value.trim() || '',
+    bulletPoints: summaryNormalizeList(document.getElementById('summary-bullets')?.value || ''),
+    nextFocus: summaryNormalizeList(document.getElementById('summary-next-focus')?.value || ''),
+    sourceRefs: summaryNormalizeList(document.getElementById('summary-source-refs')?.value || ''),
+    status: document.getElementById('summary-status')?.value || 'draft',
+    updatedAt: Date.now()
+  };
+}
+
+async function changeSummaryType() {
+  summaryUiState.summaryType = document.getElementById('summary-type-select')?.value || 'chapter_handover';
+  summaryUiState.editingId = '';
+  await renderSummaryStudio(currentWorkId);
+}
+
+async function changeSummaryChapter() {
+  summaryUiState.selectedChapterId = document.getElementById('summary-chapter-select')?.value || '';
+  summaryUiState.editingId = '';
+  await renderSummaryStudio(currentWorkId);
+}
+
+async function changeSummaryEpisode() {
+  summaryUiState.selectedEpisodeNumber = Number(document.getElementById('summary-episode-select')?.value || 0);
+  summaryUiState.editingId = '';
+  await renderSummaryStudio(currentWorkId);
+}
+
+async function newWorkSummary() {
+  summaryUiState.editingId = '';
+  await renderSummaryStudio(currentWorkId);
+}
+
+async function editWorkSummary(summaryId) {
+  const record = await dbGet(STORE_WORK_SUMMARIES, summaryId);
+  if (!record || record.workId !== currentWorkId) {
+    showToast('編集対象が見つかりません', 'error');
+    return;
+  }
+
+  summaryUiState.summaryType = record.summaryType || 'chapter_handover';
+  summaryUiState.selectedChapterId = record.chapterId || summaryUiState.selectedChapterId;
+  summaryUiState.selectedEpisodeNumber = Number(record.episodeNumber || summaryUiState.selectedEpisodeNumber || 0);
+  summaryUiState.editingId = record.id;
+
+  await renderSummaryStudio(currentWorkId);
+}
+
+async function saveWorkSummary() {
+  if (!currentWorkId) return;
+
+  const { chapters, episodes } = await getSummaryStudioBaseData(currentWorkId);
+  const summaryType = document.getElementById('summary-type-select')?.value || 'chapter_handover';
+  const typeConfig = summaryTypeConfig(summaryType);
+
+  const selectedChapterId = document.getElementById('summary-chapter-select')?.value || '';
+  const selectedEpisodeNumber = Number(document.getElementById('summary-episode-select')?.value || 0);
+  const selectedChapter = chapters.find(chapter => chapter.id === selectedChapterId) || chapters[0] || null;
+  const selectedEpisode = episodes.find(episode => Number(episode.number) === selectedEpisodeNumber) || episodes[0] || null;
+
+  if (typeConfig.scope === 'chapter' && !selectedChapter) {
+    showToast('対象の章を選んでください', 'error');
+    return;
+  }
+  if (typeConfig.scope === 'episode' && !selectedEpisode) {
+    showToast('対象の話を選んでください', 'error');
+    return;
+  }
+
+  const editingId = document.getElementById('summary-editing-id')?.value || '';
+  let existing = editingId ? await dbGet(STORE_WORK_SUMMARIES, editingId) : null;
+
+  if (!existing) {
+    existing = summaryCreateEmptyRecord(
+      currentWorkId,
+      summaryType,
+      selectedChapter?.id || '',
+      selectedEpisode
+    );
+  }
+
+  const collected = summaryCollectFormRecord(
+    existing.id,
+    currentWorkId,
+    summaryType,
+    selectedChapter?.id || '',
+    selectedEpisode
+  );
+
+  collected.createdAt = existing.createdAt || Date.now();
+
+  if (!collected.title) {
+    collected.title = summaryDefaultTitle(summaryType, selectedChapter, selectedEpisode);
+  }
+
+  if (!collected.body && !collected.bulletPoints.length && !collected.nextFocus.length) {
+    showToast('本文・箇条書き・次回重点のどれかを入力してください', 'error');
+    return;
+  }
+
+  await dbPut(STORE_WORK_SUMMARIES, collected);
+
+  summaryUiState.summaryType = collected.summaryType;
+  summaryUiState.selectedChapterId = collected.chapterId || summaryUiState.selectedChapterId;
+  summaryUiState.selectedEpisodeNumber = Number(collected.episodeNumber || summaryUiState.selectedEpisodeNumber || 0);
+  summaryUiState.editingId = collected.id;
+
+  await renderSummaryStudio(currentWorkId);
+  showToast('引き継ぎ要約を保存しました ✓');
+}
+
+async function deleteWorkSummary(summaryId) {
+  const record = await dbGet(STORE_WORK_SUMMARIES, summaryId);
+  if (!record || record.workId !== currentWorkId) {
+    showToast('削除対象が見つかりません', 'error');
+    return;
+  }
+
+  const ok = confirm(`「${record.title || '無題の要約'}」を削除しますか？\nこの操作は元に戻せません。`);
+  if (!ok) return;
+
+  await dbDelete(STORE_WORK_SUMMARIES, summaryId);
+
+  summaryUiState.summaryType = record.summaryType || summaryUiState.summaryType;
+  summaryUiState.selectedChapterId = record.chapterId || summaryUiState.selectedChapterId;
+  summaryUiState.selectedEpisodeNumber = Number(record.episodeNumber || summaryUiState.selectedEpisodeNumber || 0);
+  summaryUiState.editingId = '';
+
+  await renderSummaryStudio(currentWorkId);
+  showToast('引き継ぎ要約を削除しました');
+}
+
+async function copyWorkSummary(summaryId) {
+  const record = await dbGet(STORE_WORK_SUMMARIES, summaryId);
+  if (!record || record.workId !== currentWorkId) {
+    showToast('コピー対象が見つかりません', 'error');
+    return;
+  }
+
+  const { chapterMap, episodeMap } = await getSummaryStudioBaseData(currentWorkId);
+
+  const lines = [
+    `# ${record.title || '引き継ぎ要約'}`,
+    '',
+    `- 種類：${summaryTypeLabel(record.summaryType)}`,
+    `- 状態：${summaryStatusLabel(record.status)}`,
+    record.targetScope === 'chapter'
+      ? `- 対象：${summaryChapterLabel(chapterMap[record.chapterId])}`
+      : `- 対象：${summaryEpisodeLabel(episodeMap[record.episodeNumber], chapterMap)}`,
+    '',
+    '## 本文',
+    record.body || '（本文なし）',
+    '',
+    '## 箇条書き',
+    summaryListToText(record.bulletPoints) || '（なし）',
+    '',
+    '## 次回重点',
+    summaryListToText(record.nextFocus) || '（なし）',
+    '',
+    '## 参照元',
+    summaryListToText(record.sourceRefs) || '（なし）'
+  ];
+
+  await copyToClipboard(lines.join('\n'));
+  showToast('引き継ぎ要約をコピーしました');
+}
+
+async function fillSummaryTemplateFromCurrentTarget() {
+  const { chapters, chapterMap, episodes } = await getSummaryStudioBaseData(currentWorkId);
+  const summaryType = document.getElementById('summary-type-select')?.value || 'chapter_handover';
+  const typeConfig = summaryTypeConfig(summaryType);
+  const selectedChapterId = document.getElementById('summary-chapter-select')?.value || '';
+  const selectedEpisodeNumber = Number(document.getElementById('summary-episode-select')?.value || 0);
+
+  const selectedChapter = chapters.find(chapter => chapter.id === selectedChapterId) || chapters[0] || null;
+  const selectedEpisode = episodes.find(episode => Number(episode.number) === selectedEpisodeNumber) || episodes[0] || null;
+
+  const titleInput = document.getElementById('summary-title');
+  const bodyInput = document.getElementById('summary-body');
+  const bulletInput = document.getElementById('summary-bullets');
+  const nextFocusInput = document.getElementById('summary-next-focus');
+
+  if (!titleInput || !bodyInput || !bulletInput || !nextFocusInput) return;
+
+  const targetText = typeConfig.scope === 'chapter'
+    ? summaryChapterLabel(selectedChapter)
+    : summaryEpisodeLabel(selectedEpisode, chapterMap);
+
+  titleInput.value = summaryDefaultTitle(summaryType, selectedChapter, selectedEpisode);
+
+  if (!bodyInput.value.trim()) {
+    if (summaryType === 'canon_reflection') {
+      bodyInput.value = [
+        `${targetText} で確定したと思われる事実を整理するメモ`,
+        '',
+        'このメモはまだ確定設定へ正式反映する前の下書きです。',
+        '本文採用後に、確定設定タブへ移す候補だけを書きます。'
+      ].join('\n');
+    } else {
+      bodyInput.value = [
+        `${targetText} の次回用引き継ぎ要約`,
+        '',
+        'この要約は、次回AIへ渡す最小限の文脈として使います。'
+      ].join('\n');
+    }
+  }
+
+  if (!bulletInput.value.trim()) {
+    bulletInput.value = [
+      'この範囲で起きた重要出来事',
+      'キャラ感情の現在位置',
+      '次回に持ち越す未解決点'
+    ].join('\n');
+  }
+
+  if (!nextFocusInput.value.trim()) {
+    nextFocusInput.value = [
+      '次回で必ず守る事実',
+      '次回で進めたい感情',
+      '次回でまだ出さない情報'
+    ].join('\n');
+  }
+}
+
+async function renderSummaryStudio(workId) {
+  const root = document.getElementById('summary-studio-root');
+  if (!root) return;
+
+  if (!workId) {
+    root.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📦</div>
+        <h3>先に作品を選んでください</h3>
+        <p>作品詳細を開いてからこのタブを使います。</p>
+      </div>
+    `;
+    return;
+  }
+
+  const { chapters, chapterMap, episodes, summaries } = await getSummaryStudioBaseData(workId);
+
+  if (!chapters.length) {
+    root.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📦</div>
+        <h3>章がまだありません</h3>
+        <p>先にメタ情報・本文タブで章を作ってください。</p>
+      </div>
+    `;
+    return;
+  }
+
+  const activeType = summaryUiState.summaryType || 'chapter_handover';
+  const activeTypeConfig = summaryTypeConfig(activeType);
+
+  const selectedChapterId = summaryUiState.selectedChapterId || (chapters[0] ? chapters[0].id : '');
+  const selectedEpisodeNumber = Number(summaryUiState.selectedEpisodeNumber || (episodes[0] ? episodes[0].number : 0));
+
+  const selectedChapter = chapters.find(chapter => chapter.id === selectedChapterId) || chapters[0] || null;
+  const selectedEpisode = episodes.find(episode => Number(episode.number) === selectedEpisodeNumber) || episodes[0] || null;
+
+  const filteredSummaries = summaryFilterByCurrentTarget(
+    summaries,
+    activeType,
+    selectedChapter?.id || '',
+    selectedEpisode?.number || 0
+  );
+
+  const counts = summaryCounts(summaries);
+
+  let editingRecord = null;
+  if (summaryUiState.editingId) {
+    editingRecord = filteredSummaries.find(item => item.id === summaryUiState.editingId) || null;
+  }
+  if (!editingRecord) {
+    editingRecord = summaryCreateEmptyRecord(
+      workId,
+      activeType,
+      selectedChapter?.id || '',
+      selectedEpisode
+    );
+    editingRecord.title = summaryDefaultTitle(activeType, selectedChapter, selectedEpisode);
+  }
+
+  const currentTargetLabel = activeTypeConfig.scope === 'chapter'
+    ? summaryChapterLabel(selectedChapter)
+    : summaryEpisodeLabel(selectedEpisode, chapterMap);
+
+  root.innerHTML = `
+    <div class="section-header">
+      <div class="section-title">
+        <span class="icon">📦</span> 引き継ぎ要約・正史反映準備
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-secondary" onclick="newWorkSummary()">新規作成</button>
+        <button class="btn btn-ghost" onclick="switchTab('consistency')">整合性チェックへ戻る</button>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title"><span>📌</span> 保存状況</div>
+      </div>
+      <div class="form-section-body">
+        <div class="form-row form-row-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="form-label">保存済み要約</div>
+              <div style="font-size:1rem;font-weight:700;margin-top:6px">${counts.total}件</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <div class="form-label">次回貼り付け可</div>
+              <div style="font-size:1rem;font-weight:700;margin-top:6px">${counts.ready}件</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <div class="form-label">正史反映候補</div>
+              <div style="font-size:1rem;font-weight:700;margin-top:6px">${counts.canonReflection}件</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title"><span>🎯</span> 何をまとめるか選ぶ</div>
+      </div>
+      <div class="form-section-body">
+        <div class="form-row form-row-3">
+          <div class="form-group">
+            <label class="form-label">要約の種類</label>
+            <select id="summary-type-select" onchange="changeSummaryType()">
+              ${summaryBuildOptions(WORK_SUMMARY_TYPE_OPTIONS.map(item => ({ value: item.value, label: item.label })), activeType)}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">対象章</label>
+            <select id="summary-chapter-select" onchange="changeSummaryChapter()" ${activeTypeConfig.scope === 'episode' ? 'disabled' : ''}>
+              ${buildSummaryChapterOptions(chapters, selectedChapter?.id || '')}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">対象話</label>
+            <select id="summary-episode-select" onchange="changeSummaryEpisode()" ${activeTypeConfig.scope === 'chapter' ? 'disabled' : ''}>
+              ${buildSummaryEpisodeOptions(episodes, chapterMap, selectedEpisode?.number || 0)}
+            </select>
+          </div>
+        </div>
+
+        <div class="record-content" style="max-height:none">
+          現在の対象：${esc(currentTargetLabel)}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row form-row-2">
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="form-section-title"><span>🗃</span> 保存済み一覧</div>
+        </div>
+        <div class="form-section-body">
+          ${buildSummaryCards(filteredSummaries, chapterMap)}
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="form-section-title"><span>✍️</span> ${summaryUiState.editingId ? '要約を編集' : '新しい要約を保存'}</div>
+        </div>
+        <div class="form-section-body">
+          <input type="hidden" id="summary-editing-id" value="${esc(summaryUiState.editingId || '')}">
+
+          <div class="form-row form-row-2">
+            <div class="form-group">
+              <label class="form-label">タイトル</label>
+              <input type="text" id="summary-title" value="${esc(editingRecord.title || summaryDefaultTitle(activeType, selectedChapter, selectedEpisode))}" placeholder="例：第2章 引き継ぎ要約">
+            </div>
+            <div class="form-group">
+              <label class="form-label">状態</label>
+              <select id="summary-status">
+                ${summaryBuildOptions(WORK_SUMMARY_STATUS_OPTIONS, editingRecord.status || 'draft')}
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">本文</label>
+            <textarea id="summary-body" rows="7" placeholder="次回AIへ渡したい短い要約、または正史反映候補メモを書いてください。">${esc(editingRecord.body || '')}</textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">箇条書き</label>
+            <textarea id="summary-bullets" rows="5" placeholder="1行に1件ずつ。例：主人公Aはまだ黒幕を知らない">${esc(summaryListToText(editingRecord.bulletPoints || []))}</textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">次回重点</label>
+            <textarea id="summary-next-focus" rows="5" placeholder="1行に1件ずつ。例：関係性はまだ和解前にとどめる">${esc(summaryListToText(editingRecord.nextFocus || []))}</textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">参照元</label>
+            <textarea id="summary-source-refs" rows="4" placeholder="1行に1件ずつ。例：第8話 / Claude推敲稿 / 整合性チェック2026-04-29">${esc(summaryListToText(editingRecord.sourceRefs || []))}</textarea>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-secondary" onclick="fillSummaryTemplateFromCurrentTarget()">下書きテンプレートを入れる</button>
+            <button class="btn btn-primary" onclick="saveWorkSummary()">この要約を保存</button>
+            <button class="btn btn-ghost" onclick="newWorkSummary()">新規入力に戻す</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+let consistencyUiState = {
+  selectedEpisodeNumber: 0,
+  editingId: ''
+};
+
+const CONSISTENCY_CHECKER_OPTIONS = [
+  { value: 'Claude', label: 'Claude' },
+  { value: 'ChatGPT', label: 'ChatGPT' },
+  { value: '作者手動', label: '作者手動' }
+];
+
+const CONSISTENCY_RISK_OPTIONS = [
+  { value: 'ok', label: '問題なし' },
+  { value: 'watch', label: '要観察' },
+  { value: 'warning', label: '要修正' },
+  { value: 'critical', label: '重大注意' }
+];
+
+const CONSISTENCY_REVIEW_STATUS_OPTIONS = [
+  { value: 'open', label: '未対応' },
+  { value: 'reviewing', label: '確認中' },
+  { value: 'resolved', label: '解消済み' },
+  { value: 'accepted', label: '許容して進行' }
+];
+
+const CONSISTENCY_DIMENSION_OPTIONS = [
+  { value: 'ok', label: '問題なし' },
+  { value: 'watch', label: 'やや注意' },
+  { value: 'warning', label: '要修正' },
+  { value: 'na', label: '今回対象外' }
+];
+
+const CONSISTENCY_DIMENSIONS = [
+  { key: 'character', label: 'キャラクター一貫性' },
+  { key: 'speakingStyle', label: '口調・呼称' },
+  { key: 'knowledge', label: '知識矛盾' },
+  { key: 'timeline', label: '時系列' },
+  { key: 'foreshadowing', label: '伏線・回収' },
+  { key: 'relationship', label: '関係性の熟れ方' },
+  { key: 'r18Progression', label: 'R18 / 接近速度' },
+  { key: 'scenePurpose', label: 'シーン目的の維持' }
+];
+
+function consistencyOptionLabel(options, value) {
+  const found = options.find(option => option.value === value);
+  return found ? found.label : (value || '');
+}
+
+function consistencyBuildOptions(options, selectedValue, includeEmpty = false) {
+  const parts = [];
+  if (includeEmpty) {
+    parts.push('<option value="">（選択してください）</option>');
+  }
+  options.forEach(option => {
+    const selected = String(option.value) === String(selectedValue) ? 'selected' : '';
+    parts.push(`<option value="${esc(option.value)}" ${selected}>${esc(option.label)}</option>`);
+  });
+  return parts.join('');
+}
+
+function consistencyNormalizeList(rawValue) {
+  return String(rawValue || '')
+    .split('\n')
+    .map(value => value.trim())
+    .filter(Boolean);
+}
+
+function consistencyListToText(value) {
+  if (Array.isArray(value)) return value.join('\n');
+  return String(value || '');
+}
+
+function consistencyRiskBadgeClass(value) {
+  if (value === 'ok') return 'status-done';
+  if (value === 'watch') return 'status-wip';
+  return 'status-new';
+}
+
+function consistencyReviewStatusLabel(value) {
+  return consistencyOptionLabel(CONSISTENCY_REVIEW_STATUS_OPTIONS, value) || '未設定';
+}
+
+function consistencyRiskLabel(value) {
+  return consistencyOptionLabel(CONSISTENCY_RISK_OPTIONS, value) || '未設定';
+}
+
+function consistencyDimensionLabel(value) {
+  return consistencyOptionLabel(CONSISTENCY_DIMENSION_OPTIONS, value) || '未設定';
+}
+
+function consistencyEpisodeStatusLabel(value) {
+  if (typeof EPISODE_STATUS_OPTIONS === 'undefined') return value || '未設定';
+  const found = EPISODE_STATUS_OPTIONS.find(option => option.value === value);
+  return found ? found.label : (value || '未設定');
+}
+
+function consistencyChapterLabel(chapter) {
+  if (!chapter) return '章未設定';
+  return chapter.title || `第${chapter.number || '?'}章`;
+}
+
+function consistencyCreateEmptyReport(workId, episode) {
+  const now = Date.now();
+  const report = {
+    id: `consistency_${genId()}`,
+    workId,
+    chapterId: episode?.chapterId || '',
+    episodeId: episode?.id || '',
+    episodeNumber: Number(episode?.number || 0),
+    checkerName: 'Claude',
+    reportTitle: episode ? `第${episode.number}話 整合性チェック` : '整合性チェック',
+    overallRisk: 'watch',
+    reviewStatus: 'open',
+    summary: '',
+    issueList: [],
+    recommendedActions: [],
+    rawResult: '',
+    checks: {},
+    createdAt: now,
+    updatedAt: now
+  };
+
+  CONSISTENCY_DIMENSIONS.forEach(dimension => {
+    report.checks[dimension.key] = 'na';
+  });
+
+  return report;
+}
+
+function consistencyCollectFormReport(editingId, episode) {
+  const existingReportId = editingId || `consistency_${genId()}`;
+  const report = {
+    id: existingReportId,
+    workId: currentWorkId,
+    chapterId: episode?.chapterId || '',
+    episodeId: episode?.id || '',
+    episodeNumber: Number(episode?.number || 0),
+    checkerName: document.getElementById('consistency-checker')?.value || 'Claude',
+    reportTitle: document.getElementById('consistency-title')?.value.trim() || `第${episode?.number || '?'}話 整合性チェック`,
+    overallRisk: document.getElementById('consistency-overall-risk')?.value || 'watch',
+    reviewStatus: document.getElementById('consistency-review-status')?.value || 'open',
+    summary: document.getElementById('consistency-summary')?.value.trim() || '',
+    issueList: consistencyNormalizeList(document.getElementById('consistency-issues')?.value || ''),
+    recommendedActions: consistencyNormalizeList(document.getElementById('consistency-actions')?.value || ''),
+    rawResult: document.getElementById('consistency-raw-result')?.value || '',
+    checks: {},
+    updatedAt: Date.now()
+  };
+
+  CONSISTENCY_DIMENSIONS.forEach(dimension => {
+    report.checks[dimension.key] = document.getElementById(`consistency-dim-${dimension.key}`)?.value || 'na';
+  });
+
+  return report;
+}
+
+async function getConsistencyStudioBaseData(workId) {
+  await ensureWorkChapterLinks(workId);
+
+  const work = await dbGet(STORE_WORKS, workId);
+  const chapters = await getSortedChapters(workId);
+  const chapterMap = {};
+  chapters.forEach(chapter => {
+    chapterMap[chapter.id] = chapter;
+  });
+
+  const { episodes } = await getDraftStudioBaseData(workId);
+  const reports = await dbGetByIndex(STORE_CONSISTENCY_REPORTS, 'workId', workId);
+  reports.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+
+  return { work, chapters, chapterMap, episodes, reports };
+}
+
+function buildConsistencyEpisodeOptions(episodes, chapterMap, selectedEpisodeNumber) {
+  return episodes.map(episode => {
+    const chapter = chapterMap[episode.chapterId];
+    const chapterLabel = consistencyChapterLabel(chapter);
+    const subtitle = episode.subtitle ? ` / ${episode.subtitle}` : '';
+    const selected = Number(selectedEpisodeNumber) === Number(episode.number) ? 'selected' : '';
+    return `<option value="${episode.number}" ${selected}>第${episode.number}話 / ${esc(chapterLabel)}${esc(subtitle)}</option>`;
+  }).join('');
+}
+
+function buildConsistencyDimensionFields(report) {
+  return CONSISTENCY_DIMENSIONS.map(dimension => `
+    <div class="form-group">
+      <label class="form-label" for="consistency-dim-${dimension.key}">${dimension.label}</label>
+      <select id="consistency-dim-${dimension.key}">
+        ${consistencyBuildOptions(CONSISTENCY_DIMENSION_OPTIONS, report.checks?.[dimension.key] || 'na')}
+      </select>
+    </div>
+  `).join('');
+}
+
+function consistencySummaryCounts(reports) {
+  return {
+    total: reports.length,
+    warning: reports.filter(report => report.overallRisk === 'warning').length,
+    critical: reports.filter(report => report.overallRisk === 'critical').length,
+    unresolved: reports.filter(report => report.reviewStatus === 'open' || report.reviewStatus === 'reviewing').length
+  };
+}
+
+function buildConsistencyReportCards(reports) {
+  if (!reports.length) {
+    return `
+      <div class="empty-state" style="padding:32px">
+        <div class="empty-icon" style="font-size:2rem">🧪</div>
+        <h3>この話の整合性チェックはまだありません</h3>
+        <p>AIのチェック結果を貼って保存すると、ここに履歴がたまります。</p>
+      </div>
+    `;
+  }
+
+  return reports.map((report, index) => {
+    const riskClass = consistencyRiskBadgeClass(report.overallRisk);
+    const title = report.reportTitle || `第${report.episodeNumber}話 整合性チェック`;
+    const dimensionSummary = CONSISTENCY_DIMENSIONS
+      .map(dimension => {
+        const value = report.checks?.[dimension.key] || 'na';
+        if (value === 'na') return '';
+        return `${dimension.label}：${consistencyDimensionLabel(value)}`;
+      })
+      .filter(Boolean)
+      .slice(0, 4)
+      .join('\n');
+
+    return `
+      <div class="proposal-card ${consistencyUiState.editingId === report.id ? 'proposal-applied' : ''}">
+        <div class="proposal-card-header">
+          <span class="proposal-num">#${index + 1}</span>
+          <span class="proposal-op-badge proposal-op-error">${esc(report.checkerName || 'AI')}</span>
+          <span class="proposal-target">${esc(title)} / ${esc(new Date(report.updatedAt || report.createdAt).toLocaleString('ja-JP'))}</span>
+          <span class="status-badge ${riskClass}">${esc(consistencyRiskLabel(report.overallRisk))}</span>
+        </div>
+        <div class="proposal-card-body">
+          <div class="proposal-rationale">
+            <div class="proposal-rationale-label">概要</div>
+            <div class="proposal-rationale-text">${esc(report.summary || '概要はまだありません')}</div>
+          </div>
+          <div class="proposal-rationale">
+            <div class="proposal-rationale-label">対応状況</div>
+            <div class="proposal-rationale-text">${esc(consistencyReviewStatusLabel(report.reviewStatus))}</div>
+          </div>
+          <div class="record-content" style="max-height:160px">${esc(dimensionSummary || '観点ごとの結果は未入力です')}</div>
+        </div>
+        <div class="proposal-card-footer">
+          <button class="btn btn-secondary btn-sm" onclick="editConsistencyReport('${report.id}')">編集</button>
+          <button class="btn btn-secondary btn-sm" onclick="copyConsistencyReport('${report.id}')">コピー</button>
+          <button class="btn btn-ghost btn-sm" onclick="applyConsistencyToEpisode('${report.id}')">話ステータスへ反映</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteConsistencyReport('${report.id}')">削除</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function changeConsistencyEpisode() {
+  consistencyUiState.selectedEpisodeNumber = Number(document.getElementById('consistency-episode-select')?.value || 0);
+  consistencyUiState.editingId = '';
+  await renderConsistencyStudio(currentWorkId);
+}
+
+async function newConsistencyReport() {
+  consistencyUiState.editingId = '';
+  await renderConsistencyStudio(currentWorkId);
+}
+
+async function editConsistencyReport(reportId) {
+  const report = await dbGet(STORE_CONSISTENCY_REPORTS, reportId);
+  if (!report || report.workId !== currentWorkId) {
+    showToast('編集対象が見つかりません', 'error');
+    return;
+  }
+
+  consistencyUiState.selectedEpisodeNumber = Number(report.episodeNumber || 0);
+  consistencyUiState.editingId = report.id;
+  await renderConsistencyStudio(currentWorkId);
+}
+
+async function saveConsistencyReport() {
+  if (!currentWorkId) return;
+
+  const episodeNumber = Number(document.getElementById('consistency-episode-select')?.value || 0);
+  if (!episodeNumber) {
+    showToast('対象話を選んでください', 'error');
+    return;
+  }
+
+  const { episodes } = await getConsistencyStudioBaseData(currentWorkId);
+  const episode = episodes.find(item => Number(item.number) === episodeNumber);
+
+  if (!episode) {
+    showToast('対象話が見つかりません', 'error');
+    return;
+  }
+
+  const editingId = document.getElementById('consistency-editing-id')?.value || '';
+  let existing = editingId ? await dbGet(STORE_CONSISTENCY_REPORTS, editingId) : null;
+
+  if (!existing) {
+    existing = consistencyCreateEmptyReport(currentWorkId, episode);
+  }
+
+  const collected = consistencyCollectFormReport(existing.id, episode);
+  collected.createdAt = existing.createdAt || Date.now();
+
+  if (!collected.summary && !collected.rawResult.trim()) {
+    showToast('概要かAIの生ログのどちらかを入力してください', 'error');
+    return;
+  }
+
+  await dbPut(STORE_CONSISTENCY_REPORTS, collected);
+
+  consistencyUiState.selectedEpisodeNumber = episodeNumber;
+  consistencyUiState.editingId = collected.id;
+
+  await renderConsistencyStudio(currentWorkId);
+  showToast('整合性チェックを保存しました ✓');
+}
+
+async function deleteConsistencyReport(reportId) {
+  const report = await dbGet(STORE_CONSISTENCY_REPORTS, reportId);
+  if (!report || report.workId !== currentWorkId) {
+    showToast('削除対象が見つかりません', 'error');
+    return;
+  }
+
+  const ok = confirm(`「${report.reportTitle || '整合性チェック'}」を削除しますか？\nこの操作は元に戻せません。`);
+  if (!ok) return;
+
+  await dbDelete(STORE_CONSISTENCY_REPORTS, reportId);
+
+  consistencyUiState.selectedEpisodeNumber = Number(report.episodeNumber || 0);
+  consistencyUiState.editingId = '';
+
+  await renderConsistencyStudio(currentWorkId);
+  showToast('整合性チェックを削除しました');
+}
+
+async function copyConsistencyReport(reportId) {
+  const report = await dbGet(STORE_CONSISTENCY_REPORTS, reportId);
+  if (!report || report.workId !== currentWorkId) {
+    showToast('コピー対象が見つかりません', 'error');
+    return;
+  }
+
+  const lines = [
+    `# ${report.reportTitle || '整合性チェック'}`,
+    '',
+    `- 対象話：第${report.episodeNumber || '?'}話`,
+    `- 実施者：${report.checkerName || '不明'}`,
+    `- 全体判定：${consistencyRiskLabel(report.overallRisk)}`,
+    `- 対応状況：${consistencyReviewStatusLabel(report.reviewStatus)}`,
+    '',
+    '## 観点別結果'
+  ];
+
+  CONSISTENCY_DIMENSIONS.forEach(dimension => {
+    lines.push(`- ${dimension.label}：${consistencyDimensionLabel(report.checks?.[dimension.key] || 'na')}`);
+  });
+
+  lines.push('');
+  lines.push('## 概要');
+  lines.push(report.summary || '（概要なし）');
+  lines.push('');
+  lines.push('## 問題点');
+  lines.push(consistencyListToText(report.issueList) || '（なし）');
+  lines.push('');
+  lines.push('## 推奨対応');
+  lines.push(consistencyListToText(report.recommendedActions) || '（なし）');
+  lines.push('');
+  lines.push('## AI生ログ');
+  lines.push(report.rawResult || '（なし）');
+
+  await copyToClipboard(lines.join('\n'));
+  showToast('整合性チェックをコピーしました');
+}
+
+function consistencyEpisodeStatusFromReport(report) {
+  if (report.reviewStatus === 'resolved' || report.reviewStatus === 'accepted') {
+    return 'revised';
+  }
+  if (report.overallRisk === 'critical' || report.overallRisk === 'warning') {
+    return 'consistency_warning';
+  }
+  if (report.overallRisk === 'watch') {
+    return 'needs_fix';
+  }
+  return 'drafted';
+}
+
+async function applyConsistencyToEpisode(reportId) {
+  const report = await dbGet(STORE_CONSISTENCY_REPORTS, reportId);
+  if (!report || report.workId !== currentWorkId) {
+    showToast('反映対象が見つかりません', 'error');
+    return;
+  }
+
+  const ok = confirm(`「${report.reportTitle || '整合性チェック'}」の結果を話ステータスへ反映します。\n危険度に応じて、この話の状態を更新します。`);
+  if (!ok) return;
+
+  const episode = await ensureEpisodeRecordForDraft(currentWorkId, report.episodeNumber);
+  episode.status = consistencyEpisodeStatusFromReport(report);
+  episode.updatedAt = Date.now();
+  await dbPut(STORE_EPISODES, episode);
+
+  if (typeof renderEpisodesAccordion === 'function') {
+    await renderEpisodesAccordion(currentWorkId, currentEpisodesCount);
+  }
+  if (typeof renderChapterPlanner === 'function') {
+    await renderChapterPlanner(currentWorkId);
+  }
+
+  consistencyUiState.selectedEpisodeNumber = Number(report.episodeNumber || 0);
+  await renderConsistencyStudio(currentWorkId);
+  showToast('話ステータスへ反映しました ✓');
+}
+
+async function renderConsistencyStudio(workId) {
+  const root = document.getElementById('consistency-studio-root');
+  if (!root) return;
+
+  if (!workId) {
+    root.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🧪</div>
+        <h3>先に作品を選んでください</h3>
+        <p>作品詳細を開いてからこのタブを使います。</p>
+      </div>
+    `;
+    return;
+  }
+
+  const { chapterMap, episodes, reports } = await getConsistencyStudioBaseData(workId);
+
+  if (!episodes.length) {
+    root.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🧪</div>
+        <h3>話数がまだありません</h3>
+        <p>先にメタ情報タブで話数を設定してください。</p>
+      </div>
+    `;
+    return;
+  }
+
+  const selectedEpisodeNumber = Number(consistencyUiState.selectedEpisodeNumber || episodes[0].number || 0);
+  const selectedEpisode = episodes.find(episode => Number(episode.number) === selectedEpisodeNumber) || episodes[0];
+  const selectedReports = reports.filter(report => Number(report.episodeNumber) === Number(selectedEpisode.number));
+  const counts = consistencySummaryCounts(reports);
+
+  let editingReport = null;
+  if (consistencyUiState.editingId) {
+    editingReport = selectedReports.find(report => report.id === consistencyUiState.editingId) || null;
+  }
+  if (!editingReport) {
+    editingReport = consistencyCreateEmptyReport(workId, selectedEpisode);
+  }
+
+  const selectedChapter = chapterMap[selectedEpisode.chapterId];
+  const selectedChapterLabel = consistencyChapterLabel(selectedChapter);
+  const episodeStatusLabel = consistencyEpisodeStatusLabel(selectedEpisode.status);
+
+  root.innerHTML = `
+    <div class="section-header">
+      <div class="section-title">
+        <span class="icon">🧪</span> 物語整合性チェック
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-secondary" onclick="newConsistencyReport()">新規チェック</button>
+        <button class="btn btn-ghost" onclick="switchTab('canon')">確定設定へ戻る</button>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title"><span>📌</span> 全体の確認状況</div>
+      </div>
+      <div class="form-section-body">
+        <div class="form-row form-row-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="form-label">保存済みチェック</div>
+              <div style="font-size:1rem;font-weight:700;margin-top:6px">${counts.total}件</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <div class="form-label">要修正 / 重大注意</div>
+              <div style="font-size:1rem;font-weight:700;margin-top:6px">${counts.warning + counts.critical}件</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <div class="form-label">未対応 / 確認中</div>
+              <div style="font-size:1rem;font-weight:700;margin-top:6px">${counts.unresolved}件</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title"><span>🎯</span> 対象話を選ぶ</div>
+      </div>
+      <div class="form-section-body">
+        <div class="form-row form-row-2">
+          <div class="form-group">
+            <label class="form-label">対象話</label>
+            <select id="consistency-episode-select" onchange="changeConsistencyEpisode()">
+              ${buildConsistencyEpisodeOptions(episodes, chapterMap, selectedEpisode.number)}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">現在の章 / 話ステータス</label>
+            <div class="record-content" style="max-height:none">${esc(selectedChapterLabel)} / ${esc(episodeStatusLabel)}</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">現行本文</label>
+          <div class="record-content" style="max-height:180px">${esc(selectedEpisode.content || '') || '（まだ本文は保存されていません）'}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row form-row-2">
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="form-section-title"><span>🗃</span> 保存済みチェック一覧</div>
+        </div>
+        <div class="form-section-body">
+          ${buildConsistencyReportCards(selectedReports)}
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="form-section-title"><span>✍️</span> ${consistencyUiState.editingId ? 'チェックを編集' : '新しいチェックを保存'}</div>
+        </div>
+        <div class="form-section-body">
+          <input type="hidden" id="consistency-editing-id" value="${esc(consistencyUiState.editingId || '')}">
+
+          <div class="form-row form-row-2">
+            <div class="form-group">
+              <label class="form-label">実施者</label>
+              <select id="consistency-checker">
+                ${consistencyBuildOptions(CONSISTENCY_CHECKER_OPTIONS, editingReport.checkerName || 'Claude')}
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">全体判定</label>
+              <select id="consistency-overall-risk">
+                ${consistencyBuildOptions(CONSISTENCY_RISK_OPTIONS, editingReport.overallRisk || 'watch')}
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row form-row-2">
+            <div class="form-group">
+              <label class="form-label">チェックタイトル</label>
+              <input type="text" id="consistency-title" value="${esc(editingReport.reportTitle || `第${selectedEpisode.number}話 整合性チェック`)}" placeholder="例：第4話 Claude整合性チェック">
+            </div>
+            <div class="form-group">
+              <label class="form-label">対応状況</label>
+              <select id="consistency-review-status">
+                ${consistencyBuildOptions(CONSISTENCY_REVIEW_STATUS_OPTIONS, editingReport.reviewStatus || 'open')}
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">全体概要</label>
+            <textarea id="consistency-summary" rows="4" placeholder="この話で一番大きい問題点や、全体として見てどうかを短くまとめてください。">${esc(editingReport.summary || '')}</textarea>
+          </div>
+
+          <div class="form-section" style="margin-bottom:0">
+            <div class="form-section-header">
+              <div class="form-section-title"><span>🔍</span> 観点別チェック</div>
+            </div>
+            <div class="form-section-body">
+              <div class="form-row form-row-2">
+                ${buildConsistencyDimensionFields(editingReport)}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">問題点一覧</label>
+            <textarea id="consistency-issues" rows="5" placeholder="1行に1件ずつ書いてください。例：主人公Aが知りえない情報を知っている">${esc(consistencyListToText(editingReport.issueList || []))}</textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">推奨対応</label>
+            <textarea id="consistency-actions" rows="5" placeholder="1行に1件ずつ書いてください。例：第5話冒頭に違和感の気づきを追加する">${esc(consistencyListToText(editingReport.recommendedActions || []))}</textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">AI生ログ / 原文</label>
+            <textarea id="consistency-raw-result" rows="10" placeholder="ClaudeやChatGPTの整合性チェック結果をそのまま貼り付けてください。">${esc(editingReport.rawResult || '')}</textarea>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="saveConsistencyReport()">このチェックを保存</button>
+            <button class="btn btn-secondary" onclick="newConsistencyReport()">新規入力に戻す</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+let canonUiState = {
+  categoryKey: 'characters',
+  editingId: ''
+};
+
+const CANON_CATEGORY_CONFIGS = {
+  characters: {
+    label: 'キャラクター',
+    icon: '👤',
+    store: STORE_CANON_CHARACTERS,
+    titleField: 'name',
+    summaryField: 'overview',
+    emptyLabel: 'キャラクターはまだありません',
+    fields: [
+      { key: 'name', label: '名前', type: 'text', placeholder: '例：朝比奈 湊' },
+      { key: 'role', label: '役割', type: 'text', placeholder: '例：主人公 / 攻め / 受け / 相棒' },
+      { key: 'overview', label: '概要', type: 'textarea', rows: 4, placeholder: 'このキャラを一文で説明してください' },
+      { key: 'appearanceNotes', label: '外見メモ', type: 'textarea', rows: 3, placeholder: '髪、目、体格、印象など' },
+      { key: 'personality', label: '性格', type: 'textarea', rows: 4, placeholder: '基本性格、癖、反応パターンなど' },
+      { key: 'values', label: '価値観', type: 'textarea', rows: 3, placeholder: '何を大事にし、何を嫌うか' },
+      { key: 'speakingStyle', label: '口調', type: 'textarea', rows: 3, placeholder: '敬語か、語尾、呼び方、会話温度など' },
+      { key: 'internalContradictions', label: '内的矛盾', type: 'textarea', rows: 3, placeholder: '強がるが寂しがり、など' },
+      { key: 'cannotBreakCore', label: '絶対に崩してはいけない核', type: 'textarea', rows: 3, placeholder: 'AIが壊してはいけない芯を書く' },
+      { key: 'currentState', label: '現在状態', type: 'textarea', rows: 5, placeholder: '感情、立場、知っていること、恋愛段階など' },
+      { key: 'notes', label: 'メモ', type: 'textarea', rows: 3, placeholder: '補足メモ' },
+      { key: 'sourceRefs', label: '参照元', type: 'list', placeholder: '1行に1件。例：第3話 / Claude分析ログ2026-04-29' }
+    ]
+  },
+  relations: {
+    label: '関係性',
+    icon: '🔗',
+    store: STORE_CANON_RELATIONS,
+    titleField: 'relationType',
+    summaryField: 'currentSummary',
+    emptyLabel: '関係性はまだありません',
+    fields: [
+      { key: 'fromCharacterId', label: '起点キャラ名またはID', type: 'text', placeholder: '例：朝比奈 湊' },
+      { key: 'toCharacterId', label: '相手キャラ名またはID', type: 'text', placeholder: '例：榊 原' },
+      { key: 'relationType', label: '関係タイプ', type: 'text', placeholder: '例：幼なじみ / 上司と部下 / 宿敵' },
+      { key: 'currentSummary', label: '現在の関係要約', type: 'textarea', rows: 4, placeholder: '今この2人がどういう距離感か' },
+      { key: 'trustStage', label: '信頼段階', type: 'text', placeholder: '例：低い / 揺れ始め / 高い' },
+      { key: 'romanceStage', label: '恋愛段階', type: 'text', placeholder: '例：自覚前 / 片想い / 相思相愛' },
+      { key: 'tensionStage', label: '緊張段階', type: 'text', placeholder: '例：刺々しい / 不安定 / 甘い' },
+      { key: 'cannotSkipSteps', label: '飛ばしてはいけない段階', type: 'textarea', rows: 3, placeholder: '例：和解前に告白へ飛ばさない' },
+      { key: 'updatedReason', label: '更新理由メモ', type: 'textarea', rows: 3, placeholder: '何話でどう変化したか' }
+    ]
+  },
+  timeline: {
+    label: '時系列イベント',
+    icon: '🕰️',
+    store: STORE_CANON_TIMELINE_EVENTS,
+    titleField: 'eventTitle',
+    summaryField: 'summary',
+    emptyLabel: '時系列イベントはまだありません',
+    fields: [
+      { key: 'publicEpisodeRef', label: '公開上の話参照', type: 'text', placeholder: '例：第4話' },
+      { key: 'inStoryOrder', label: '作中順', type: 'text', placeholder: '例：12' },
+      { key: 'eventTitle', label: 'イベント名', type: 'text', placeholder: '例：首飾りの違和感に気づく' },
+      { key: 'summary', label: '要約', type: 'textarea', rows: 4, placeholder: '何が起きたかを簡潔に' },
+      { key: 'participants', label: '参加人物', type: 'list', placeholder: '1行に1人。例：朝比奈 湊' },
+      { key: 'knowledgeOwnerIds', label: 'この出来事を知っている人物', type: 'list', placeholder: '1行に1人。知らない人物は入れない' },
+      { key: 'dateLabel', label: '日付ラベル', type: 'text', placeholder: '例：4月14日 夜 / 夏祭り当日' },
+      { key: 'notes', label: 'メモ', type: 'textarea', rows: 3, placeholder: '補足や注意点' }
+    ]
+  },
+  foreshadowings: {
+    label: '伏線',
+    icon: '🧵',
+    store: STORE_CANON_FORESHADOWINGS,
+    titleField: 'title',
+    summaryField: 'summary',
+    emptyLabel: '伏線はまだありません',
+    fields: [
+      { key: 'title', label: '伏線名', type: 'text', placeholder: '例：首飾りの違和感' },
+      { key: 'summary', label: '伏線の内容', type: 'textarea', rows: 4, placeholder: '何を示す伏線か' },
+      { key: 'importance', label: '重要度', type: 'select', options: [
+        { value: 'low', label: '低' },
+        { value: 'medium', label: '中' },
+        { value: 'high', label: '高' },
+        { value: 'critical', label: '最重要' }
+      ] },
+      { key: 'introducedAtChapter', label: '提示章', type: 'text', placeholder: '例：第1章' },
+      { key: 'introducedAtEpisode', label: '提示話', type: 'text', placeholder: '例：第3話' },
+      { key: 'plannedResolveAtChapter', label: '回収予定章', type: 'text', placeholder: '例：第4章' },
+      { key: 'plannedResolveAtEpisode', label: '回収予定話', type: 'text', placeholder: '例：第18話' },
+      { key: 'relatedCharacters', label: '関連人物', type: 'list', placeholder: '1行に1人' },
+      { key: 'relatedScenes', label: '関連場面', type: 'list', placeholder: '1行に1件' },
+      { key: 'status', label: '状態', type: 'select', options: [
+        { value: 'open', label: '未回収' },
+        { value: 'resolved', label: '回収済み' },
+        { value: 'retired', label: '撤回 / 使わない' }
+      ] },
+      { key: 'actualResolvedAtEpisode', label: '実際の回収話', type: 'text', placeholder: '例：第19話' },
+      { key: 'notes', label: 'メモ', type: 'textarea', rows: 3, placeholder: '補足メモ' }
+    ]
+  },
+  questions: {
+    label: '未解決事項',
+    icon: '❓',
+    store: STORE_CANON_OPEN_QUESTIONS,
+    titleField: 'title',
+    summaryField: 'question',
+    emptyLabel: '未解決事項はまだありません',
+    fields: [
+      { key: 'title', label: '項目名', type: 'text', placeholder: '例：首飾りの持ち主は誰か' },
+      { key: 'question', label: '問いの内容', type: 'textarea', rows: 4, placeholder: '何がまだ未解決なのか' },
+      { key: 'owner', label: '主に抱えている人物', type: 'text', placeholder: '例：朝比奈 湊' },
+      { key: 'category', label: '分類', type: 'text', placeholder: '例：謎 / 感情 / 世界設定 / 犯人' },
+      { key: 'plannedResolutionScope', label: '解決予定範囲', type: 'text', placeholder: '例：第3章後半 / 最終章' },
+      { key: 'urgency', label: '緊急度', type: 'select', options: [
+        { value: 'low', label: '低' },
+        { value: 'medium', label: '中' },
+        { value: 'high', label: '高' }
+      ] },
+      { key: 'notes', label: 'メモ', type: 'textarea', rows: 3, placeholder: '補足メモ' }
+    ]
+  },
+  world: {
+    label: '世界設定',
+    icon: '🌌',
+    store: STORE_CANON_WORLD_RULES,
+    titleField: 'title',
+    summaryField: 'body',
+    emptyLabel: '世界設定はまだありません',
+    fields: [
+      { key: 'category', label: '分類', type: 'text', placeholder: '例：制度 / 魔法 / 家柄 / 業界' },
+      { key: 'title', label: '設定名', type: 'text', placeholder: '例：当主継承の規則' },
+      { key: 'body', label: '内容', type: 'textarea', rows: 5, placeholder: '設定本文' },
+      { key: 'certainty', label: '確度', type: 'select', options: [
+        { value: 'confirmed', label: '確定' },
+        { value: 'probable', label: 'ほぼ確定' },
+        { value: 'rumor', label: '噂 / 未確定' }
+      ] },
+      { key: 'source', label: '参照元', type: 'text', placeholder: '例：第6話 / 作者メモ' },
+      { key: 'notes', label: 'メモ', type: 'textarea', rows: 3, placeholder: '補足メモ' }
+    ]
+  },
+  locations: {
+    label: '場所',
+    icon: '📍',
+    store: STORE_CANON_LOCATIONS,
+    titleField: 'name',
+    summaryField: 'summary',
+    emptyLabel: '場所はまだありません',
+    fields: [
+      { key: 'name', label: '場所名', type: 'text', placeholder: '例：旧温室' },
+      { key: 'summary', label: '場所の説明', type: 'textarea', rows: 4, placeholder: 'どういう場所か' },
+      { key: 'emotionalMeaning', label: '感情的な意味', type: 'text', placeholder: '例：秘密の共有、孤独、別れの予感' },
+      { key: 'relatedCharacters', label: '関連人物', type: 'list', placeholder: '1行に1人' },
+      { key: 'notes', label: 'メモ', type: 'textarea', rows: 3, placeholder: '補足メモ' }
+    ]
+  },
+  items: {
+    label: 'アイテム',
+    icon: '🗝️',
+    store: STORE_CANON_ITEMS,
+    titleField: 'name',
+    summaryField: 'summary',
+    emptyLabel: 'アイテムはまだありません',
+    fields: [
+      { key: 'name', label: 'アイテム名', type: 'text', placeholder: '例：銀の首飾り' },
+      { key: 'summary', label: '説明', type: 'textarea', rows: 4, placeholder: '何で、どういう役割か' },
+      { key: 'symbolicMeaning', label: '象徴的な意味', type: 'text', placeholder: '例：執着、記憶、罪悪感' },
+      { key: 'relatedCharacters', label: '関連人物', type: 'list', placeholder: '1行に1人' },
+      { key: 'status', label: '現在状態', type: 'text', placeholder: '例：紛失中 / 主人公が所持 / 破損' },
+      { key: 'notes', label: 'メモ', type: 'textarea', rows: 3, placeholder: '補足メモ' }
+    ]
+  }
+};
+
+function canonGetConfig(categoryKey) {
+  return CANON_CATEGORY_CONFIGS[categoryKey] || CANON_CATEGORY_CONFIGS.characters;
+}
+
+function canonEscapeAttr(value) {
+  return esc(String(value == null ? '' : value)).replace(/"/g, '&quot;');
+}
+
+function canonNormalizeList(rawValue) {
+  return String(rawValue || '')
+    .split('\n')
+    .map(value => value.trim())
+    .flatMap(value => value.split(','))
+    .map(value => value.trim())
+    .filter(Boolean);
+}
+
+function canonListToText(value) {
+  if (Array.isArray(value)) return value.join('\n');
+  return String(value || '');
+}
+
+function canonFieldValue(item, field) {
+  const value = item[field.key];
+  if (field.type === 'list') return canonListToText(value);
+  if (value == null) return '';
+  return String(value);
+}
+
+function canonDisplayValue(value) {
+  if (Array.isArray(value)) return value.join(' / ');
+  return String(value || '');
+}
+
+function canonFieldLabel(field) {
+  if (field.type === 'list') {
+    return `${field.label}（改行またはカンマ区切り）`;
+  }
+  return field.label;
+}
+
+function canonCreateEmptyItem(workId, categoryKey) {
+  const config = canonGetConfig(categoryKey);
+  const now = Date.now();
+  const item = {
+    id: `canon_${categoryKey}_${genId()}`,
+    workId,
+    createdAt: now,
+    updatedAt: now
+  };
+
+  config.fields.forEach(field => {
+    item[field.key] = field.type === 'list' ? [] : '';
+  });
+
+  return item;
+}
+
+function canonSortItems(items, config) {
+  const titleField = config.titleField;
+  return [...items].sort((a, b) => {
+    const aValue = String(a[titleField] || '');
+    const bValue = String(b[titleField] || '');
+    return aValue.localeCompare(bValue, 'ja');
+  });
+}
+
+function canonSummaryText(item, config) {
+  const raw = item[config.summaryField];
+  const text = canonDisplayValue(raw).trim();
+  if (!text) return '要約はまだありません';
+  return text.length > 180 ? text.slice(0, 180) + '…' : text;
+}
+
+function canonTitleText(item, config) {
+  const title = String(item[config.titleField] || '').trim();
+  if (title) return title;
+  return '（未入力）';
+}
+
+async function canonLoadCounts(workId) {
+  const entries = await Promise.all(
+    Object.entries(CANON_CATEGORY_CONFIGS).map(async ([key, config]) => {
+      const items = await dbGetByIndex(config.store, 'workId', workId);
+      return [key, items.length];
+    })
+  );
+
+  return Object.fromEntries(entries);
+}
+
+function canonBuildCountCards(counts) {
+  return Object.entries(CANON_CATEGORY_CONFIGS).map(([key, config]) => {
+    const count = counts[key] || 0;
+    return `
+      <div class="card">
+        <div class="card-body">
+          <div class="form-label">${config.icon} ${config.label}</div>
+          <div style="font-size:1rem;font-weight:700;margin-top:6px">${count}件</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function canonBuildCategoryButtons(counts, activeKey) {
+  return Object.entries(CANON_CATEGORY_CONFIGS).map(([key, config]) => `
+    <button class="rule-filter-btn ${key === activeKey ? 'active' : ''}" onclick="openCanonCategory('${key}')">
+      ${config.icon} ${config.label}
+      <span class="count-badge" style="margin-left:6px">${counts[key] || 0}</span>
+    </button>
+  `).join('');
+}
+
+function canonBuildFieldHtml(field, item) {
+  const fieldId = `canon-field-${field.key}`;
+  const value = canonFieldValue(item, field);
+  const placeholder = canonEscapeAttr(field.placeholder || '');
+
+  if (field.type === 'textarea') {
+    return `
+      <div class="form-group">
+        <label class="form-label" for="${fieldId}">${canonFieldLabel(field)}</label>
+        <textarea id="${fieldId}" rows="${field.rows || 4}" placeholder="${placeholder}">${esc(value)}</textarea>
+      </div>
+    `;
+  }
+
+  if (field.type === 'select') {
+    return `
+      <div class="form-group">
+        <label class="form-label" for="${fieldId}">${canonFieldLabel(field)}</label>
+        <select id="${fieldId}">
+          ${(field.options || []).map(option => `
+            <option value="${canonEscapeAttr(option.value)}" ${String(option.value) === String(value) ? 'selected' : ''}>
+              ${esc(option.label)}
+            </option>
+          `).join('')}
+        </select>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="form-group">
+      <label class="form-label" for="${fieldId}">${canonFieldLabel(field)}</label>
+      <input type="text" id="${fieldId}" value="${canonEscapeAttr(value)}" placeholder="${placeholder}">
+    </div>
+  `;
+}
+
+function canonBuildItemCards(items, config, categoryKey) {
+  if (!items.length) {
+    return `
+      <div class="empty-state" style="padding:32px">
+        <div class="empty-icon" style="font-size:2rem">${config.icon}</div>
+        <h3>${esc(config.emptyLabel)}</h3>
+        <p>右側の入力欄から最初の1件を保存してください。</p>
+      </div>
+    `;
+  }
+
+  return items.map((item, index) => `
+    <div class="proposal-card ${canonUiState.editingId === item.id ? 'proposal-applied' : ''}">
+      <div class="proposal-card-header">
+        <span class="proposal-num">#${index + 1}</span>
+        <span class="proposal-op-badge proposal-op-create">${esc(config.label)}</span>
+        <span class="proposal-target">${esc(canonTitleText(item, config))}</span>
+      </div>
+      <div class="proposal-card-body">
+        <div class="proposal-rationale">
+          <div class="proposal-rationale-label">概要</div>
+          <div class="proposal-rationale-text">${esc(canonSummaryText(item, config))}</div>
+        </div>
+        <div class="record-content" style="max-height:160px">
+          ${config.fields.slice(0, 4).map(field => {
+            const value = canonDisplayValue(item[field.key]).trim();
+            if (!value) return '';
+            return `${field.label}：${value}`;
+          }).filter(Boolean).join('\n') || '表示できる内容がまだありません'}
+        </div>
+      </div>
+      <div class="proposal-card-footer">
+        <button class="btn btn-secondary btn-sm" onclick="editCanonItem('${categoryKey}','${item.id}')">編集</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteCanonItem('${categoryKey}','${item.id}')">削除</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function canonCollectFormItem(categoryKey, editingId) {
+  const config = canonGetConfig(categoryKey);
+  const base = editingId ? null : canonCreateEmptyItem(currentWorkId, categoryKey);
+  const item = base || {
+    id: editingId,
+    workId: currentWorkId
+  };
+
+  config.fields.forEach(field => {
+    const element = document.getElementById(`canon-field-${field.key}`);
+    if (!element) return;
+
+    if (field.type === 'list') {
+      item[field.key] = canonNormalizeList(element.value);
+    } else {
+      item[field.key] = element.value.trim();
+    }
+  });
+
+  item.workId = currentWorkId;
+  item.updatedAt = Date.now();
+  if (!editingId) {
+    item.createdAt = item.createdAt || Date.now();
+  }
+
+  return item;
+}
+
+async function openCanonCategory(categoryKey) {
+  canonUiState = {
+    categoryKey,
+    editingId: ''
+  };
+  await renderCanonStudio(currentWorkId);
+}
+
+async function editCanonItem(categoryKey, itemId) {
+  canonUiState = {
+    categoryKey,
+    editingId: itemId
+  };
+  await renderCanonStudio(currentWorkId);
+}
+
+async function newCanonItem(categoryKey) {
+  canonUiState = {
+    categoryKey,
+    editingId: ''
+  };
+  await renderCanonStudio(currentWorkId);
+}
+
+async function saveCanonItem() {
+  if (!currentWorkId) return;
+
+  const categoryKey = canonUiState.categoryKey || 'characters';
+  const config = canonGetConfig(categoryKey);
+  const editingId = document.getElementById('canon-editing-id')?.value || '';
+  let targetItem = editingId ? await dbGet(config.store, editingId) : null;
+
+  if (!targetItem) {
+    targetItem = canonCreateEmptyItem(currentWorkId, categoryKey);
+  }
+
+  const collected = canonCollectFormItem(categoryKey, targetItem.id);
+  collected.id = targetItem.id;
+  collected.createdAt = targetItem.createdAt || Date.now();
+
+  const titleValue = String(collected[config.titleField] || '').trim();
+  if (!titleValue) {
+    showToast(`${config.label}の「${config.fields.find(field => field.key === config.titleField)?.label || 'タイトル'}」を入力してください`, 'error');
+    return;
+  }
+
+  await dbPut(config.store, collected);
+
+  canonUiState = {
+    categoryKey,
+    editingId: collected.id
+  };
+
+  await renderCanonStudio(currentWorkId);
+  showToast('確定設定を保存しました ✓');
+}
+
+async function deleteCanonItem(categoryKey, itemId) {
+  const config = canonGetConfig(categoryKey);
+  const item = await dbGet(config.store, itemId);
+
+  if (!item || item.workId !== currentWorkId) {
+    showToast('削除対象が見つかりません', 'error');
+    return;
+  }
+
+  const ok = confirm(`「${canonTitleText(item, config)}」を削除しますか？\nこの操作は元に戻せません。`);
+  if (!ok) return;
+
+  await dbDelete(config.store, itemId);
+
+  canonUiState = {
+    categoryKey,
+    editingId: ''
+  };
+
+  await renderCanonStudio(currentWorkId);
+  showToast('確定設定を削除しました');
+}
+
+async function renderCanonStudio(workId) {
+  const root = document.getElementById('canon-studio-root');
+  if (!root) return;
+
+  if (!workId) {
+    root.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🧭</div>
+        <h3>先に作品を選んでください</h3>
+        <p>作品詳細を開いてからこのタブを使います。</p>
+      </div>
+    `;
+    return;
+  }
+
+  const counts = await canonLoadCounts(workId);
+  const categoryKey = canonUiState.categoryKey || 'characters';
+  const config = canonGetConfig(categoryKey);
+  const items = canonSortItems(await dbGetByIndex(config.store, 'workId', workId), config);
+
+  let editingItem = null;
+  if (canonUiState.editingId) {
+    editingItem = items.find(item => item.id === canonUiState.editingId) || null;
+  }
+  if (!editingItem) {
+    editingItem = canonCreateEmptyItem(workId, categoryKey);
+  }
+
+  root.innerHTML = `
+    <div class="section-header">
+      <div class="section-title">
+        <span class="icon">🧭</span> 確定設定スタジオ
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-secondary" onclick="newCanonItem('${categoryKey}')">新規作成</button>
+        <button class="btn btn-ghost" onclick="switchTab('drafts')">初稿・差分・採用へ戻る</button>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title"><span>📌</span> カテゴリごとの件数</div>
+      </div>
+      <div class="form-section-body">
+        <div class="works-grid" style="margin-top:0">
+          ${canonBuildCountCards(counts)}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title"><span>🗂️</span> 編集するカテゴリを選ぶ</div>
+      </div>
+      <div class="form-section-body">
+        <div class="rule-filter-bar">
+          ${canonBuildCategoryButtons(counts, categoryKey)}
+        </div>
+        <div class="form-hint">
+          ここで保存するのは本文ではなく「確定した事実」です。まだ仮の情報しかないものは、分析ログや執筆メモに残しておき、確定したらここへ移してください。
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row form-row-2">
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="form-section-title"><span>${config.icon}</span> 保存済み ${config.label}</div>
+        </div>
+        <div class="form-section-body">
+          ${canonBuildItemCards(items, config, categoryKey)}
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="form-section-title"><span>✍️</span> ${canonUiState.editingId ? '編集' : '新規作成'}</div>
+        </div>
+        <div class="form-section-body">
+          <input type="hidden" id="canon-editing-id" value="${canonEscapeAttr(canonUiState.editingId || '')}">
+          <div class="form-hint">
+            「${config.label}」カテゴリの内容を入力します。まず一番上の必須になる見出し項目を入れてから保存してください。
+          </div>
+          ${config.fields.map(field => canonBuildFieldHtml(field, editingItem)).join('')}
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="saveCanonItem()">この内容を保存</button>
+            <button class="btn btn-secondary" onclick="newCanonItem('${categoryKey}')">新規入力に戻す</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+const DRAFT_VERSION_TYPE_OPTIONS = [
+  { value: 'chatgpt_draft', label: 'ChatGPT初稿' },
+  { value: 'claude_revision', label: 'Claude推敲稿' },
+  { value: 'author_edit', label: '作者修正版' },
+  { value: 'adopted', label: '採用稿' },
+  { value: 'memo', label: '比較用メモ' }
+];
+
+function draftVersionTypeLabel(value) {
+  const found = DRAFT_VERSION_TYPE_OPTIONS.find(option => option.value === value);
+  return found ? found.label : '不明';
+}
+
+function draftFormatDate(timestamp) {
+  if (!timestamp) return '日時不明';
+  try {
+    return new Date(timestamp).toLocaleString('ja-JP');
+  } catch (_) {
+    return '日時不明';
+  }
+}
+
+function draftNormalizeText(value) {
+  return String(value || '').replace(/\r\n/g, '\n').trim();
+}
+
+function draftCountChars(value) {
+  return draftNormalizeText(value).length;
+}
+
+function draftCountLines(value) {
+  const normalized = draftNormalizeText(value);
+  if (!normalized) return 0;
+  return normalized.split('\n').length;
+}
+
+function draftPreview(value, max = 180) {
+  const normalized = draftNormalizeText(value).replace(/\n+/g, ' / ');
+  if (!normalized) return '（本文なし）';
+  return normalized.length > max ? normalized.slice(0, max) + '…' : normalized;
+}
+
+function draftEpisodeStatusLabel(value) {
+  const options = typeof EPISODE_STATUS_OPTIONS !== 'undefined' ? EPISODE_STATUS_OPTIONS : [];
+  const found = options.find(option => option.value === value);
+  return found ? found.label : (value || '未設定');
+}
+
+async function getDraftStudioBaseData(workId) {
+  await ensureWorkChapterLinks(workId);
+
+  const work = await dbGet(STORE_WORKS, workId);
+  const chapters = await dbGetByIndex(STORE_CHAPTERS, 'workId', workId);
+  chapters.sort((a, b) => (a.number || 0) - (b.number || 0));
+
+  const storedEpisodes = await dbGetByIndex(STORE_EPISODES, 'workId', workId);
+  const episodeMap = {};
+  storedEpisodes.forEach(episode => {
+    episodeMap[episode.number] = episode;
+  });
+
+  const firstChapterId = chapters[0] ? chapters[0].id : '';
+  const count = Number(currentEpisodesCount) || Number(work?.episodes) || 0;
+  const episodes = [];
+
+  for (let i = 1; i <= count; i += 1) {
+    const existing = episodeMap[i];
+    if (existing) {
+      episodes.push(existing);
+    } else {
+      episodes.push({
+        id: '',
+        workId,
+        number: i,
+        subtitle: '',
+        content: '',
+        chapterId: firstChapterId,
+        status: 'unplanned',
+        isVirtual: true
+      });
+    }
+  }
+
+  const drafts = await dbGetByIndex(STORE_EPISODE_DRAFTS, 'workId', workId);
+  drafts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+  return { work, chapters, episodes, drafts };
+}
+
+function buildDraftEpisodeOptions(episodes, chapters, selectedNumber) {
+  const chapterMap = {};
+  chapters.forEach(chapter => {
+    chapterMap[chapter.id] = chapter;
+  });
+
+  return episodes.map(episode => {
+    const chapter = chapterMap[episode.chapterId];
+    const chapterLabel = chapter ? (chapter.title || `第${chapter.number || '?'}章`) : '章未設定';
+    const subtitle = episode.subtitle ? ` / ${episode.subtitle}` : '';
+    const currentMark = draftCountChars(episode.content || '') > 0 ? ' / 本文あり' : ' / 本文なし';
+    const selected = Number(selectedNumber) === Number(episode.number) ? 'selected' : '';
+    return `<option value="${episode.number}" ${selected}>第${episode.number}話 / ${esc(chapterLabel)}${esc(subtitle)}${esc(currentMark)}</option>`;
+  }).join('');
+}
+
+function buildDraftVersionTypeOptions(selectedValue) {
+  return DRAFT_VERSION_TYPE_OPTIONS.map(option => {
+    const selected = option.value === selectedValue ? 'selected' : '';
+    return `<option value="${esc(option.value)}" ${selected}>${esc(option.label)}</option>`;
+  }).join('');
+}
+
+function buildDraftVersionOptions(drafts, selectedId, includeEmptyLabel = '（選択してください）') {
+  const optionHtml = drafts.map(draft => {
+    const selected = draft.id === selectedId ? 'selected' : '';
+    const date = draftFormatDate(draft.createdAt || draft.updatedAt);
+    return `<option value="${esc(draft.id)}" ${selected}>[${esc(draftVersionTypeLabel(draft.versionType))}] ${esc(date)} / ${esc(draft.title || '無題')}</option>`;
+  }).join('');
+
+  return `<option value="">${esc(includeEmptyLabel)}</option>${optionHtml}`;
+}
+
+function collectDraftStudioFormState() {
+  return {
+    selectedEpisodeNumber: Number(document.getElementById('draft-episode-select')?.value || 0),
+    versionType: document.getElementById('draft-version-type')?.value || 'chatgpt_draft',
+    title: document.getElementById('draft-title')?.value || '',
+    notes: document.getElementById('draft-notes')?.value || '',
+    body: document.getElementById('draft-body')?.value || '',
+    compareLeftId: document.getElementById('draft-compare-left')?.value || '',
+    compareRightId: document.getElementById('draft-compare-right')?.value || ''
+  };
+}
+
+function draftGetSuggestedTitle(episodeNumber, versionType) {
+  return `第${episodeNumber}話 ${draftVersionTypeLabel(versionType)}`;
+}
+
+function draftPickComparePair(drafts, state) {
+  const validIds = new Set(drafts.map(draft => draft.id));
+  let leftId = validIds.has(state.compareLeftId) ? state.compareLeftId : '';
+  let rightId = validIds.has(state.compareRightId) ? state.compareRightId : '';
+
+  if (!rightId && drafts[0]) rightId = drafts[0].id;
+  if (!leftId && drafts[1]) leftId = drafts[1].id;
+  if (!leftId && drafts[0]) leftId = drafts[0].id;
+  if (!rightId && drafts[0]) rightId = drafts[0].id;
+
+  return { leftId, rightId };
+}
+
+function draftSplitLines(value) {
+  const normalized = draftNormalizeText(value);
+  return normalized ? normalized.split('\n') : [];
+}
+
+function draftCalcSharedLines(leftLines, rightLines) {
+  const n = leftLines.length;
+  const m = rightLines.length;
+  if (!n || !m) return 0;
+
+  let previous = new Array(m + 1).fill(0);
+  let current = new Array(m + 1).fill(0);
+
+  for (let i = 1; i <= n; i += 1) {
+    current = new Array(m + 1).fill(0);
+    for (let j = 1; j <= m; j += 1) {
+      if (leftLines[i - 1] === rightLines[j - 1]) {
+        current[j] = previous[j - 1] + 1;
+      } else {
+        current[j] = Math.max(previous[j], current[j - 1]);
+      }
+    }
+    previous = current;
+  }
+
+  return previous[m];
+}
+
+function draftBuildCompareStats(leftText, rightText) {
+  const leftLines = draftSplitLines(leftText);
+  const rightLines = draftSplitLines(rightText);
+  const shared = draftCalcSharedLines(leftLines, rightLines);
+  const removed = Math.max(leftLines.length - shared, 0);
+  const added = Math.max(rightLines.length - shared, 0);
+  const denominator = leftLines.length + rightLines.length;
+  const similarity = denominator ? Math.round((shared * 2 / denominator) * 100) : 100;
+
+  return {
+    leftChars: draftCountChars(leftText),
+    rightChars: draftCountChars(rightText),
+    leftLines: leftLines.length,
+    rightLines: rightLines.length,
+    sharedLines: shared,
+    removedLines: removed,
+    addedLines: added,
+    similarity
+  };
+}
+
+function buildDraftCompareHtml(leftDraft, rightDraft) {
+  if (!leftDraft || !rightDraft) {
+    return `
+      <div class="empty-state" style="padding:32px">
+        <div class="empty-icon" style="font-size:2rem">🧩</div>
+        <h3>比較する版を2つ選んでください</h3>
+        <p>保存済みバージョンが2件以上ある話で使えます。</p>
+      </div>
+    `;
+  }
+
+  const stats = draftBuildCompareStats(leftDraft.body || '', rightDraft.body || '');
+
+  return `
+    <div class="proposal-rationale" style="margin-bottom:12px">
+      <div class="proposal-rationale-label">差分サマリー</div>
+      <div class="proposal-rationale-text">
+        左 ${stats.leftChars}文字 / ${stats.leftLines}行　
+        右 ${stats.rightChars}文字 / ${stats.rightLines}行　
+        共通行 ${stats.sharedLines}　
+        右で増えた行 ${stats.addedLines}　
+        左から減った行 ${stats.removedLines}　
+        類似度の目安 ${stats.similarity}%
+      </div>
+    </div>
+
+    <div class="proposal-diff">
+      <div class="proposal-diff-side diff-before">
+        <div class="proposal-diff-label">比較元</div>
+        <div class="proposal-diff-title">${esc(leftDraft.title || '無題')}</div>
+        <div class="proposal-diff-cat">${esc(draftVersionTypeLabel(leftDraft.versionType))} / ${esc(draftFormatDate(leftDraft.createdAt || leftDraft.updatedAt))}</div>
+        <div class="proposal-diff-body">${esc(leftDraft.body || '') || '<span class="proposal-diff-empty">（本文なし）</span>'}</div>
+      </div>
+      <div class="proposal-diff-side diff-after">
+        <div class="proposal-diff-label">比較先</div>
+        <div class="proposal-diff-title">${esc(rightDraft.title || '無題')}</div>
+        <div class="proposal-diff-cat">${esc(draftVersionTypeLabel(rightDraft.versionType))} / ${esc(draftFormatDate(rightDraft.createdAt || rightDraft.updatedAt))}</div>
+        <div class="proposal-diff-body">${esc(rightDraft.body || '') || '<span class="proposal-diff-empty">（本文なし）</span>'}</div>
+      </div>
+    </div>
+  `;
+}
+
+function buildDraftListHtml(drafts) {
+  if (!drafts.length) {
+    return `
+      <div class="empty-state" style="padding:32px">
+        <div class="empty-icon" style="font-size:2rem">📝</div>
+        <h3>この話にはまだ保存済みバージョンがありません</h3>
+        <p>上の入力欄へ貼って「この版を保存」を押すと、差分確認の土台ができます。</p>
+      </div>
+    `;
+  }
+
+  return drafts.map((draft, index) => {
+    const title = draft.title || draftGetSuggestedTitle(draft.episodeNumber, draft.versionType);
+    const notes = draft.notes ? esc(draft.notes) : '（メモなし）';
+
+    return `
+      <div class="proposal-card">
+        <div class="proposal-card-header">
+          <span class="proposal-num">#${index + 1}</span>
+          <span class="proposal-op-badge proposal-op-modify">${esc(draftVersionTypeLabel(draft.versionType))}</span>
+          <span class="proposal-target">${esc(title)} / ${esc(draftFormatDate(draft.createdAt || draft.updatedAt))}</span>
+          <span class="proposal-status-badge proposal-status-applied">${draft.charCount || draftCountChars(draft.body || '')}字</span>
+        </div>
+        <div class="proposal-card-body">
+          <div class="proposal-rationale">
+            <div class="proposal-rationale-label">メモ</div>
+            <div class="proposal-rationale-text">${notes}</div>
+          </div>
+          <div class="record-content" style="max-height:220px">${esc(draft.body || '')}</div>
+        </div>
+        <div class="proposal-card-footer">
+          <button class="btn btn-secondary btn-sm" onclick="loadDraftIntoComposer('${draft.id}')">編集欄へ読み込む</button>
+          <button class="btn btn-secondary btn-sm" onclick="copyDraftVersion('${draft.id}')">コピー</button>
+          <button class="btn btn-ghost btn-sm" onclick="applyDraftToEpisode('${draft.id}')">現行本文へ反映</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteDraftVersion('${draft.id}')">削除</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function renderDraftStudio(workId, overrideState = null) {
+  const root = document.getElementById('draft-studio-root');
+  if (!root) return;
+
+  if (!workId) {
+    root.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📝</div>
+        <h3>先に作品を選んでください</h3>
+        <p>作品詳細を開いてからこのタブを使います。</p>
+      </div>
+    `;
+    return;
+  }
+
+  const { work, chapters, episodes, drafts } = await getDraftStudioBaseData(workId);
+  const previousState = overrideState || collectDraftStudioFormState();
+  const selectedEpisodeNumber = Number(previousState.selectedEpisodeNumber) || (episodes[0] ? Number(episodes[0].number) : 0);
+  const selectedEpisode = episodes.find(episode => Number(episode.number) === selectedEpisodeNumber) || episodes[0] || null;
+  const episodeNumber = selectedEpisode ? Number(selectedEpisode.number) : 0;
+  const selectedDrafts = drafts
+    .filter(draft => Number(draft.episodeNumber) === episodeNumber)
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+  const comparePair = draftPickComparePair(selectedDrafts, previousState);
+  const compareLeft = selectedDrafts.find(draft => draft.id === comparePair.leftId) || null;
+  const compareRight = selectedDrafts.find(draft => draft.id === comparePair.rightId) || null;
+
+  const chapterMap = {};
+  chapters.forEach(chapter => {
+    chapterMap[chapter.id] = chapter;
+  });
+
+  const chapter = selectedEpisode ? chapterMap[selectedEpisode.chapterId] : null;
+  const chapterLabel = chapter ? (chapter.title || `第${chapter.number || '?'}章`) : '章未設定';
+  const episodeStatusLabel = selectedEpisode ? draftEpisodeStatusLabel(selectedEpisode.status) : '未設定';
+  const defaultTitle = selectedEpisode
+    ? draftGetSuggestedTitle(episodeNumber, previousState.versionType || 'chatgpt_draft')
+    : '';
+
+  root.innerHTML = `
+    <div class="section-header">
+      <div class="section-title">
+        <span class="icon">📝</span> 初稿・推敲・採用管理
+      </div>
+      <div class="form-hint">
+        ChatGPT初稿 → Claude推敲稿 → 作者修正版 → 採用稿 を別々に保存し、あとで差分比較できます。
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title"><span>🎯</span> 今回の対象話</div>
+      </div>
+      <div class="form-section-body">
+        ${episodes.length ? `
+        <div class="form-row form-row-2">
+          <div class="form-group">
+            <label class="form-label">対象話</label>
+            <select id="draft-episode-select" onchange="renderDraftStudio(currentWorkId)">
+              ${buildDraftEpisodeOptions(episodes, chapters, episodeNumber)}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">現在の所属章 / 話状態</label>
+            <div class="record-content" style="max-height:none">
+              ${esc(chapterLabel)} / ${esc(episodeStatusLabel)}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">現行本文の状況</label>
+          <div class="record-content" style="max-height:180px">${esc(selectedEpisode?.content || '') || '（まだ本文は保存されていません）'}</div>
+          <div class="form-hint" style="margin-top:8px">
+            ここに表示されるのは、メタ情報タブで保存済みの本文です。保存前の入力内容は反映されません。
+          </div>
+        </div>
+        ` : `
+        <div class="empty-state" style="padding:32px">
+          <div class="empty-icon" style="font-size:2rem">📝</div>
+          <h3>話数がまだありません</h3>
+          <p>先にメタ情報タブで「話数」を入力してください。</p>
+        </div>
+        `}
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title"><span>💾</span> 新しい版を保存</div>
+      </div>
+      <div class="form-section-body">
+        ${episodes.length ? `
+        <div class="form-row form-row-3">
+          <div class="form-group">
+            <label class="form-label">版の種類</label>
+            <select id="draft-version-type" onchange="refreshDraftSuggestedTitle()">
+              ${buildDraftVersionTypeOptions(previousState.versionType || 'chatgpt_draft')}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">版タイトル</label>
+            <input type="text" id="draft-title" value="${esc(previousState.title || defaultTitle)}" placeholder="例：第3話 ChatGPT初稿">
+          </div>
+          <div class="form-group">
+            <label class="form-label">元にした版（任意）</label>
+            <select id="draft-source-id">
+              ${buildDraftVersionOptions(selectedDrafts, '', '（元版なし）')}
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">作業メモ</label>
+          <textarea id="draft-notes" rows="3" placeholder="例：Claudeで心理描写を厚くした版。結末は変えていない。">${esc(previousState.notes || '')}</textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">本文</label>
+          <textarea id="draft-body" rows="16" placeholder="ChatGPTやClaudeから受け取った本文をここへ貼り付けてください。">${esc(previousState.body || '')}</textarea>
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-secondary" onclick="loadCurrentEpisodeIntoDraftForm()">現行本文を読み込む</button>
+          <button class="btn btn-primary" onclick="saveDraftVersion()">この版を保存</button>
+          <button class="btn btn-ghost" onclick="clearDraftComposer()">入力欄をクリア</button>
+        </div>
+        ` : ''}
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title"><span>🗃</span> 保存済みバージョン</div>
+      </div>
+      <div class="form-section-body">
+        ${buildDraftListHtml(selectedDrafts)}
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title"><span>🧩</span> 差分比較</div>
+      </div>
+      <div class="form-section-body">
+        ${selectedDrafts.length >= 2 ? `
+        <div class="form-row form-row-2">
+          <div class="form-group">
+            <label class="form-label">比較元</label>
+            <select id="draft-compare-left" onchange="renderDraftStudio(currentWorkId)">
+              ${buildDraftVersionOptions(selectedDrafts, comparePair.leftId)}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">比較先</label>
+            <select id="draft-compare-right" onchange="renderDraftStudio(currentWorkId)">
+              ${buildDraftVersionOptions(selectedDrafts, comparePair.rightId)}
+            </select>
+          </div>
+        </div>
+        ${buildDraftCompareHtml(compareLeft, compareRight)}
+        ` : `
+        <div class="empty-state" style="padding:32px">
+          <div class="empty-icon" style="font-size:2rem">🧩</div>
+          <h3>比較できる版がまだありません</h3>
+          <p>まずは1話ぶんの版を2つ以上保存してください。</p>
+        </div>
+        `}
+      </div>
+    </div>
+  `;
+}
+
+function refreshDraftSuggestedTitle() {
+  const episodeSelect = document.getElementById('draft-episode-select');
+  const typeSelect = document.getElementById('draft-version-type');
+  const titleInput = document.getElementById('draft-title');
+  if (!episodeSelect || !typeSelect || !titleInput) return;
+
+  if (!titleInput.value.trim() || titleInput.value.trim().startsWith('第')) {
+    titleInput.value = draftGetSuggestedTitle(Number(episodeSelect.value || 0), typeSelect.value || 'chatgpt_draft');
+  }
+}
+
+async function clearDraftComposer() {
+  await renderDraftStudio(currentWorkId, {
+    ...collectDraftStudioFormState(),
+    title: '',
+    notes: '',
+    body: ''
+  });
+}
+
+async function loadCurrentEpisodeIntoDraftForm() {
+  const state = collectDraftStudioFormState();
+  const { episodes } = await getDraftStudioBaseData(currentWorkId);
+  const target = episodes.find(episode => Number(episode.number) === Number(state.selectedEpisodeNumber));
+
+  if (!target) {
+    showToast('対象話が見つかりません', 'error');
+    return;
+  }
+
+  await renderDraftStudio(currentWorkId, {
+    ...state,
+    title: draftGetSuggestedTitle(target.number, state.versionType || 'chatgpt_draft'),
+    body: target.content || '',
+    notes: state.notes || '現行本文をベースに保存'
+  });
+}
+
+async function ensureEpisodeRecordForDraft(workId, episodeNumber) {
+  await ensureWorkChapterLinks(workId);
+
+  const existing = await dbGetByIndex(STORE_EPISODES, 'workId', workId);
+  const found = existing.find(episode => Number(episode.number) === Number(episodeNumber));
+  if (found) return found;
+
+  const chapters = await dbGetByIndex(STORE_CHAPTERS, 'workId', workId);
+  chapters.sort((a, b) => (a.number || 0) - (b.number || 0));
+  const firstChapterId = chapters[0] ? chapters[0].id : '';
+
+  const created = {
+    id: genId(),
+    workId,
+    number: Number(episodeNumber),
+    subtitle: '',
+    content: '',
+    chapterId: firstChapterId,
+    status: 'unplanned',
+    createdAt: Date.now(),
+    updatedAt: Date.now()
+  };
+
+  await dbPut(STORE_EPISODES, created);
+  return created;
+}
+
+async function saveDraftVersion() {
+  if (!currentWorkId) return;
+
+  const episodeNumber = Number(document.getElementById('draft-episode-select')?.value || 0);
+  const versionType = document.getElementById('draft-version-type')?.value || 'chatgpt_draft';
+  const title = document.getElementById('draft-title')?.value.trim() || draftGetSuggestedTitle(episodeNumber, versionType);
+  const notes = document.getElementById('draft-notes')?.value.trim() || '';
+  const body = document.getElementById('draft-body')?.value || '';
+  const sourceVersionId = document.getElementById('draft-source-id')?.value || '';
+
+  if (!episodeNumber) {
+    showToast('対象話を選んでください', 'error');
+    return;
+  }
+
+  if (!draftNormalizeText(body)) {
+    showToast('本文を貼り付けてください', 'error');
+    return;
+  }
+
+  const episode = await ensureEpisodeRecordForDraft(currentWorkId, episodeNumber);
+
+  const draft = {
+    id: 'draft_' + genId(),
+    workId: currentWorkId,
+    chapterId: episode.chapterId || '',
+    episodeId: episode.id,
+    episodeNumber,
+    versionType,
+    title,
+    notes,
+    body,
+    sourceVersionId,
+    charCount: draftCountChars(body),
+    lineCount: draftCountLines(body),
+    createdAt: Date.now(),
+    updatedAt: Date.now()
+  };
+
+  await dbPut(STORE_EPISODE_DRAFTS, draft);
+
+  await renderDraftStudio(currentWorkId, {
+    selectedEpisodeNumber: episodeNumber,
+    versionType,
+    title: '',
+    notes: '',
+    body: '',
+    compareLeftId: sourceVersionId || '',
+    compareRightId: draft.id
+  });
+
+  showToast('版を保存しました ✓');
+}
+
+async function loadDraftIntoComposer(draftId) {
+  const draft = await dbGet(STORE_EPISODE_DRAFTS, draftId);
+  if (!draft || draft.workId !== currentWorkId) {
+    showToast('版が見つかりません', 'error');
+    return;
+  }
+
+  await renderDraftStudio(currentWorkId, {
+    selectedEpisodeNumber: Number(draft.episodeNumber),
+    versionType: draft.versionType || 'chatgpt_draft',
+    title: draft.title || '',
+    notes: draft.notes || '',
+    body: draft.body || '',
+    compareLeftId: draft.id,
+    compareRightId: ''
+  });
+}
+
+async function copyDraftVersion(draftId) {
+  const draft = await dbGet(STORE_EPISODE_DRAFTS, draftId);
+  if (!draft || draft.workId !== currentWorkId) {
+    showToast('版が見つかりません', 'error');
+    return;
+  }
+
+  const markdown = [
+    `# ${draft.title || draftGetSuggestedTitle(draft.episodeNumber, draft.versionType)}`,
+    '',
+    `- 種類：${draftVersionTypeLabel(draft.versionType)}`,
+    `- 対象話：第${draft.episodeNumber}話`,
+    `- 保存日時：${draftFormatDate(draft.createdAt || draft.updatedAt)}`,
+    draft.notes ? `- メモ：${draft.notes}` : '',
+    '',
+    draft.body || ''
+  ].filter(Boolean).join('\n');
+
+  await copyToClipboard(markdown);
+  showToast('版をコピーしました');
+}
+
+function adoptedEpisodeStatusFromDraftType(versionType) {
+  if (versionType === 'chatgpt_draft') return 'drafted';
+  if (versionType === 'claude_revision') return 'revised';
+  if (versionType === 'author_edit') return 'author_review';
+  if (versionType === 'adopted') return 'adopted';
+  return 'drafted';
+}
+
+async function applyDraftToEpisode(draftId) {
+  const draft = await dbGet(STORE_EPISODE_DRAFTS, draftId);
+  if (!draft || draft.workId !== currentWorkId) {
+    showToast('版が見つかりません', 'error');
+    return;
+  }
+
+  const ok = confirm(`「${draft.title || '無題の版'}」を現行本文へ反映します。\nメタ情報タブに表示される本文がこの版で上書きされます。`);
+  if (!ok) return;
+
+  const episode = await ensureEpisodeRecordForDraft(currentWorkId, draft.episodeNumber);
+  episode.content = draft.body || '';
+  episode.status = adoptedEpisodeStatusFromDraftType(draft.versionType);
+  episode.chapterId = draft.chapterId || episode.chapterId;
+  episode.updatedAt = Date.now();
+
+  await dbPut(STORE_EPISODES, episode);
+
+  if (typeof renderChapterPlanner === 'function') {
+    await renderChapterPlanner(currentWorkId);
+  }
+  if (typeof renderEpisodesAccordion === 'function') {
+    await renderEpisodesAccordion(currentWorkId, currentEpisodesCount);
+  }
+
+  await renderDraftStudio(currentWorkId, {
+    ...collectDraftStudioFormState(),
+    selectedEpisodeNumber: Number(draft.episodeNumber)
+  });
+
+  showToast('現行本文へ反映しました ✓');
+}
+
+async function deleteDraftVersion(draftId) {
+  const draft = await dbGet(STORE_EPISODE_DRAFTS, draftId);
+  if (!draft || draft.workId !== currentWorkId) {
+    showToast('版が見つかりません', 'error');
+    return;
+  }
+
+  const ok = confirm(`「${draft.title || '無題の版'}」を削除しますか？\nこの操作は元に戻せません。`);
+  if (!ok) return;
+
+  await dbDelete(STORE_EPISODE_DRAFTS, draftId);
+
+  await renderDraftStudio(currentWorkId, {
+    ...collectDraftStudioFormState(),
+    selectedEpisodeNumber: Number(draft.episodeNumber)
+  });
+
+  showToast('版を削除しました');
 }
 
 // ======================================================
@@ -5400,11 +10303,38 @@ function confirmDeleteWork(id,title){
   nb.addEventListener('click',async()=>{await deleteWork(id);closeModal('modal-confirm');});openModal('modal-confirm');
 }
 async function deleteWork(id){
-  await dbDelete(STORE_WORKS,id);const eps=await dbGetByIndex(STORE_EPISODES,'workId',id);for(const ep of eps)await dbDelete(STORE_EPISODES,ep.id);
-  const recs=await dbGetByIndex(STORE_RECORDS,'workId',id);for(const r of recs)await dbDelete(STORE_RECORDS,r.id);
-  const presets=await dbGetByIndex('rulePresets','workId',id);for(const p of presets)await dbDelete('rulePresets',p.id);
-  showToast('作品を削除しました');showPage('list');
+  await dbDelete(STORE_WORKS,id);
+
+  async function deleteStoreItemsByWorkId(storeName){
+    const items = await dbGetByIndex(storeName,'workId',id);
+    for(const item of items){
+      await dbDelete(storeName,item.id);
+    }
+  }
+
+  await deleteStoreItemsByWorkId(STORE_EPISODES);
+  await deleteStoreItemsByWorkId(STORE_RECORDS);
+  await deleteStoreItemsByWorkId('rulePresets');
+  await deleteStoreItemsByWorkId(STORE_WRITING_VAULT);
+  await deleteStoreItemsByWorkId(STORE_CHAPTERS);
+  await deleteStoreItemsByWorkId(STORE_CANON_CHARACTERS);
+  await deleteStoreItemsByWorkId(STORE_CANON_RELATIONS);
+  await deleteStoreItemsByWorkId(STORE_CANON_TIMELINE_EVENTS);
+  await deleteStoreItemsByWorkId(STORE_CANON_FORESHADOWINGS);
+  await deleteStoreItemsByWorkId(STORE_CANON_OPEN_QUESTIONS);
+  await deleteStoreItemsByWorkId(STORE_CANON_WORLD_RULES);
+  await deleteStoreItemsByWorkId(STORE_CANON_LOCATIONS);
+  await deleteStoreItemsByWorkId(STORE_CANON_ITEMS);
+  await deleteStoreItemsByWorkId(STORE_EPISODE_DRAFTS);
+  await deleteStoreItemsByWorkId(STORE_CONSISTENCY_REPORTS);
+  await deleteStoreItemsByWorkId(STORE_PROMPT_SNAPSHOTS);
+  await deleteStoreItemsByWorkId(STORE_PIPELINE_SESSIONS);
+  await deleteStoreItemsByWorkId(STORE_WORK_SUMMARIES);
+
+  showToast('作品を削除しました');
+  showPage('list');
 }
+
 function confirmDeleteRecord(id){
   document.getElementById('confirm-message').textContent='この分析記録を削除しますか？この操作は取り消せません。';
   const okBtn=document.getElementById('confirm-ok-btn');const nb=okBtn.cloneNode(true);okBtn.parentNode.replaceChild(nb,okBtn);
