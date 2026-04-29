@@ -253,6 +253,102 @@ textarea { resize: vertical; }
 .export-card-title { font-size: 0.8rem; font-weight: 700; color: var(--purple-300); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
 .export-card-desc { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.5; }
 .export-btn-group { display: flex; gap: 6px; }
+.analysis-compact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+}
+
+.analysis-compact-card {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.analysis-compact-card-wide {
+  grid-column: 1 / -1;
+}
+
+.analysis-compact-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--purple-300);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.analysis-compact-desc {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.analysis-compact-note {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.analysis-compact-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.analysis-compact-actions .btn-export {
+  width: auto;
+  min-width: 160px;
+  padding: 8px 14px;
+}
+
+.analysis-compact-actions .btn.btn-secondary {
+  padding: 8px 12px;
+}
+
+.analysis-section-tight .form-section-body {
+  gap: 12px;
+}
+
+.analysis-section-tight .form-section-header {
+  padding: 14px 18px;
+}
+
+.analysis-records-compact .analysis-record {
+  margin-bottom: 8px;
+}
+
+.analysis-records-compact .record-header {
+  padding: 10px 14px;
+}
+
+.analysis-records-compact .record-body {
+  padding: 0 14px 12px;
+}
+
+.analysis-records-compact .record-toggle {
+  padding: 0 14px 10px;
+}
+
+.analysis-episode-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
+
+@media (max-width: 680px) {
+  .analysis-compact-actions .btn-export,
+  .analysis-compact-actions .btn.btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+}
 .reader-voice-area { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; margin: 12px 0; }
 .reader-voice-label { font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
 .episode-check-grid { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
@@ -281,6 +377,98 @@ textarea { resize: vertical; }
 .tab-btn { padding: 10px 18px; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: var(--transition); font-family: inherit; margin-bottom: -1px; }
 .tab-btn:hover { color: var(--text-secondary); }
 .tab-btn.active { color: var(--purple-300); border-bottom-color: var(--purple-500); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.work-tab-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.work-tab-header .tab-bar {
+  flex: 1 1 680px;
+  min-width: 0;
+  margin-bottom: 0;
+  flex-wrap: wrap;
+}
+
+.work-tab-side {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.work-utility-btn.active,
+.work-utility-btn[aria-expanded="true"] {
+  background: var(--purple-glow2);
+  color: var(--purple-300);
+  border-color: var(--border-hover);
+  box-shadow: 0 0 12px var(--purple-glow2);
+}
+
+.work-utility-panel {
+  display: none;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 24px;
+}
+
+.work-utility-panel.open {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.work-utility-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--purple-300);
+}
+
+.work-utility-desc {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.work-utility-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.meta-collapsible .meta-collapsible-panel {
+  display: none;
+}
+
+.meta-collapsible.open .meta-collapsible-panel {
+  display: flex;
+}
+
+.meta-collapsible-note {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 900px) {
+  .work-tab-header {
+    align-items: stretch;
+  }
+
+  .work-tab-header .tab-bar {
+    flex: 1 1 100%;
+  }
+
+  .work-tab-side {
+    width: 100%;
+  }
+}
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
 .rule-card {
@@ -335,6 +523,227 @@ textarea { resize: vertical; }
 .pm-rule-check-label:hover { border-color: var(--border-hover); color: var(--text-secondary); }
 .pm-rule-check-label input { width: 12px; height: 12px; accent-color: var(--purple-500); }
 .pm-rule-check-label.pm-rule-checked { border-color: var(--purple-500); color: var(--purple-300); background: var(--purple-glow2); }
+.pm-layout {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.pm-sidebar {
+  position: sticky;
+  top: 72px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pm-sidebar-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--purple-300);
+}
+
+.pm-sidebar-desc {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.pm-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pm-nav-btn {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.pm-nav-btn:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.pm-nav-btn.active {
+  border-color: var(--purple-500);
+  background: var(--purple-glow2);
+  color: var(--purple-300);
+  box-shadow: 0 0 12px var(--purple-glow2);
+}
+
+.pm-main {
+  min-width: 0;
+}
+
+.pm-pane {
+  display: none;
+}
+
+.pm-pane.active {
+  display: block;
+}
+
+.pm-pane-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pm-pane-stack .form-section {
+  margin-bottom: 0;
+}
+
+.pm-pane-intro {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.pm-pane-intro strong {
+  color: var(--purple-300);
+}
+
+.pm-role-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.pm-role-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+}
+
+.pm-role-card-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.pm-role-card-title.pm-role-fixed {
+  color: var(--purple-300);
+}
+
+.pm-role-card-title.pm-role-bridge {
+  color: #93C5FD;
+}
+
+.pm-role-card-body {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.pm-role-card-body strong {
+  color: var(--text-secondary);
+}
+
+.pm-inline-note {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+  line-height: 1.6;
+}
+
+.pm-memo-help {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+  line-height: 1.6;
+}
+
+.pm-memo-preview-wrap {
+  margin-top: 8px;
+}
+
+.pm-memo-preview-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--purple-300);
+  margin-bottom: 6px;
+}
+
+.pm-memo-preview-box {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.pm-memo-preview-box.empty {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+@media (max-width: 820px) {
+  .pm-role-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 980px) {
+  .pm-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .pm-sidebar {
+    position: static;
+  }
+
+  .pm-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .pm-nav-btn {
+    width: auto;
+    min-width: 140px;
+  }
+}
+
+@media (max-width: 680px) {
+  .pm-nav {
+    flex-direction: column;
+  }
+
+  .pm-nav-btn {
+    width: 100%;
+    min-width: 100%;
+  }
+}
+
 @media (max-width: 900px) {
   .sidebar { width: 180px; min-width: 180px; }
   .form-row-2, .form-row-3 { grid-template-columns: 1fr; }
@@ -494,24 +903,77 @@ textarea { resize: vertical; }
 /* === END RULE HISTORY === */
 
 /* === WRITING VAULT === */
+.vault-top-sticky {
+  position: sticky;
+  top: 72px;
+  z-index: 8;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
 .vault-toolbar {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
   align-items: center;
-  margin-bottom: 16px;
+}
+
+.vault-toolbar-primary {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-card);
+}
+
+.vault-toolbar-secondary {
+  background: rgba(22, 33, 62, 0.92);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  backdrop-filter: blur(8px);
+}
+
+.vault-toolbar-spacer {
+  flex: 1;
+}
+
+.vault-quick-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.vault-quick-select {
+  min-width: 180px;
+  max-width: 240px;
+}
+
+.vault-mini-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.vault-mini-card .form-hint {
+  margin-top: 6px;
 }
 
 .vault-ai-request {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: 16px;
-  margin-bottom: 16px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
 }
 
 .vault-ai-request textarea {
-  min-height: 110px;
+  min-height: 90px;
   line-height: 1.7;
 }
 
@@ -519,9 +981,7 @@ textarea { resize: vertical; }
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .vault-filter-btn {
@@ -551,7 +1011,7 @@ textarea { resize: vertical; }
 .vault-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .vault-card {
@@ -564,15 +1024,15 @@ textarea { resize: vertical; }
 
 .vault-card:hover {
   border-color: var(--border-hover);
-  box-shadow: 0 0 14px var(--purple-glow2);
+  box-shadow: 0 0 12px var(--purple-glow2);
 }
 
-.vault-card-header {
+.vault-card-compact .vault-card-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  padding: 14px 18px 10px;
+  padding: 12px 14px 10px;
 }
 
 .vault-card-info {
@@ -585,11 +1045,11 @@ textarea { resize: vertical; }
   gap: 8px;
   flex-wrap: wrap;
   align-items: center;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .vault-card-title {
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   font-weight: 700;
   color: var(--text-primary);
   line-height: 1.4;
@@ -608,12 +1068,87 @@ textarea { resize: vertical; }
   flex-shrink: 0;
 }
 
-.vault-type-draft { color: #C4B5FD; }
-.vault-type-progress { color: #FCD34D; border-color: rgba(245,158,11,0.35); background: rgba(245,158,11,0.12); }
-.vault-type-compressed { color: #FDE68A; border-color: rgba(251,191,36,0.35); background: rgba(251,191,36,0.12); }
-.vault-type-setting { color: #6EE7B7; border-color: rgba(16,185,129,0.35); background: rgba(16,185,129,0.12); }
-.vault-type-instruction { color: #93C5FD; border-color: rgba(59,130,246,0.35); background: rgba(59,130,246,0.12); }
-.vault-type-memo { color: #9CA3AF; border-color: rgba(107,114,128,0.35); background: rgba(107,114,128,0.12); }
+.vault-type-draft {
+  color: #C4B5FD;
+}
+
+.vault-type-outline {
+  color: #93C5FD;
+  border-color: rgba(59,130,246,0.35);
+  background: rgba(59,130,246,0.12);
+}
+
+.vault-type-compressed {
+  color: #FDE68A;
+  border-color: rgba(251,191,36,0.35);
+  background: rgba(251,191,36,0.12);
+}
+
+.vault-card-purpose-a2 {
+  border-color: rgba(168,85,247,0.35);
+  box-shadow: inset 0 0 0 1px rgba(168,85,247,0.12);
+}
+
+.vault-card-purpose-c {
+  border-color: rgba(59,130,246,0.35);
+  box-shadow: inset 0 0 0 1px rgba(59,130,246,0.12);
+}
+
+.vault-card-purpose-general {
+  border-color: rgba(251,191,36,0.35);
+  box-shadow: inset 0 0 0 1px rgba(251,191,36,0.1);
+}
+
+.vault-meta-badge,
+.vault-purpose-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.4;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+}
+
+.vault-meta-badge {
+  color: var(--text-muted);
+}
+
+.vault-purpose-badge {
+  flex-shrink: 0;
+}
+
+.vault-purpose-a2 {
+  color: #D8B4FE;
+  border-color: rgba(168,85,247,0.35);
+  background: rgba(168,85,247,0.14);
+}
+
+.vault-purpose-c {
+  color: #93C5FD;
+  border-color: rgba(59,130,246,0.35);
+  background: rgba(59,130,246,0.14);
+}
+
+.vault-purpose-general {
+  color: #FDE68A;
+  border-color: rgba(251,191,36,0.35);
+  background: rgba(251,191,36,0.12);
+}
+
+.vault-compression-filter-bar {
+  display: none;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 0 2px 2px;
+}
+
+.vault-compression-filter-bar.open {
+  display: flex;
+}
 
 .vault-card-meta {
   display: flex;
@@ -621,23 +1156,21 @@ textarea { resize: vertical; }
   gap: 8px;
   font-size: 0.72rem;
   color: var(--text-muted);
+  margin-bottom: 8px;
 }
 
-.vault-card-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-top: 8px;
-}
-
-.vault-tag {
-  display: inline-block;
-  padding: 1px 8px;
-  border-radius: 20px;
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
+.vault-preview {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  max-height: 110px;
+  overflow-y: auto;
 }
 
 .vault-card-actions {
@@ -648,30 +1181,17 @@ textarea { resize: vertical; }
   flex-shrink: 0;
 }
 
-.vault-card-body {
-  padding: 0 18px 14px;
+.vault-card-actions-compact .btn {
+  min-width: 62px;
+  justify-content: center;
 }
 
-.vault-preview {
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-  line-height: 1.7;
-  white-space: pre-wrap;
-  word-break: break-word;
-  background: var(--bg-input);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 12px 14px;
-  max-height: 180px;
-  overflow-y: auto;
-}
-
-.vault-card-footer {
+.vault-card-footer-compact {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 12px;
-  padding: 10px 18px;
+  padding: 8px 14px 10px;
   border-top: 1px solid var(--border);
 }
 
@@ -693,7 +1213,7 @@ textarea { resize: vertical; }
 
 .vault-empty {
   text-align: center;
-  padding: 52px 24px;
+  padding: 42px 24px;
   color: var(--text-muted);
   background: var(--bg-card);
   border: 1px dashed var(--border);
@@ -701,18 +1221,18 @@ textarea { resize: vertical; }
 }
 
 .vault-empty .vault-empty-icon {
-  font-size: 2.5rem;
-  margin-bottom: 12px;
+  font-size: 2.2rem;
+  margin-bottom: 10px;
 }
 
 .vault-empty h3 {
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--text-secondary);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .vault-empty p {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
 }
 
 .vault-modal-body textarea {
@@ -733,6 +1253,51 @@ textarea { resize: vertical; }
   width: 15px;
   height: 15px;
   accent-color: var(--purple-500);
+}
+
+.vault-modal-helper-row {
+  display: flex;
+  gap: 8px;
+  align-items: end;
+  flex-wrap: wrap;
+}
+
+.vault-modal-helper-row .form-group {
+  flex: 1;
+  min-width: 180px;
+}
+
+@media (max-width: 900px) {
+  .vault-top-sticky {
+    top: 62px;
+  }
+}
+
+@media (max-width: 680px) {
+  .vault-card-compact .vault-card-header {
+    flex-direction: column;
+  }
+
+  .vault-card-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .vault-card-actions-compact .btn {
+    flex: 1 1 120px;
+  }
+
+  .vault-toolbar-primary .btn-export,
+  .vault-toolbar-primary .btn-secondary,
+  .vault-toolbar-primary .btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .vault-quick-select {
+    min-width: 100%;
+    max-width: none;
+  }
 }
 
 /* === WRITING VAULT COMPRESSION === */
@@ -874,17 +1439,42 @@ textarea { resize: vertical; }
     <!-- PAGE 2: 作品編集 -->
     <section class="page" id="page-work">
       <div class="breadcrumb"><a onclick="showPage('list')">← 作品リスト</a><span>/</span><span id="breadcrumb-title">作品詳細</span></div>
-   <div class="tab-bar">
-  <button class="tab-btn active" data-tab="meta" onclick="switchTab('meta')">メタ情報・本文</button>
-  <button class="tab-btn" data-tab="drafts" onclick="switchTab('drafts')">初稿・差分・採用</button>
-  <button class="tab-btn" data-tab="canon" onclick="switchTab('canon')">確定設定</button>
-  <button class="tab-btn" data-tab="consistency" onclick="switchTab('consistency')">整合性チェック</button>
-  <button class="tab-btn" data-tab="summaries" onclick="switchTab('summaries')">引き継ぎ要約</button>
-  <button class="tab-btn" data-tab="reflection" onclick="switchTab('reflection')">正史反映アシスト</button>
-  <button class="tab-btn" data-tab="backup" onclick="switchTab('backup')">バックアップ</button>
-  <button class="tab-btn" data-tab="analysis" onclick="switchTab('analysis')">分析結果・エクスポート</button>
-  <button class="tab-btn" data-tab="promptmaker" onclick="switchTab('promptmaker')">プロンプトメーカー</button>
-  <button class="tab-btn" data-tab="vault" onclick="switchTab('vault')">執筆保管庫</button>
+   <div class="work-tab-header">
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="meta" onclick="switchTab('meta')">メタ情報・本文</button>
+    <button class="tab-btn" data-tab="analysis" onclick="switchTab('analysis')">分析結果・エクスポート</button>
+    <button class="tab-btn" data-tab="promptmaker" onclick="switchTab('promptmaker')">プロンプトメーカー</button>
+    <button class="tab-btn" data-tab="vault" onclick="switchTab('vault')">執筆保管庫</button>
+  </div>
+
+  <div class="work-tab-side">
+    <button
+      type="button"
+      class="btn btn-ghost btn-sm work-utility-btn"
+      data-hidden-tab="backup"
+      onclick="toggleWorkUtilityPanel(false); switchTab('backup')"
+    >🗄 バックアップ</button>
+
+    <button
+      type="button"
+      class="btn btn-ghost btn-sm work-utility-btn"
+      id="work-utility-toggle"
+      aria-expanded="false"
+      onclick="toggleWorkUtilityPanel()"
+    >＋ 補助機能</button>
+  </div>
+</div>
+
+<div class="work-utility-panel" id="work-utility-panel">
+  <div class="work-utility-title">今は上部から外した機能</div>
+  <div class="work-utility-desc">完全削除ではなく退避です。必要なときだけここから開けます。</div>
+  <div class="work-utility-actions">
+    <button type="button" class="btn btn-ghost btn-sm work-utility-btn" data-hidden-tab="drafts" onclick="openHiddenWorkTab('drafts')">初稿・差分・採用</button>
+    <button type="button" class="btn btn-ghost btn-sm work-utility-btn" data-hidden-tab="canon" onclick="openHiddenWorkTab('canon')">確定設定</button>
+    <button type="button" class="btn btn-ghost btn-sm work-utility-btn" data-hidden-tab="consistency" onclick="openHiddenWorkTab('consistency')">整合性チェック</button>
+    <button type="button" class="btn btn-ghost btn-sm work-utility-btn" data-hidden-tab="summaries" onclick="openHiddenWorkTab('summaries')">引き継ぎ要約</button>
+    <button type="button" class="btn btn-ghost btn-sm work-utility-btn" data-hidden-tab="reflection" onclick="openHiddenWorkTab('reflection')">正史反映アシスト</button>
+  </div>
 </div>
 
       <!-- TAB: メタ情報・本文 -->
@@ -920,16 +1510,25 @@ textarea { resize: vertical; }
             <div class="form-group"><label class="form-label">描きたいシーン</label><div class="form-hint">プロンプトメーカーのA/Bに自動差し込みされます</div><textarea id="meta-scene" rows="5" placeholder="一枚の場面、一つの台詞、一つの空気感など…&#10;作品ジャンル（TL／BL／百合／男性向け等）もここで指定&#10;制約や必須要素があれば併記してください"></textarea></div>
           </div>
         </div>
-        <div class="form-section">
+       <div class="form-section meta-collapsible" id="meta-chapter-planner-collapsible">
           <div class="form-section-header">
             <div class="form-section-title"><span>🗂️</span> セクションB：章・話設計</div>
-            <div style="display:flex;gap:8px;align-items:center">
-              <span style="font-size:0.75rem;color:var(--text-muted)">章の追加と、各話の所属整理を行います</span>
-              <button class="btn btn-primary btn-sm" onclick="addChapter()">章を追加</button>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <span class="meta-collapsible-note">短編運用では通常は閉じたままで使えます</span>
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                id="meta-chapter-planner-toggle"
+                aria-expanded="false"
+                onclick="toggleMetaChapterPlanner()"
+              >章・話設計を開く</button>
             </div>
           </div>
-          <div class="form-section-body">
-            <div class="form-hint">章タイトルや章メモはここで保存します。各話をどの章に入れるかは、下の「話本文」で各話保存すると反映されます。</div>
+          <div class="form-section-body meta-collapsible-panel">
+            <div style="display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+              <div class="form-hint">章タイトルや章メモはここで保存します。各話をどの章に入れるかは、下の「話本文」で各話保存すると反映されます。</div>
+              <button class="btn btn-primary btn-sm" onclick="addChapter()">章を追加</button>
+            </div>
             <div id="chapter-planner-container" style="display:flex;flex-direction:column;gap:12px;margin-top:14px">
               <div class="empty-state" style="padding:32px">
                 <div class="empty-icon" style="font-size:2rem">🗂️</div>
@@ -960,7 +1559,7 @@ textarea { resize: vertical; }
           </div>
           <div class="form-section-body">
             <div class="form-hint">
-              ChatGPT初稿、Claude推敲稿、作者修正版、採用稿を別々に保存できます。
+              Claude初稿、Claude推敲稿、作者修正版、採用稿を別々に保存できます。
               この画面で比較して、必要な版だけを現行本文へ反映します。
             </div>
             <div id="draft-studio-root" style="margin-top:16px">
@@ -1079,580 +1678,751 @@ textarea { resize: vertical; }
         </div>
       </div>
 
-      <!-- TAB: 分析結果・エクスポート -->
+     <!-- TAB: 分析結果・エクスポート -->
       <div class="tab-panel" id="tab-analysis">
-        <div class="form-section">
-          <div class="form-section-header"><div class="form-section-title"><span>🚀</span> 機能①：分析依頼エクスポート（Claudeに渡す素材）</div></div>
+        <div class="form-section analysis-section-tight">
+          <div class="form-section-header">
+            <div class="form-section-title"><span>🚀</span> 機能①：分析依頼エクスポート</div>
+          </div>
           <div class="form-section-body">
-            <p style="font-size:0.8rem;color:var(--text-muted)">作品データ＋プロンプトテンプレートをMarkdownに変換してクリップボードにコピーします。</p>
-            <div class="export-grid">
-              <div class="export-card">
-                <div class="export-card-title">🔬 構成分析を依頼</div><div class="export-card-desc">メタ情報＋全話本文＋構成分析プロンプト</div>
-                <div class="export-btn-group"><button class="btn btn-export" onclick="exportAnalysisRequest('structure')">📋 コピー</button><button class="btn btn-secondary btn-sm" onclick="downloadMd('structure')">↓ .md</button></div>
-              </div>
-              <div class="export-card">
-                <div class="export-card-title">💬 読者の声分析を依頼</div><div class="export-card-desc">メタ情報＋読者レビュー原文＋分析プロンプト</div>
-                <div class="reader-voice-area"><div class="reader-voice-label">📝 読者の声（レビュー原文を貼り付け）</div><textarea id="reader-voice-input" rows="5" placeholder="ムーンライト等の感想欄からコピーしたレビュー原文を貼り付けてください…" style="font-size:0.8rem"></textarea></div>
-                <div class="export-btn-group"><button class="btn btn-export" onclick="exportAnalysisRequest('reader')">📋 コピー</button><button class="btn btn-secondary btn-sm" onclick="downloadMd('reader')">↓ .md</button></div>
-              </div>
-              <div class="export-card">
-                <div class="export-card-title">👤 キャラクター抽出を依頼</div><div class="export-card-desc">メタ情報＋全話本文＋キャラクター抽出プロンプト</div>
-                <div class="export-btn-group" style="max-width:300px"><button class="btn btn-export" onclick="exportAnalysisRequest('character')">📋 コピー</button><button class="btn btn-secondary btn-sm" onclick="downloadMd('character')">↓ .md</button></div>
-              </div>
-              <div class="export-card">
-                <div class="export-card-title">📐 ルール抽出を依頼</div><div class="export-card-desc">分析記録＋マイルール集 → 新規ルール案・既存修正案を導出</div>
-                <div style="margin:8px 0">
-                  <label class="ep-check-label" id="rule-export-fulltext-lbl"><input type="checkbox" id="rule-export-fulltext" onchange="document.getElementById('rule-export-fulltext-lbl').classList.toggle('ep-checked',this.checked)"> 全話本文も含める</label>
+            <p class="analysis-compact-note">Claude に渡す分析依頼素材を、用途別にコピーまたは .md 保存します。</p>
+
+            <div class="analysis-compact-grid">
+              <div class="analysis-compact-card">
+                <div class="analysis-compact-title">🔬 構成分析を依頼</div>
+                <div class="analysis-compact-desc">メタ情報＋全話本文＋構成分析プロンプト</div>
+                <div class="analysis-compact-actions">
+                  <button class="btn btn-export" onclick="exportAnalysisRequest('structure')">📋 コピー</button>
+                  <button class="btn btn-secondary btn-sm" onclick="downloadMd('structure')">↓ .md</button>
                 </div>
-                <div class="export-btn-group"><button class="btn btn-export" onclick="exportAnalysisRequest('rule')">📋 コピー</button><button class="btn btn-secondary btn-sm" onclick="downloadMd('rule')">↓ .md</button></div>
+              </div>
+
+              <div class="analysis-compact-card">
+                <div class="analysis-compact-title">💬 読者の声分析を依頼</div>
+                <div class="analysis-compact-desc">メタ情報＋読者レビュー原文＋分析プロンプト</div>
+                <div class="reader-voice-area" style="margin:0">
+                  <div class="reader-voice-label">📝 読者の声（レビュー原文を貼り付け）</div>
+                  <textarea id="reader-voice-input" rows="4" placeholder="ムーンライト等の感想欄からコピーしたレビュー原文を貼り付けてください…" style="font-size:0.8rem"></textarea>
+                </div>
+                <div class="analysis-compact-actions">
+                  <button class="btn btn-export" onclick="exportAnalysisRequest('reader')">📋 コピー</button>
+                  <button class="btn btn-secondary btn-sm" onclick="downloadMd('reader')">↓ .md</button>
+                </div>
+              </div>
+
+              <div class="analysis-compact-card">
+                <div class="analysis-compact-title">👤 キャラクター抽出を依頼</div>
+                <div class="analysis-compact-desc">メタ情報＋全話本文＋キャラクター抽出プロンプト</div>
+                <div class="analysis-compact-actions">
+                  <button class="btn btn-export" onclick="exportAnalysisRequest('character')">📋 コピー</button>
+                  <button class="btn btn-secondary btn-sm" onclick="downloadMd('character')">↓ .md</button>
+                </div>
+              </div>
+
+              <div class="analysis-compact-card">
+                <div class="analysis-compact-title">📐 ルール抽出を依頼</div>
+                <div class="analysis-compact-desc">分析記録＋マイルール集から、新規ルール案や修正案を導出します。</div>
+                <div>
+                  <label class="ep-check-label" id="rule-export-fulltext-lbl">
+                    <input type="checkbox" id="rule-export-fulltext" onchange="document.getElementById('rule-export-fulltext-lbl').classList.toggle('ep-checked',this.checked)">
+                    全話本文も含める
+                  </label>
+                </div>
+                <div class="analysis-compact-actions">
+                  <button class="btn btn-export" onclick="exportAnalysisRequest('rule')">📋 コピー</button>
+                  <button class="btn btn-secondary btn-sm" onclick="downloadMd('rule')">↓ .md</button>
+                </div>
               </div>
             </div>
-<div class="export-card">
-  <div class="export-card-title">
-    📋 章アウトライン生成を依頼
-  </div>
-  <div class="export-card-desc">
-    章プロット記録＋キャラ設定シート →
-    Part構造（章内アウトライン）を生成
-  </div>
-  <div class="export-btn-group">
-    <button class="btn btn-export"
-            onclick="exportAnalysisRequest('outline')">
-      📋 コピー
-    </button>
-    <button class="btn btn-secondary btn-sm"
-            onclick="downloadMd('outline')">
-      ↓ .md
-    </button>
-  </div>
-</div>
           </div>
         </div>
-        <div class="form-section">
+
+        <div class="form-section analysis-section-tight">
           <div class="form-section-header">
             <div class="form-section-title"><span>💾</span> 機能②：分析結果の保存 <span class="count-badge" id="records-count">0</span></div>
             <button class="btn btn-primary btn-sm" onclick="openAddRecordModal()">＋ 新規記録を追加</button>
           </div>
-          <div class="form-section-body" style="gap:0"><div id="records-container"></div></div>
-        </div>
-        <div class="form-section">
-          <div class="form-section-header"><div class="form-section-title"><span>📤</span> 機能③：分析結果の再エクスポート（参考資料として渡す）</div></div>
           <div class="form-section-body">
-            <p style="font-size:0.8rem;color:var(--text-muted)">保存済みの分析記録を目的別にまとめてMarkdown出力します。</p>
-            <div class="export-grid">
-              <div class="export-card">
-                <div class="export-card-title">📝 文章分析用にエクスポート</div><div class="export-card-desc">メタ情報＋選択した話の本文＋全分析記録</div>
-                <div style="margin-bottom:10px"><div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:6px">本文に含める話を選択：</div><div class="episode-check-grid" id="episode-checks"></div></div>
-                <div class="export-btn-group"><button class="btn btn-export" onclick="reExport('writing')">📋 コピー</button><button class="btn btn-secondary btn-sm" onclick="downloadReExport('writing')">↓ .md</button></div>
-              </div>
-              <div class="export-card">
-                <div class="export-card-title">🗺 プロット・構成決め用にエクスポート</div><div class="export-card-desc">メタ情報＋構成分析/R18配置/感情曲線/転換点/読者の声/プロット設計の記録</div>
-                <div class="export-btn-group"><button class="btn btn-export" onclick="reExport('plot')">📋 コピー</button><button class="btn btn-secondary btn-sm" onclick="downloadReExport('plot')">↓ .md</button></div>
-              </div>
-              <div class="export-card">
-                <div class="export-card-title">👥 キャラ決め用にエクスポート</div><div class="export-card-desc">メタ情報＋キャラクター抽出/キャラ設定シート/読者の声の記録</div>
-                <div class="export-btn-group"><button class="btn btn-export" onclick="reExport('character')">📋 コピー</button><button class="btn btn-secondary btn-sm" onclick="downloadReExport('character')">↓ .md</button></div>
-              </div>
-              <div class="export-card">
-                <div class="export-card-title">🗂 全データエクスポート</div><div class="export-card-desc">メタ情報＋全話本文＋全分析記録</div>
-                <div class="export-btn-group"><button class="btn btn-export" onclick="reExport('all')">📋 コピー</button><button class="btn btn-secondary btn-sm" onclick="downloadReExport('all')">↓ .md</button></div>
-              </div>
+            <p class="analysis-compact-note">保存した分析結果はここで一覧確認します。必要時だけ開いて使う前提の、軽い保管スペースです。</p>
+            <div class="analysis-records-compact">
+              <div id="records-container"></div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- TAB: プロンプトメーカー -->
-      <div class="tab-panel" id="tab-promptmaker">
-        <div class="form-section">
+        <div class="form-section analysis-section-tight">
           <div class="form-section-header">
-            <div class="form-section-title"><span>✍️</span> 執筆作品タイトル</div>
+            <div class="form-section-title"><span>📤</span> 機能③：分析結果の再エクスポート</div>
           </div>
           <div class="form-section-body">
-            <div class="form-group">
-              <label class="form-label" for="pm-writing-title">あなたが執筆する作品タイトル</label>
-              <input type="text" id="pm-writing-title" placeholder="例：死に急ぐ推しを助けるために、モブ店員の私が物語を書き換えます">
-              <div class="form-hint">
-                プロンプトメーカーでMarkdownをダウンロードするとき、このタイトルをファイル名に使います。未入力の場合は分析中の作品タイトルを使います。
+            <p class="analysis-compact-note">保存済みの分析記録を、参考資料として目的別にまとめて出力します。</p>
+
+            <div class="analysis-compact-grid">
+              <div class="analysis-compact-card analysis-compact-card-wide">
+                <div class="analysis-compact-title">📝 文章分析用にエクスポート</div>
+                <div class="analysis-compact-desc">メタ情報＋選択した話の本文＋全分析記録</div>
+                <div class="analysis-episode-box">
+                  <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:6px">本文に含める話を選択：</div>
+                  <div class="episode-check-grid" id="episode-checks"></div>
+                </div>
+                <div class="analysis-compact-actions">
+                  <button class="btn btn-export" onclick="reExport('writing')">📋 コピー</button>
+                  <button class="btn btn-secondary btn-sm" onclick="downloadReExport('writing')">↓ .md</button>
+                </div>
+              </div>
+
+              <div class="analysis-compact-card">
+                <div class="analysis-compact-title">🗺 プロット・構成決め用</div>
+                <div class="analysis-compact-desc">構成分析 / R18配置 / 感情曲線 / 転換点 / 読者の声 / プロット設計の記録を出力</div>
+                <div class="analysis-compact-actions">
+                  <button class="btn btn-export" onclick="reExport('plot')">📋 コピー</button>
+                  <button class="btn btn-secondary btn-sm" onclick="downloadReExport('plot')">↓ .md</button>
+                </div>
+              </div>
+
+              <div class="analysis-compact-card">
+                <div class="analysis-compact-title">👥 キャラ決め用</div>
+                <div class="analysis-compact-desc">キャラクター抽出 / キャラ設定シート / 読者の声の記録を出力</div>
+                <div class="analysis-compact-actions">
+                  <button class="btn btn-export" onclick="reExport('character')">📋 コピー</button>
+                  <button class="btn btn-secondary btn-sm" onclick="downloadReExport('character')">↓ .md</button>
+                </div>
+              </div>
+
+              <div class="analysis-compact-card">
+                <div class="analysis-compact-title">🗂 全データ</div>
+                <div class="analysis-compact-desc">メタ情報＋全話本文＋全分析記録</div>
+                <div class="analysis-compact-actions">
+                  <button class="btn btn-export" onclick="reExport('all')">📋 コピー</button>
+                  <button class="btn btn-secondary btn-sm" onclick="downloadReExport('all')">↓ .md</button>
+                </div>
               </div>
             </div>
-            <div>
-              <button class="btn btn-primary btn-sm" onclick="saveWritingTitleFromInput('pm-writing-title')">執筆作品タイトルを保存</button>
-            </div>
           </div>
         </div>
+      </div>
 
-        <!-- 描きたいシーン プレビュー -->
-        <div class="form-section">
-          <div class="form-section-header"><div class="form-section-title"><span>🎬</span> 描きたいシーン（プロンプトA/Bに自動差し込み）</div><button class="btn btn-ghost btn-sm" onclick="switchTab('meta')">メタ情報タブで編集 →</button></div>
-          <div class="form-section-body"><div id="pm-scene-preview" class="pm-scene-preview pm-scene-empty">（未入力 — メタ情報タブの「描きたいシーン」に入力してください）</div></div>
-        </div>
-
-        <!-- プロンプトA: プロット生成 -->
-        <div class="form-section">
-          <div class="form-section-header"><div class="form-section-title"><span>🗺</span> プロンプトA：プロット生成</div></div>
-          <div class="form-section-body">
-            <p style="font-size:0.78rem;color:var(--text-muted)">構成分析＋読者の声の記録＋描きたいシーンをもとに、プロット設計プロンプトを生成します。</p>
-            <div class="pm-auto-source" id="pm-a-source">素材の自動差し込み状況を確認中…</div>
-            <div class="pm-param-row">
-              <div class="pm-param-item"><label>全体構成サマリー文字数</label><div style="display:flex;gap:4px;align-items:center"><input type="number" id="pm-a-summary-min" value="200" min="50" step="50"><span style="font-size:0.78rem;color:var(--text-muted)">〜</span><input type="number" id="pm-a-summary-max" value="400" min="50" step="50"><span style="font-size:0.72rem;color:var(--text-muted)">字</span></div></div>
-              <div class="pm-param-item"><label>セクション要約文字数</label><div style="display:flex;gap:4px;align-items:center"><input type="number" id="pm-a-sec-min" value="100" min="50" step="50"><span style="font-size:0.78rem;color:var(--text-muted)">〜</span><input type="number" id="pm-a-sec-max" value="200" min="50" step="50"><span style="font-size:0.72rem;color:var(--text-muted)">字</span></div></div>
-              <div class="pm-param-item"><label>挑戦の提案数</label><div style="display:flex;gap:4px;align-items:center"><input type="number" id="pm-a-challenge-min" value="1" min="1" max="10"><span style="font-size:0.78rem;color:var(--text-muted)">〜</span><input type="number" id="pm-a-challenge-max" value="2" min="1" max="10"><span style="font-size:0.72rem;color:var(--text-muted)">個</span></div></div>
-              <div class="pm-param-item"><label>着地設計の文字数上限</label><div style="display:flex;gap:4px;align-items:center"><input type="number" id="pm-a-landing" value="200" min="50" step="50"><span style="font-size:0.72rem;color:var(--text-muted)">字以内</span></div></div>
+     <!-- TAB: プロンプトメーカー -->
+      <div class="tab-panel" id="tab-promptmaker">
+        <div class="pm-layout">
+          <aside class="pm-sidebar">
+            <div class="pm-sidebar-title">プロンプトメーカー</div>
+            <div class="pm-sidebar-desc">
+              左の項目を押すと、その項目だけ右側に表示します。<br>
+              デフォルトは <strong>執筆系プロンプト</strong> です。
             </div>
-            <div class="export-btn-group" style="margin-top:12px"><button class="btn btn-export" onclick="generatePrompt('A')">📋 プロンプトをコピー</button><button class="btn btn-secondary btn-sm" onclick="downloadPrompt('A')">↓ .md</button></div>
-          </div>
-        </div>
-  <!-- プロンプトA-2: 章アウトライン生成 -->
-  <div class="form-section">
-    <div class="form-section-header">
-      <div class="form-section-title">
-        <span>📋</span> プロンプトA-2：章アウトライン生成
-      </div>
-    </div>
-    <div class="form-section-body">
-      <p style="font-size:0.78rem;color:var(--text-muted)">
-        章プロット記録＋キャラ設定シートをもとに、
-        指定した章のPart構造（章内アウトライン）を設計するプロンプトを生成します。
-        出力結果は執筆保管庫に保存してください。
-      </p>
-      <div class="pm-auto-source" id="pm-a2-source">
-        素材の自動差し込み状況を確認中…
-      </div>
-      <div class="form-row form-row-2">
-        <div class="form-group">
-          <label class="form-label">
-            対象章のプロット記録を選択
-          </label>
-          <select id="pm-a2-plot-select">
-            <option value="">
-              （プロット設計の記録がありません）
-            </option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">
-            キャラ設定シートの記録を選択（任意）
-          </label>
-          <select id="pm-a2-char-select">
-            <option value="">（任意）</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row form-row-3">
-        <div class="form-group">
-          <label class="form-label">対象章番号</label>
-          <input type="number" id="pm-a2-chapter-num"
-                 min="1" placeholder="例：1">
-        </div>
-        <div class="form-group">
-          <label class="form-label">想定Part数</label>
-          <div style="display:flex;gap:6px;align-items:center">
-            <input type="number" id="pm-a2-part-min"
-                   min="1" max="20" value="3"
-                   style="width:60px">
-            <span style="font-size:0.78rem;
-                         color:var(--text-muted)">〜</span>
-            <input type="number" id="pm-a2-part-max"
-                   min="1" max="20" value="6"
-                   style="width:60px">
-            <span style="font-size:0.72rem;
-                         color:var(--text-muted)">Part</span>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">1Partあたりの文字数</label>
-          <div style="display:flex;gap:6px;align-items:center">
-            <input type="number" id="pm-a2-chars-min"
-                   min="1000" step="500" value="5500"
-                   style="width:75px">
-            <span style="font-size:0.78rem;
-                         color:var(--text-muted)">〜</span>
-            <input type="number" id="pm-a2-chars-max"
-                   min="1000" step="500" value="11000"
-                   style="width:75px">
-            <span style="font-size:0.72rem;
-                         color:var(--text-muted)">字</span>
-          </div>
-        </div>
-<div class="form-group">
-  <label class="form-label">保管庫の圧縮メモを執筆方針に挿入</label>
-  <div style="display:flex;gap:8px;align-items:center">
-    <select id="pm-a2-compressed-select">
+
+            <div class="pm-nav">
+              <button type="button" class="pm-nav-btn" data-pm-view-btn="title" onclick="setPromptMakerView('title')">✍️ 執筆作品タイトル</button>
+              <button type="button" class="pm-nav-btn" data-pm-view-btn="scene" onclick="setPromptMakerView('scene')">🎬 描きたいシーン</button>
+              <button type="button" class="pm-nav-btn" data-pm-view-btn="plot" onclick="setPromptMakerView('plot')">🗺 プロンプトA：プロット生成</button>
+              <button type="button" class="pm-nav-btn" data-pm-view-btn="outline" onclick="setPromptMakerView('outline')">📋 プロンプトA-2：章アウトライン生成</button>
+              <button type="button" class="pm-nav-btn" data-pm-view-btn="character" onclick="setPromptMakerView('character')">👥 キャラクター設計</button>
+              <button type="button" class="pm-nav-btn active" data-pm-view-btn="writing" onclick="setPromptMakerView('writing')">✍️ 執筆系プロンプト</button>
+            </div>
+          </aside>
+
+          <div class="pm-main">
+            <div class="pm-pane" data-pm-view="title">
+              <div class="pm-pane-intro">執筆用のファイル名に使う作品タイトルです。未入力なら作品タイトルを使います。</div>
+
+              <div class="form-section">
+                <div class="form-section-header">
+                  <div class="form-section-title"><span>✍️</span> 執筆作品タイトル</div>
+                </div>
+                <div class="form-section-body">
+                  <div class="form-group">
+                    <label class="form-label" for="pm-writing-title">あなたが執筆する作品タイトル</label>
+                    <input type="text" id="pm-writing-title" placeholder="例：死に急ぐ推しを助けるために、モブ店員の私が物語を書き換えます">
+                    <div class="form-hint">
+                      プロンプトメーカーでMarkdownをダウンロードするとき、このタイトルをファイル名に使います。未入力の場合は分析中の作品タイトルを使います。
+                    </div>
+                  </div>
+                  <div>
+                    <button class="btn btn-primary btn-sm" onclick="saveWritingTitleFromInput('pm-writing-title')">執筆作品タイトルを保存</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pm-pane" data-pm-view="scene">
+              <div class="pm-pane-intro">描きたいシーンはメタ情報タブで編集し、ここでは確認だけします。</div>
+
+              <div class="form-section">
+                <div class="form-section-header">
+                  <div class="form-section-title"><span>🎬</span> 描きたいシーン（プロンプトA/Bに自動差し込み）</div>
+                  <button class="btn btn-ghost btn-sm" onclick="switchTab('meta')">メタ情報タブで編集 →</button>
+                </div>
+                <div class="form-section-body">
+                  <div id="pm-scene-preview" class="pm-scene-preview pm-scene-empty">（未入力 — メタ情報タブの「描きたいシーン」に入力してください）</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pm-pane" data-pm-view="plot">
+              <div class="pm-pane-intro">プロット生成だけを開きます。Aを使うときだけここへ来れば十分です。</div>
+
+              <div class="form-section">
+                <div class="form-section-header"><div class="form-section-title"><span>🗺</span> プロンプトA：プロット生成</div></div>
+                <div class="form-section-body">
+                  <p style="font-size:0.78rem;color:var(--text-muted)">構成分析＋読者の声の記録＋描きたいシーンをもとに、プロット設計プロンプトを生成します。</p>
+                  <div class="pm-auto-source" id="pm-a-source">素材の自動差し込み状況を確認中…</div>
+                  <div class="pm-param-row">
+                    <div class="pm-param-item"><label>全体構成サマリー文字数</label><div style="display:flex;gap:4px;align-items:center"><input type="number" id="pm-a-summary-min" value="200" min="50" step="50"><span style="font-size:0.78rem;color:var(--text-muted)">〜</span><input type="number" id="pm-a-summary-max" value="400" min="50" step="50"><span style="font-size:0.72rem;color:var(--text-muted)">字</span></div></div>
+                    <div class="pm-param-item"><label>セクション要約文字数</label><div style="display:flex;gap:4px;align-items:center"><input type="number" id="pm-a-sec-min" value="100" min="50" step="50"><span style="font-size:0.78rem;color:var(--text-muted)">〜</span><input type="number" id="pm-a-sec-max" value="200" min="50" step="50"><span style="font-size:0.72rem;color:var(--text-muted)">字</span></div></div>
+                    <div class="pm-param-item"><label>挑戦の提案数</label><div style="display:flex;gap:4px;align-items:center"><input type="number" id="pm-a-challenge-min" value="1" min="1" max="10"><span style="font-size:0.78rem;color:var(--text-muted)">〜</span><input type="number" id="pm-a-challenge-max" value="2" min="1" max="10"><span style="font-size:0.72rem;color:var(--text-muted)">個</span></div></div>
+                    <div class="pm-param-item"><label>着地設計の文字数上限</label><div style="display:flex;gap:4px;align-items:center"><input type="number" id="pm-a-landing" value="200" min="50" step="50"><span style="font-size:0.72rem;color:var(--text-muted)">字以内</span></div></div>
+                  </div>
+                  <div class="export-btn-group" style="margin-top:12px"><button class="btn btn-export" onclick="generatePrompt('A')">📋 プロンプトをコピー</button><button class="btn btn-secondary btn-sm" onclick="downloadPrompt('A')">↓ .md</button></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pm-pane" data-pm-view="outline">
+              <div class="pm-pane-intro">章アウトライン生成だけを開きます。出力結果は執筆保管庫へ保存してから、執筆系で使います。</div>
+
+              <div class="form-section">
+                <div class="form-section-header">
+                  <div class="form-section-title">
+                    <span>📋</span> プロンプトA-2：章アウトライン生成
+                  </div>
+                </div>
+                <div class="form-section-body">
+                  <p style="font-size:0.78rem;color:var(--text-muted)">
+                    章プロット記録＋キャラ設定シートをもとに、
+                    指定した章のPart構造（章内アウトライン）を設計するプロンプトを生成します。
+                    出力結果は執筆保管庫に保存してください。
+                  </p>
+                  <div class="pm-auto-source" id="pm-a2-source">
+                    素材の自動差し込み状況を確認中…
+                  </div>
+
+                  <div class="form-row form-row-2">
+                    <div class="form-group">
+                      <label class="form-label">対象章のプロット記録を選択</label>
+                      <select id="pm-a2-plot-select">
+                        <option value="">（プロット設計の記録がありません）</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">キャラ設定シートの記録を選択（任意）</label>
+                      <select id="pm-a2-char-select">
+                        <option value="">（任意）</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-row form-row-2">
+                    <div class="form-group">
+                      <label class="form-label">対象章番号</label>
+                      <input type="number" id="pm-a2-chapter-num" min="1" placeholder="例：1">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">想定Part数</label>
+                      <div style="display:flex;gap:6px;align-items:center">
+                        <input type="number" id="pm-a2-part-min" min="1" max="20" value="3" style="width:60px">
+                        <span style="font-size:0.78rem;color:var(--text-muted)">〜</span>
+                        <input type="number" id="pm-a2-part-max" min="1" max="20" value="6" style="width:60px">
+                        <span style="font-size:0.72rem;color:var(--text-muted)">Part</span>
+                      </div>
+                    </div>
+                  </div>
+
+                <div class="form-group">
+  <label class="form-label">章設計メモを執筆方針に挿入</label>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <select id="pm-a2-compressed-select" onchange="refreshPromptMakerMemoPreview('a2'); handlePmCompressedMemoSelectChange('a2')">
       <option value="">（選択なし）</option>
     </select>
     <button class="btn btn-secondary btn-sm" onclick="insertVaultMemoToA2Policy(false)">追記</button>
     <button class="btn btn-ghost btn-sm" onclick="insertVaultMemoToA2Policy(true)">置換</button>
   </div>
-  <div class="form-hint">
-    A-2章設計用のAI圧縮メモを選ぶと、執筆方針メモへ差し込めます。
+  <div class="pm-memo-help">
+    ここには「章設計用」の圧縮メモだけを表示します。A-2の章アウトライン設計方針として使う欄です。
+  </div>
+
+  <div class="pm-memo-preview-wrap">
+    <div class="pm-memo-preview-label">選択中の章設計メモ</div>
+    <div id="pm-a2-compressed-preview" class="pm-memo-preview-box empty">（まだ章設計メモを選択していません）</div>
   </div>
 </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">執筆方針メモ（任意）</label>
-        <textarea id="pm-a2-policy" rows="3"
-          placeholder="例：この章は主人公の内面描写を中心に。前章との感情的な落差を活かすこと。R18シーンはなし。"></textarea>
-      </div>
-      <div class="export-btn-group" style="margin-top:12px">
-        <button class="btn btn-export"
-                onclick="generatePrompt('A2')">
-          📋 プロンプトをコピー
-        </button>
-        <button class="btn btn-secondary btn-sm"
-                onclick="downloadPrompt('A2')">
-          ↓ .md
-        </button>
-      </div>
+
+                  <div class="form-group">
+                    <label class="form-label">執筆方針メモ（任意）</label>
+                    <textarea id="pm-a2-policy" rows="3" placeholder="例：この章は主人公の内面描写を中心に。前章との感情的な落差を活かすこと。R18シーンはなし。"></textarea>
+                  </div>
+
+                  <div class="export-btn-group" style="margin-top:12px">
+                    <button class="btn btn-export" onclick="generatePrompt('A2')">📋 プロンプトをコピー</button>
+                    <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('A2')">↓ .md</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pm-pane" data-pm-view="character">
+              <div class="pm-pane-intro">キャラクター設計だけを開きます。Bを使うときだけここへ来れば十分です。</div>
+
+              <div class="form-section">
+                <div class="form-section-header"><div class="form-section-title"><span>👥</span> プロンプトB：キャラクター設計</div></div>
+                <div class="form-section-body">
+                  <p style="font-size:0.78rem;color:var(--text-muted)">キャラクター抽出＋読者の声の記録＋描きたいシーンをもとに、キャラ設定プロンプトを生成します。</p>
+                  <div class="pm-auto-source" id="pm-b-source">素材の自動差し込み状況を確認中…</div>
+                  <div class="pm-param-row">
+                    <div class="pm-param-item"><label>台詞サンプル数（日常会話）</label><input type="number" id="pm-b-sample-daily" value="2" min="1" max="10"></div>
+                    <div class="pm-param-item"><label>台詞サンプル数（感情の核心）</label><input type="number" id="pm-b-sample-core" value="2" min="1" max="10"></div>
+                    <div class="pm-param-item"><label>台詞サンプル数（濡れ場）</label><input type="number" id="pm-b-sample-r18" value="2" min="1" max="10"></div>
+                    <div class="pm-param-item"><label>キャラ造形の挑戦提案数</label><div style="display:flex;gap:4px;align-items:center"><input type="number" id="pm-b-challenge-min" value="1" min="1" max="10"><span style="font-size:0.78rem;color:var(--text-muted)">〜</span><input type="number" id="pm-b-challenge-max" value="2" min="1" max="10"><span style="font-size:0.72rem;color:var(--text-muted)">個</span></div></div>
+                  </div>
+                  <div class="export-btn-group" style="margin-top:12px"><button class="btn btn-export" onclick="generatePrompt('B')">📋 プロンプトをコピー</button><button class="btn btn-secondary btn-sm" onclick="downloadPrompt('B')">↓ .md</button></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pm-pane active" data-pm-view="writing">
+              <div class="pm-pane-intro">
+                <strong>一番よく使う項目だけをまとめた画面です。</strong><br>
+                ここでは Claude 初稿 / Claude 推敲 / 整合性チェック / 差分評価 をまとめて扱います。
+              </div>
+
+              <div class="pm-pane-stack">
+                <div class="form-section">
+                  <div class="form-section-header">
+                    <div class="form-section-title"><span>✍️</span> 執筆系プロンプト</div>
+                  </div>
+                  <div class="form-section-body">
+                    <p style="font-size:0.78rem;color:var(--text-muted)">
+                      ここでは Claude 前提で「初稿」「推敲」「整合性チェック」「差分評価」に使うプロンプトを作ります。
+                      初稿は常に1Partずつ出力し、先頭行に <code>pt1</code> のようなタグを付ける形式に統一します。
+                    </p>
+
+                    <div class="pm-record-select" id="pm-c-plot-select-area">
+                      <label>プロット設計の記録を選択</label>
+                      <select id="pm-c-plot-select" onchange="onPlotSelectChange()">
+                        <option value="">（プロット設計の記録がありません）</option>
+                      </select>
+                    </div>
+
+                    <div class="pm-record-select" id="pm-c-char-select-area">
+                      <label>キャラ設定シートの記録を選択</label>
+                      <select id="pm-c-char-select">
+                        <option value="">（キャラ設定シートの記録がありません）</option>
+                      </select>
+                    </div>
+
+                    <div class="form-row form-row-2">
+                      <div class="form-group">
+                        <label class="form-label">執筆対象：章</label>
+                        <div id="pm-c-section-area">
+                          <select id="pm-c-section-select" style="display:none" onchange="onSectionSelect()">
+                            <option value="">（プロットを選択してください）</option>
+                          </select>
+                          <input type="number" id="pm-c-section-num" min="1" placeholder="章番号 例：1" style="display:none">
+                          <div id="pm-c-section-hint" class="form-hint" style="margin-top:4px"></div>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="form-label">執筆対象：Part番号</label>
+                        <div style="display:flex;gap:8px;align-items:center">
+                          <input type="number" id="pm-c-part-num" min="1" max="20" placeholder="例：1" style="width:80px">
+                          <span style="font-size:0.78rem;color:var(--text-muted)">／</span>
+                          <input type="number" id="pm-c-part-total" min="1" max="20" placeholder="全Part数 例：5" style="width:80px">
+                          <span style="font-size:0.72rem;color:var(--text-muted)">Part中</span>
+                        </div>
+                        <div class="form-hint" style="margin-top:4px">
+                          例：5Part構成の1番目 → 1 ／ 5。出力は常に <code>pt1</code> のような表記で始めます。
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-row form-row-2">
+                      <div class="form-group">
+                        <label class="form-label">R18シーンの有無</label>
+                        <select id="pm-c-has-r18">
+                          <option value="no">なし（通常Part）</option>
+                          <option value="yes">あり（R18 Part）</option>
+                        </select>
+                        <div id="pm-c-r18-hint" class="form-hint" style="margin-top:4px"></div>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="form-label">出力方式</label>
+                        <div class="pm-auto-source" style="margin:0">
+                          Claudeで1Partずつ出力します。次Partへ勝手に進ませません。
+                        </div>
+                      </div>
+                    </div>
+
+                   <div class="pm-role-grid">
+  <div class="pm-role-card">
+    <div class="pm-role-card-title pm-role-fixed">🔒 確定設定 = 毎回守る固定条件</div>
+    <div class="pm-role-card-body">
+      キャラクターの核、関係性、伏線、未解決事項、世界設定など、<strong>本文のたびにブレさせてはいけない内容</strong>です。<br>
+      作品全体の整合性を守るために使います。
     </div>
   </div>
 
-        <!-- プロンプトB: キャラクター設計 -->
-        <div class="form-section">
-          <div class="form-section-header"><div class="form-section-title"><span>👥</span> プロンプトB：キャラクター設計</div></div>
-          <div class="form-section-body">
-            <p style="font-size:0.78rem;color:var(--text-muted)">キャラクター抽出＋読者の声の記録＋描きたいシーンをもとに、キャラ設定プロンプトを生成します。</p>
-            <div class="pm-auto-source" id="pm-b-source">素材の自動差し込み状況を確認中…</div>
-            <div class="pm-param-row">
-              <div class="pm-param-item"><label>台詞サンプル数（日常会話）</label><input type="number" id="pm-b-sample-daily" value="2" min="1" max="10"></div>
-              <div class="pm-param-item"><label>台詞サンプル数（感情の核心）</label><input type="number" id="pm-b-sample-core" value="2" min="1" max="10"></div>
-              <div class="pm-param-item"><label>台詞サンプル数（濡れ場）</label><input type="number" id="pm-b-sample-r18" value="2" min="1" max="10"></div>
-              <div class="pm-param-item"><label>キャラ造形の挑戦提案数</label><div style="display:flex;gap:4px;align-items:center"><input type="number" id="pm-b-challenge-min" value="1" min="1" max="10"><span style="font-size:0.78rem;color:var(--text-muted)">〜</span><input type="number" id="pm-b-challenge-max" value="2" min="1" max="10"><span style="font-size:0.72rem;color:var(--text-muted)">個</span></div></div>
-            </div>
-            <div class="export-btn-group" style="margin-top:12px"><button class="btn btn-export" onclick="generatePrompt('B')">📋 プロンプトをコピー</button><button class="btn btn-secondary btn-sm" onclick="downloadPrompt('B')">↓ .md</button></div>
+  <div class="pm-role-card">
+    <div class="pm-role-card-title pm-role-bridge">🧩 圧縮メモ = 直前の接続資料</div>
+    <div class="pm-role-card-body">
+      前Partの感情、距離感、身体状態、未解決の緊張など、<strong>今このPartへつなぐための直前情報</strong>です。<br>
+      固定設定ではなく、執筆のたびに入れ替わる前提です。
+    </div>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="form-label">章アウトライン（執筆保管庫から選択）</label>
+  <select id="pm-c-outline-select">
+    <option value="">（選択なし — 保管庫にアウトラインメモがない場合）</option>
+  </select>
+  <div class="form-hint" style="margin-top:4px">
+    執筆保管庫に保存した章アウトラインメモを選択すると、プロンプトに全Part構造が差し込まれます。
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="form-label">確定設定（毎回渡す固定条件）</label>
+  <select id="pm-c-canon-mode">
+    <option value="core">重要事項のみ反映（推奨）</option>
+    <option value="full">保存済み確定設定を広めに反映</option>
+    <option value="off">反映しない</option>
+  </select>
+  <div class="form-hint" style="margin-top:4px">
+    キャラクターの核、関係性、伏線、未解決事項、世界設定などを、本文執筆のたびに守る固定条件として差し込みます。
+  </div>
+</div>
+
+<div class="form-row form-row-3">
+  <div class="form-group">
+    <label class="form-label">固定条件の絞り込み章番号</label>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <input type="number" id="pm-c-canon-chapter-num" min="1" placeholder="例：2">
+      <label style="display:inline-flex;gap:6px;align-items:center;font-size:0.78rem;color:var(--text-secondary);cursor:pointer">
+        <input type="checkbox" id="pm-c-canon-auto-chapter" checked onchange="syncCanonChapterFilterFromWriting(true)">
+        執筆対象章から自動反映
+      </label>
+    </div>
+    <div class="form-hint" style="margin-top:4px">
+      執筆対象の章番号を使って、今回の本文に関係が深い固定条件を優先表示します。
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">章まわりの範囲</label>
+    <select id="pm-c-canon-scope">
+      <option value="chapter">その章に直接関係するもの中心</option>
+      <option value="near">前後の章も少し含める</option>
+      <option value="wide">広めに拾う</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">重点人物（任意）</label>
+    <input type="text" id="pm-c-canon-character-focus" placeholder="例：朝比奈 湊, 榊 原">
+    <div class="form-hint" style="margin-top:4px">
+      カンマ区切りで入力してください。
+    </div>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="form-label">重点キーワード（任意）</label>
+  <input type="text" id="pm-c-canon-keyword-focus" placeholder="例：首飾り, 再会, 片想い, 夏祭り">
+  <div class="form-hint" style="margin-top:4px">
+    伏線、場所、アイテム、イベント名など、今回重視したい語をカンマ区切りで入力してください。
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+    <button class="btn btn-secondary btn-sm" onclick="syncCanonChapterFilterFromWriting(true)">執筆対象章を反映</button>
+    <button class="btn btn-secondary btn-sm" onclick="previewCanonPromptForWriting()">固定条件をプレビュー</button>
+    <button class="btn btn-ghost btn-sm" onclick="copyCanonPromptForWriting()">固定条件だけコピー</button>
+  </div>
+</div>
+
+<div class="form-group" id="pm-c-canon-preview-wrap" style="display:none">
+  <label class="form-label">固定条件の差し込みプレビュー</label>
+  <div id="pm-c-canon-preview" class="pm-scene-preview pm-scene-empty">（ここに固定条件を表示します）</div>
+</div>
+
+<div class="form-group">
+  <label class="form-label">直前接続メモを接続資料に挿入</label>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <select id="pm-c-compressed-select" onchange="refreshPromptMakerMemoPreview('c'); handlePmCompressedMemoSelectChange('c')">
+      <option value="">（選択なし）</option>
+    </select>
+    <button class="btn btn-secondary btn-sm" onclick="insertVaultMemoToCPrevText(false)">追記</button>
+    <button class="btn btn-ghost btn-sm" onclick="insertVaultMemoToCPrevText(true)">置換</button>
+  </div>
+  <div class="pm-memo-help">
+    ここには「直前接続用」の圧縮メモだけを表示します。今回書くPartへ入る直前の流れをつなぐための欄です。
+  </div>
+
+  <div class="pm-memo-preview-wrap">
+    <div class="pm-memo-preview-label">選択中の直前接続メモ</div>
+    <div id="pm-c-compressed-preview" class="pm-memo-preview-box empty">（まだ直前接続メモを選択していません）</div>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="form-label">直前接続資料（前Part・前章までの流れ）</label>
+  <textarea id="pm-c-prev-text" rows="6" placeholder="全文ではなく、直前までの状況、感情、距離感、身体状態、未解決の緊張などを貼り付けてください…"></textarea>
+  <div class="pm-inline-note">
+    ここは固定設定ではありません。今回書くPartの直前に何が残っているかを渡す場所です。
+  </div>
+</div>
+
+                    </div>
+
+                    <div class="pm-param-row">
+                      <div class="pm-param-item">
+                        <label>比喩の上限</label>
+                        <div style="display:flex;gap:4px;align-items:center">
+                          <input type="number" id="pm-c-metaphor-min" value="1" min="0" max="20">
+                          <span style="font-size:0.78rem;color:var(--text-muted)">〜</span>
+                          <input type="number" id="pm-c-metaphor-max" value="2" min="0" max="20">
+                          <span style="font-size:0.72rem;color:var(--text-muted)">個/場面</span>
+                        </div>
+                      </div>
+
+                      <div class="pm-param-item">
+                        <label>会話:地の文バランス</label>
+                        <div style="display:flex;gap:4px;align-items:center">
+                          <input type="text" id="pm-c-dialog-ratio" value="6:4〜4:6" style="width:120px">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="pm-assist-area" style="margin-top:12px">
+                      <div class="pm-assist-title"><span>🤖</span> ルール選別アシスタント</div>
+                      <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:10px">
+                        プロット＋キャラ設定＋全ルールをClaudeに渡して、今回の章 / Part に適用すべきルールを選別してもらいます。
+                      </p>
+                      <div class="export-btn-group" style="margin-bottom:12px">
+                        <button class="btn btn-export" onclick="generateRuleSelectionPrompt()">📋 ルール選別プロンプトをコピー</button>
+                        <button class="btn btn-secondary btn-sm" onclick="downloadRuleSelectionPrompt()">↓ .md</button>
+                      </div>
+                      <div style="display:flex;gap:8px;margin-bottom:10px">
+                        <button class="btn btn-secondary btn-sm" onclick="openAddPresetModal()">💾 Claudeの回答からプリセット保存</button>
+                      </div>
+                      <div id="pm-c-presets-area">
+                        <div style="font-size:0.75rem;color:var(--text-muted)">保存済みプリセットはありません</div>
+                      </div>
+                    </div>
+
+                    <div style="margin-top:12px">
+                      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                        <label class="form-label" style="margin:0">適用するマイルール</label>
+                        <div style="display:flex;gap:6px">
+                          <button class="btn btn-ghost btn-sm" onclick="pmRuleSelectAll(true)">全選択</button>
+                          <button class="btn btn-ghost btn-sm" onclick="pmRuleSelectAll(false)">全解除</button>
+                        </div>
+                      </div>
+                      <div class="pm-rule-checks" id="pm-c-rules"></div>
+                    </div>
+
+                    <div class="export-btn-group" style="margin-top:12px;flex-wrap:wrap">
+                      <button class="btn btn-export" onclick="generatePrompt('C_CLAUDE')">📋 Claude初稿用をコピー</button>
+                      <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('C_CLAUDE')">↓ .md</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-section">
+                  <div class="form-section-header">
+                    <div class="form-section-title"><span>🪄</span> Claude推敲用</div>
+                  </div>
+                  <div class="form-section-body">
+                    <p style="font-size:0.78rem;color:var(--text-muted)">
+                      初稿を小説として磨くための推敲プロンプトです。設定追加や大きな展開変更はさせず、文芸的な改善に限定します。
+                    </p>
+                    <div class="form-group">
+                      <label class="form-label">推敲したい本文</label>
+                      <textarea id="pm-d-revision-text" rows="10" placeholder="Claude初稿または作者修正版をここへ貼り付けてください"></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">今回の推敲で特に見てほしいこと（任意）</label>
+                      <textarea id="pm-d-revision-goal" rows="4" placeholder="例：心理描写を厚くしたい / 台詞温度を上げたい / 地の文をなめらかにしたい"></textarea>
+                    </div>
+                    <div class="export-btn-group">
+                      <button class="btn btn-export" onclick="generatePrompt('D')">📋 Claude推敲用をコピー</button>
+                      <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('D')">↓ .md</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-section">
+  <div class="form-section-header">
+    <div class="form-section-title"><span>🧪</span> 整合性チェック</div>
+  </div>
+  <div class="form-section-body">
+    <p style="font-size:0.78rem;color:var(--text-muted)">
+      ここでは、1章の内部整合性を確認する「章単体チェック」と、前章と次章のブレを見る「2章比較チェック」を使い分けます。
+    </p>
+
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px">
+        <div style="font-size:0.86rem;font-weight:700;color:var(--purple-300);margin-bottom:10px">① 章単体チェック</div>
+
+        <div class="form-row form-row-2">
+          <div class="form-group">
+            <label class="form-label">対象章ラベル</label>
+            <input type="text" id="pm-e-single-label" placeholder="例：第2章 / 第2章 pt3 / 第1話">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">重点確認項目</label>
+            <select id="pm-e-single-focus">
+              <option value="general">全体</option>
+              <option value="character">キャラブレ</option>
+              <option value="tone">口調・文体</option>
+              <option value="emotion">感情推移</option>
+              <option value="logic">論理・因果</option>
+              <option value="foreshadow">伏線・情報開示</option>
+              <option value="r18">R18進行</option>
+            </select>
           </div>
         </div>
 
-       <!-- 執筆・仕上げプロンプト群 -->
-        <div class="form-section">
-          <div class="form-section-header">
-            <div class="form-section-title"><span>✍️</span> 執筆系プロンプト</div>
+        <div class="form-group">
+          <label class="form-label">前章までの補足（任意）</label>
+          <textarea id="pm-e-single-prev" rows="4" placeholder="例：第1章終盤で両片想いが明確化。まだ肉体関係はなし。攻めは敬語寄り。受けは警戒が解けきっていない。"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">チェックしたい章本文</label>
+          <textarea id="pm-e-single-text" rows="10" placeholder="ここに対象章の本文を貼り付けてください"></textarea>
+        </div>
+
+        <div class="export-btn-group">
+          <button class="btn btn-export" onclick="generatePrompt('E_SINGLE')">📋 章単体チェック用をコピー</button>
+          <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('E_SINGLE')">↓ .md</button>
+        </div>
+      </div>
+
+      <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px">
+        <div style="font-size:0.86rem;font-weight:700;color:var(--purple-300);margin-bottom:10px">② 2章比較チェック</div>
+
+        <div class="form-row form-row-2">
+          <div class="form-group">
+            <label class="form-label">比較元ラベル</label>
+            <input type="text" id="pm-e-compare-a-label" placeholder="例：第1章">
           </div>
-          <div class="form-section-body">
-            <p style="font-size:0.78rem;color:var(--text-muted)">
-              ここでは「初稿」「推敲」「整合性チェック」「引き継ぎ要約」「正史反映」「差分評価」に使うプロンプトを作ります。
-              Claude分析用 / Claude設計用は外部運用前提で、この画面には重複実装しません。
-            </p>
 
-            <div class="pm-record-select" id="pm-c-plot-select-area">
-              <label>プロット設計の記録を選択</label>
-              <select id="pm-c-plot-select" onchange="onPlotSelectChange(); renderPmChapterAiPreferenceList(); refreshPmDraftModelUi();">
-                <option value="">（プロット設計の記録がありません）</option>
-              </select>
-            </div>
-
-            <div class="pm-record-select" id="pm-c-char-select-area">
-              <label>キャラ設定シートの記録を選択</label>
-              <select id="pm-c-char-select">
-                <option value="">（キャラ設定シートの記録がありません）</option>
-              </select>
-            </div>
-
-            <div class="form-row form-row-2">
-              <div class="form-group">
-                <label class="form-label">執筆対象：章</label>
-                <div id="pm-c-section-area">
-                  <select id="pm-c-section-select" style="display:none"
-                          onchange="onSectionSelect(); refreshPmDraftModelUi();">
-                    <option value="">（プロットを選択してください）</option>
-                  </select>
-                  <input type="number" id="pm-c-section-num" min="1"
-                         placeholder="章番号 例：1" style="display:none"
-                         oninput="refreshPmDraftModelUi()">
-                  <div id="pm-c-section-hint" class="form-hint"
-                       style="margin-top:4px"></div>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">執筆対象：Part番号</label>
-                <div style="display:flex;gap:8px;align-items:center">
-                  <input type="number" id="pm-c-part-num" min="1" max="20"
-                         placeholder="例：3" style="width:80px">
-                  <span style="font-size:0.78rem;color:var(--text-muted)">／</span>
-                  <input type="number" id="pm-c-part-total" min="1" max="20"
-                         placeholder="全Part数 例：5" style="width:80px">
-                  <span style="font-size:0.72rem;color:var(--text-muted)">Part中</span>
-                </div>
-                <div class="form-hint" style="margin-top:4px">
-                  例：5Part構成の3番目 → 3 ／ 5
-                </div>
-              </div>
-            </div>
-
-            <div class="form-row form-row-2">
-              <div class="form-group">
-                <label class="form-label">R18シーンの有無</label>
-                <select id="pm-c-has-r18" onchange="refreshPmDraftModelUi()">
-                  <option value="no">なし（通常セクション）</option>
-                  <option value="yes">あり（R18セクション）</option>
-                </select>
-                <div id="pm-c-r18-hint" class="form-hint" style="margin-top:4px"></div>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">今回の執筆AI</label>
-                <select id="pm-c-draft-model" onchange="refreshPmDraftModelUi()">
-                  <option value="auto">章設定に従う（未設定なら自動判定）</option>
-                  <option value="chatgpt">ChatGPTで初稿を書く</option>
-                  <option value="claude">Claudeで初稿を書く</option>
-                </select>
-                <div id="pm-c-ai-pref-status" class="form-hint" style="margin-top:4px">
-                  章設定またはR18判定から自動で決めます
-                </div>
-              </div>
-            </div>
-
-            <div class="form-section" style="margin-bottom:0">
-              <div class="form-section-header">
-                <div class="form-section-title"><span>🧭</span> 章ごとの既定執筆AI</div>
-                <button class="btn btn-primary btn-sm" onclick="savePmCurrentChapterAiPreference()">この章の既定AIを保存</button>
-              </div>
-              <div class="form-section-body">
-                <div class="form-hint">
-                  ここで保存した設定は「章ごとの既定執筆AI」です。  
-                  たとえば「第3章はClaude」「第4章はChatGPT」という切り替えを覚えさせられます。
-                </div>
-                <div id="pm-c-ai-pref-list" style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
-                  <div class="form-hint">章設定を読み込み中です…</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">章アウトライン（執筆保管庫から選択）</label>
-              <select id="pm-c-outline-select">
-                <option value="">（選択なし — 保管庫にアウトラインメモがない場合）</option>
-              </select>
-              <div class="form-hint" style="margin-top:4px">
-                執筆保管庫に保存した章アウトラインメモを選択すると、プロンプトに全Part構造が差し込まれます
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">保管庫の圧縮メモを接続資料に挿入</label>
-              <div style="display:flex;gap:8px;align-items:center">
-                <select id="pm-c-compressed-select">
-                  <option value="">（選択なし）</option>
-                </select>
-                <button class="btn btn-secondary btn-sm" onclick="insertVaultMemoToCPrevText(false)">追記</button>
-                <button class="btn btn-ghost btn-sm" onclick="insertVaultMemoToCPrevText(true)">置換</button>
-              </div>
-              <div class="form-hint">
-                C本文接続用のAI圧縮メモを選ぶと、前セクション接続資料へ差し込めます。
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">前Part・前章までの接続資料（任意）</label>
-              <textarea id="pm-c-prev-text" rows="6" placeholder="全文ではなく、直前までの状況、感情、距離感、身体状態、未解決の緊張などを貼り付けてください…"></textarea>
-            </div>
-
-            <div class="pm-param-row">
-              <div class="pm-param-item">
-                <label>通常セクション文字数</label>
-                <div style="display:flex;gap:4px;align-items:center">
-                  <input type="number" id="pm-c-normal-min" value="5500" min="500" step="500">
-                  <span style="font-size:0.78rem;color:var(--text-muted)">〜</span>
-                  <input type="number" id="pm-c-normal-max" value="11000" min="500" step="500">
-                  <span style="font-size:0.72rem;color:var(--text-muted)">字</span>
-                </div>
-              </div>
-
-              <div class="pm-param-item">
-                <label>R18セクション文字数</label>
-                <div style="display:flex;gap:4px;align-items:center">
-                  <input type="number" id="pm-c-r18-min" value="5500" min="500" step="500">
-                  <span style="font-size:0.78rem;color:var(--text-muted)">〜</span>
-                  <input type="number" id="pm-c-r18-max" value="11000" min="500" step="500">
-                  <span style="font-size:0.72rem;color:var(--text-muted)">字</span>
-                </div>
-              </div>
-
-              <div class="pm-param-item">
-                <label>比喩の上限</label>
-                <div style="display:flex;gap:4px;align-items:center">
-                  <input type="number" id="pm-c-metaphor-min" value="1" min="0" max="20">
-                  <span style="font-size:0.78rem;color:var(--text-muted)">〜</span>
-                  <input type="number" id="pm-c-metaphor-max" value="2" min="0" max="20">
-                  <span style="font-size:0.72rem;color:var(--text-muted)">個/場面</span>
-                </div>
-              </div>
-
-              <div class="pm-param-item">
-                <label>会話:地の文バランス</label>
-                <div style="display:flex;gap:4px;align-items:center">
-                  <input type="text" id="pm-c-dialog-ratio" value="6:4〜4:6" style="width:120px">
-                </div>
-              </div>
-            </div>
-
-            <div class="pm-assist-area" style="margin-top:12px">
-              <div class="pm-assist-title"><span>🤖</span> ルール選別アシスタント</div>
-              <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:10px">
-                プロット＋キャラ設定＋全ルールをClaudeに渡して、今回の章 / Part に適用すべきルールを選別してもらいます。
-              </p>
-              <div class="export-btn-group" style="margin-bottom:12px">
-                <button class="btn btn-export" onclick="generateRuleSelectionPrompt()">📋 ルール選別プロンプトをコピー</button>
-                <button class="btn btn-secondary btn-sm" onclick="downloadRuleSelectionPrompt()">↓ .md</button>
-              </div>
-              <div style="display:flex;gap:8px;margin-bottom:10px">
-                <button class="btn btn-secondary btn-sm" onclick="openAddPresetModal()">💾 Claudeの回答からプリセット保存</button>
-              </div>
-              <div id="pm-c-presets-area">
-                <div style="font-size:0.75rem;color:var(--text-muted)">保存済みプリセットはありません</div>
-              </div>
-            </div>
-
-            <div style="margin-top:12px">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-                <label class="form-label" style="margin:0">適用するマイルール</label>
-                <div style="display:flex;gap:6px">
-                  <button class="btn btn-ghost btn-sm" onclick="pmRuleSelectAll(true)">全選択</button>
-                  <button class="btn btn-ghost btn-sm" onclick="pmRuleSelectAll(false)">全解除</button>
-                </div>
-              </div>
-              <div class="pm-rule-checks" id="pm-c-rules"></div>
-            </div>
-
-            <div class="export-btn-group" style="margin-top:12px;flex-wrap:wrap">
-              <button class="btn btn-export" onclick="generatePrompt('C_AUTO')">📋 既定AIで初稿プロンプトをコピー</button>
-              <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('C_AUTO')">↓ .md</button>
-              <button class="btn btn-export" onclick="generatePrompt('C_CHATGPT')">📋 ChatGPT初稿用をコピー</button>
-              <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('C_CHATGPT')">↓ .md</button>
-              <button class="btn btn-export" onclick="generatePrompt('C_CLAUDE')">📋 Claude初稿用をコピー</button>
-              <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('C_CLAUDE')">↓ .md</button>
-            </div>
+          <div class="form-group">
+            <label class="form-label">比較先ラベル</label>
+            <input type="text" id="pm-e-compare-b-label" placeholder="例：第2章">
           </div>
         </div>
 
-        <div class="form-section">
-          <div class="form-section-header">
-            <div class="form-section-title"><span>🪄</span> Claude推敲用</div>
+        <div class="form-group">
+          <label class="form-label">重点確認項目</label>
+          <select id="pm-e-compare-focus">
+            <option value="general">全体</option>
+            <option value="character">キャラブレ</option>
+            <option value="tone">口調・温度感</option>
+            <option value="emotion">感情進行</option>
+            <option value="logic">論理・因果</option>
+            <option value="foreshadow">伏線・情報開示順</option>
+            <option value="r18">R18進行</option>
+          </select>
+        </div>
+
+        <div class="form-row form-row-2">
+          <div class="form-group">
+            <label class="form-label">比較元本文</label>
+            <textarea id="pm-e-compare-a-text" rows="10" placeholder="前の章の本文を貼り付けてください"></textarea>
           </div>
-          <div class="form-section-body">
-            <p style="font-size:0.78rem;color:var(--text-muted)">
-              初稿を小説として磨くための推敲プロンプトです。設定追加や大きな展開変更はさせず、文芸的な改善に限定します。
-            </p>
-            <div class="form-group">
-              <label class="form-label">推敲したい本文</label>
-              <textarea id="pm-d-revision-text" rows="10" placeholder="ChatGPT初稿または作者修正版をここへ貼り付けてください"></textarea>
-            </div>
-            <div class="form-group">
-              <label class="form-label">今回の推敲で特に見てほしいこと（任意）</label>
-              <textarea id="pm-d-revision-goal" rows="4" placeholder="例：心理描写を厚くしたい / 台詞温度を上げたい / 地の文をなめらかにしたい"></textarea>
-            </div>
-            <div class="export-btn-group">
-              <button class="btn btn-export" onclick="generatePrompt('D')">📋 Claude推敲用をコピー</button>
-              <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('D')">↓ .md</button>
-            </div>
+
+          <div class="form-group">
+            <label class="form-label">比較先本文</label>
+            <textarea id="pm-e-compare-b-text" rows="10" placeholder="次の章の本文を貼り付けてください"></textarea>
           </div>
         </div>
 
-        <div class="form-section">
-          <div class="form-section-header">
-            <div class="form-section-title"><span>🧪</span> 整合性チェック用</div>
-          </div>
-          <div class="form-section-body">
-            <p style="font-size:0.78rem;color:var(--text-muted)">
-              キャラ・口調・知識矛盾・時系列・伏線・関係性・R18進行・シーン目的の確認に使います。
-            </p>
-            <div class="form-group">
-              <label class="form-label">チェックしたい本文</label>
-              <textarea id="pm-e-check-text" rows="10" placeholder="整合性チェックしたい本文を貼り付けてください"></textarea>
-            </div>
-            <div class="form-group">
-              <label class="form-label">補足メモ（任意）</label>
-              <textarea id="pm-e-check-extra" rows="4" placeholder="例：第5話とのつながり重視 / R18進行速度を重点確認 など"></textarea>
-            </div>
-            <div class="export-btn-group">
-              <button class="btn btn-export" onclick="generatePrompt('E')">📋 整合性チェック用をコピー</button>
-              <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('E')">↓ .md</button>
-            </div>
-          </div>
+        <div class="export-btn-group">
+          <button class="btn btn-export" onclick="generatePrompt('E_COMPARE')">📋 2章比較チェック用をコピー</button>
+          <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('E_COMPARE')">↓ .md</button>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <div class="form-section">
-          <div class="form-section-header">
-            <div class="form-section-title"><span>📦</span> 引き継ぎ要約更新用</div>
-          </div>
-          <div class="form-section-body">
-            <p style="font-size:0.78rem;color:var(--text-muted)">
-              採用稿または現行本文から、次回AIへ渡す短い引き継ぎ要約を作らせるためのプロンプトです。
-            </p>
-            <div class="form-group">
-              <label class="form-label">要約元の本文または採用稿</label>
-              <textarea id="pm-f-summary-text" rows="10" placeholder="要約を作りたい本文を貼り付けてください"></textarea>
-            </div>
-            <div class="export-btn-group">
-              <button class="btn btn-export" onclick="generatePrompt('F')">📋 引き継ぎ要約更新用をコピー</button>
-              <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('F')">↓ .md</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-section">
-          <div class="form-section-header">
-            <div class="form-section-title"><span>🧭</span> 正史反映用</div>
-          </div>
-          <div class="form-section-body">
-            <p style="font-size:0.78rem;color:var(--text-muted)">
-              採用稿または現行本文から、確定設定へ反映すべき事実だけを抽出するためのプロンプトです。
-            </p>
-            <div class="form-group">
-              <label class="form-label">正史反映したい本文</label>
-              <textarea id="pm-g-canon-text" rows="10" placeholder="確定設定へ反映したい本文を貼り付けてください"></textarea>
-            </div>
-            <div class="export-btn-group">
-              <button class="btn btn-export" onclick="generatePrompt('G')">📋 正史反映用をコピー</button>
-              <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('G')">↓ .md</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-section">
-          <div class="form-section-header">
-            <div class="form-section-title"><span>🧩</span> 差分評価用</div>
-          </div>
-          <div class="form-section-body">
-            <p style="font-size:0.78rem;color:var(--text-muted)">
-              ChatGPT初稿とClaude推敲稿、または作者修正版の差分を評価し、改善点と変わりすぎた点を洗い出します。
-            </p>
-            <div class="form-group">
-              <label class="form-label">比較元本文</label>
-              <textarea id="pm-h-diff-original" rows="8" placeholder="元になった本文を貼り付けてください"></textarea>
-            </div>
-            <div class="form-group">
-              <label class="form-label">比較先本文</label>
-              <textarea id="pm-h-diff-revised" rows="8" placeholder="比較したい改稿本文を貼り付けてください"></textarea>
-            </div>
-            <div class="export-btn-group">
-              <button class="btn btn-export" onclick="generatePrompt('H')">📋 差分評価用をコピー</button>
-              <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('H')">↓ .md</button>
+                <div class="form-section">
+                  <div class="form-section-header">
+                    <div class="form-section-title"><span>🧩</span> 差分評価用</div>
+                  </div>
+                  <div class="form-section-body">
+                    <p style="font-size:0.78rem;color:var(--text-muted)">
+                      Claude初稿とClaude推敲稿、または作者修正版の差分を評価し、改善された点と変わりすぎた点を洗い出します。
+                    </p>
+                    <div class="form-group">
+                      <label class="form-label">比較元本文</label>
+                      <textarea id="pm-h-diff-original" rows="8" placeholder="元になった本文を貼り付けてください"></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">比較先本文</label>
+                      <textarea id="pm-h-diff-revised" rows="8" placeholder="比較したい改稿本文を貼り付けてください"></textarea>
+                    </div>
+                    <div class="export-btn-group">
+                      <button class="btn btn-export" onclick="generatePrompt('H')">📋 差分評価用をコピー</button>
+                      <button class="btn btn-secondary btn-sm" onclick="downloadPrompt('H')">↓ .md</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <!-- TAB: 執筆保管庫 -->
+
+     <!-- TAB: 執筆保管庫 -->
       <div class="tab-panel" id="tab-vault">
-        <div class="section-header">
+        <div class="section-header" style="margin-bottom:12px">
           <div class="section-title"><span class="icon">🗃</span> 執筆保管庫 <span class="count-badge" id="vault-count">0</span></div>
-          <div class="vault-toolbar">
-            <button class="btn btn-primary" onclick="openVaultModal()">＋ 新規メモ</button>
-<button class="btn btn-secondary" onclick="openVaultCompressionPromptModal()">🧩 圧縮プロンプト作成</button>
+        </div>
+
+        <div class="vault-top-sticky">
+          <div class="vault-toolbar vault-toolbar-primary">
+            <div class="vault-quick-group">
+            <button class="btn btn-primary" onclick="vaultQuickAdd('draft')">＋ 本文メモ</button>
+<button class="btn btn-secondary" onclick="vaultQuickAdd('outline')">＋ アウトライン</button>
+<button class="btn btn-secondary" onclick="vaultQuickAddCompressed('a2')">🧩 章設計メモ</button>
+<button class="btn btn-secondary" onclick="vaultQuickAddCompressed('c')">🔗 直前接続メモ</button>
+            </div>
+
+            <div class="vault-toolbar-spacer"></div>
+
+            <select id="vault-quick-chapter" class="vault-quick-select">
+              <option value="">章を選択しない</option>
+            </select>
+
             <button class="btn btn-export" onclick="copyWritingVaultAiMarkdown()">📋 AI引き継ぎ資料をコピー</button>
             <button class="btn btn-secondary" onclick="downloadWritingVaultAiMarkdown()">↓ .md</button>
           </div>
-        </div>
-        <div class="vault-ai-request">
+
+         <div class="vault-toolbar vault-toolbar-secondary" id="vault-filter-bar">
+            <button class="vault-filter-btn active" data-vault-filter="" onclick="setVaultFilter('')">すべて</button>
+            <button class="vault-filter-btn" data-vault-filter="draft" onclick="setVaultFilter('draft')">本文</button>
+            <button class="vault-filter-btn" data-vault-filter="outline" onclick="setVaultFilter('outline')">アウトライン</button>
+            <button class="vault-filter-btn" data-vault-filter="compressed" onclick="setVaultFilter('compressed')">圧縮メモ</button>
+          </div>
+
+          <div class="vault-compression-filter-bar" id="vault-compression-filter-bar">
+            <button class="vault-filter-btn active" data-vault-compression-filter="" onclick="setVaultCompressionFilter('')">圧縮メモ：すべて</button>
+            <button class="vault-filter-btn" data-vault-compression-filter="a2" onclick="setVaultCompressionFilter('a2')">章設計メモ</button>
+            <button class="vault-filter-btn" data-vault-compression-filter="c" onclick="setVaultCompressionFilter('c')">直前接続メモ</button>
+            <button class="vault-filter-btn" data-vault-compression-filter="general" onclick="setVaultCompressionFilter('general')">汎用補助</button>
+          </div>
+
+        <div class="vault-mini-card">
           <div class="form-group">
             <label class="form-label" for="vault-writing-title">執筆作品タイトル</label>
             <input type="text" id="vault-writing-title" placeholder="例：死に急ぐ推しを助けるために、モブ店員の私が物語を書き換えます">
-            <div class="form-hint">
-              執筆保管庫のAI引き継ぎ資料をMarkdown保存するとき、このタイトルをファイル名に使います。未入力の場合は分析中の作品タイトルを使います。
-            </div>
+            <div class="form-hint">AI引き継ぎ資料のファイル名に使います。未入力なら作品タイトルを使います。</div>
           </div>
-          <div>
+          <div style="margin-top:10px">
             <button class="btn btn-primary btn-sm" onclick="saveWritingTitleFromInput('vault-writing-title')">執筆作品タイトルを保存</button>
           </div>
         </div>
@@ -1660,19 +2430,9 @@ textarea { resize: vertical; }
         <div class="vault-ai-request">
           <div class="form-group">
             <label class="form-label" for="vault-ai-request">今回AIに頼みたいこと</label>
-            <textarea id="vault-ai-request" placeholder="例：第3話の続きとして、攻め視点で再会シーンを書きたい。既存設定と現在地を踏まえて、自然な会話と感情の揺れを重視してほしい。"></textarea>
-            <div class="form-hint">この内容は保存データではなく、コピー・ダウンロード時の引き継ぎMarkdownに含めます。</div>
+            <textarea id="vault-ai-request" placeholder="例：第3章の続きとして、攻め視点で再会シーンを書きたい。既存設定と現在地を踏まえて、自然な会話と感情の揺れを重視してほしい。"></textarea>
+            <div class="form-hint">この内容は保存データではなく、AI引き継ぎ資料の先頭に含めます。</div>
           </div>
-        </div>
-
-        <div class="vault-filter-bar" id="vault-filter-bar">
-          <button class="vault-filter-btn active" data-vault-filter="" onclick="setVaultFilter('')">すべて</button>
-          <button class="vault-filter-btn" data-vault-filter="draft" onclick="setVaultFilter('draft')">原稿</button>
-          <button class="vault-filter-btn" data-vault-filter="progress" onclick="setVaultFilter('progress')">現在地</button>
-<button class="vault-filter-btn" data-vault-filter="compressed" onclick="setVaultFilter('compressed')">AI圧縮メモ</button>
-          <button class="vault-filter-btn" data-vault-filter="setting" onclick="setVaultFilter('setting')">設定</button>
-          <button class="vault-filter-btn" data-vault-filter="instruction" onclick="setVaultFilter('instruction')">申し送り</button>
-          <button class="vault-filter-btn" data-vault-filter="memo" onclick="setVaultFilter('memo')">その他</button>
         </div>
 
         <div id="vault-list" class="vault-list"></div>
@@ -1680,7 +2440,7 @@ textarea { resize: vertical; }
         <div id="vault-empty" class="vault-empty" style="display:none">
           <div class="vault-empty-icon">🗃</div>
           <h3>まだ執筆保管庫にメモがありません。</h3>
-          <p>「新規メモ」から、原稿・現在地・設定・AIへの申し送りを保存してください。</p>
+          <p>上の「本文メモ」「アウトライン」「圧縮メモ」から始めてください。</p>
         </div>
       </div>
     </section>
@@ -1917,49 +2677,66 @@ textarea { resize: vertical; }
       <div class="modal-title" id="modal-writing-vault-title">🗃 執筆保管庫メモを追加</div>
       <button class="modal-close" onclick="closeModal('modal-writing-vault')">✕</button>
     </div>
-    <div class="modal-body vault-modal-body">
+   <div class="modal-body vault-modal-body">
       <input type="hidden" id="vault-edit-id">
 
       <div class="form-row form-row-2">
         <div class="form-group">
           <label class="form-label" for="vault-type">種別</label>
-         <select id="vault-type" onchange="toggleVaultCompressionPurposeField()">
-            <option value="draft">原稿・シーン断片</option>
-            <option value="progress">現在地・ここまでの進行状況</option>
-        <option value="compressed">AI圧縮メモ</option>
-            <option value="setting">キャラ・設定メモ</option>
-            <option value="instruction">AIへの申し送り</option>
-            <option value="memo">その他メモ</option>
+          <select id="vault-type" onchange="handleVaultTypeChange()">
+            <option value="draft">本文</option>
+            <option value="outline">アウトライン</option>
+            <option value="compressed">圧縮メモ</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="vault-title">タイトル</label>
-          <input type="text" id="vault-title" placeholder="例：第1話 初稿 / 現在地メモ / 攻め設定">
+          <label class="form-label" for="vault-chapter-number">章</label>
+          <select id="vault-chapter-number" onchange="fillVaultTitleSuggestion()">
+            <option value="">章を選択しない</option>
+          </select>
         </div>
       </div>
 
-<div class="form-group" id="vault-compression-purpose-group" style="display:none">
+      <div class="vault-modal-helper-row">
+        <div class="form-group">
+          <label class="form-label" for="vault-title">タイトル</label>
+          <input type="text" id="vault-title" placeholder="例：第1章 本文 / 第1章 アウトライン / 第1章 圧縮メモ">
+          <div class="form-hint">通常は右のボタンで自動入力できます。</div>
+        </div>
+        <div>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="fillVaultTitleSuggestion()">タイトル自動入力</button>
+        </div>
+      </div>
+
+    <div class="form-group" id="vault-compression-purpose-group" style="display:none">
   <label class="form-label" for="vault-compression-purpose">圧縮メモの用途</label>
-  <select id="vault-compression-purpose">
-    <option value="general">汎用引き継ぎ用</option>
-    <option value="a2">A-2章設計用</option>
-    <option value="c">C本文接続用</option>
-  </select>
+  <div style="display:flex;gap:8px;align-items:end;flex-wrap:wrap">
+    <div style="flex:1;min-width:220px">
+      <select id="vault-compression-purpose" onchange="handleVaultCompressionPurposeChange()">
+        <option value="a2">章設計用（A-2へ入れる）</option>
+        <option value="c">直前接続用（C本文へ入れる）</option>
+        <option value="general">汎用補助</option>
+      </select>
+    </div>
+    <div>
+      <button type="button" class="btn btn-secondary btn-sm" onclick="fillVaultCompressionTemplate(true)">テンプレ入力</button>
+    </div>
+  </div>
   <div class="form-hint">
-    A-2は章アウトライン生成用、Cは本文執筆時の前セクション接続用です。
+    章設計用はA-2の方針補助、直前接続用はC本文の「直前接続資料」へ入れる前提です。
   </div>
 </div>
 
       <div class="form-group">
         <label class="form-label" for="vault-body">本文</label>
-        <textarea id="vault-body" placeholder="原稿、設定、現在地、AIへの申し送りなどを入力"></textarea>
+        <textarea id="vault-body" placeholder="本文、アウトライン、圧縮メモを入力"></textarea>
         <div class="form-hint">タイトルまたは本文のどちらかは必須です。</div>
       </div>
 
       <div class="form-group">
         <label class="form-label" for="vault-tags">タグ</label>
-        <input type="text" id="vault-tags" placeholder="例：第1話, 攻め視点, 再会シーン">
+        <input type="text" id="vault-tags" placeholder="例：第1章, 再会, すれ違い">
         <div class="form-hint">カンマ区切りで入力してください。</div>
       </div>
 
@@ -1968,6 +2745,7 @@ textarea { resize: vertical; }
         AI引き継ぎ資料に含める
       </label>
     </div>
+
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-writing-vault')">キャンセル</button>
       <button class="btn btn-primary" onclick="saveWritingVaultItem()">保存</button>
@@ -2414,44 +3192,87 @@ function showPage(page,workId){
   }
 }
 
+function toggleWorkUtilityPanel(forceOpen){
+  const panel = document.getElementById('work-utility-panel');
+  const toggleBtn = document.getElementById('work-utility-toggle');
+
+  if(!panel || !toggleBtn) return;
+
+  const nextOpen = typeof forceOpen === 'boolean'
+    ? forceOpen
+    : !panel.classList.contains('open');
+
+  panel.classList.toggle('open', nextOpen);
+  toggleBtn.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
+  toggleBtn.textContent = nextOpen ? '－ 補助機能を閉じる' : '＋ 補助機能';
+}
+
+function openHiddenWorkTab(tab){
+  toggleWorkUtilityPanel(false);
+  switchTab(tab);
+}
+
+function toggleMetaChapterPlanner(){
+  const root = document.getElementById('meta-chapter-planner-collapsible');
+  const toggleBtn = document.getElementById('meta-chapter-planner-toggle');
+
+  if(!root || !toggleBtn) return;
+
+  const nextOpen = !root.classList.contains('open');
+  root.classList.toggle('open', nextOpen);
+  toggleBtn.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
+  toggleBtn.textContent = nextOpen ? '章・話設計を閉じる' : '章・話設計を開く';
+}
+
 function switchTab(tab){
-  document.querySelectorAll('.tab-btn').forEach(btn=>{
-    btn.classList.toggle('active', btn.dataset.tab===tab);
+  const visibleTabs = ['meta','analysis','promptmaker','vault'];
+  const allTabs = ['meta','drafts','canon','consistency','summaries','reflection','backup','analysis','promptmaker','vault'];
+
+  document.querySelectorAll('.tab-btn[data-tab]').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.tab === tab);
   });
 
-  ['meta','drafts','canon','consistency','summaries','reflection','backup','analysis','promptmaker','vault'].forEach(name=>{
+  document.querySelectorAll('.work-utility-btn[data-hidden-tab]').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.hiddenTab === tab);
+  });
+
+  allTabs.forEach(name=>{
     const panel = document.getElementById(`tab-${name}`);
     if(panel){
-      panel.classList.toggle('active', name===tab);
+      panel.classList.toggle('active', name === tab);
     }
   });
 
-  if(tab==='drafts'&&currentWorkId){
+  if(visibleTabs.includes(tab)){
+    toggleWorkUtilityPanel(false);
+  }
+
+  if(tab==='drafts' && currentWorkId){
     renderDraftStudio(currentWorkId);
   }
-  if(tab==='canon'&&currentWorkId){
+  if(tab==='canon' && currentWorkId){
     renderCanonStudio(currentWorkId);
   }
-  if(tab==='consistency'&&currentWorkId){
+  if(tab==='consistency' && currentWorkId){
     renderConsistencyStudio(currentWorkId);
   }
-  if(tab==='summaries'&&currentWorkId){
+  if(tab==='summaries' && currentWorkId){
     renderSummaryStudio(currentWorkId);
   }
-  if(tab==='reflection'&&currentWorkId){
+  if(tab==='reflection' && currentWorkId){
     renderReflectionStudio(currentWorkId);
   }
-  if(tab==='backup'&&currentWorkId){
+  if(tab==='backup' && currentWorkId){
     renderBackupStudio(currentWorkId);
   }
-  if(tab==='analysis'&&currentWorkId){
+  if(tab==='analysis' && currentWorkId){
     loadRecords(currentWorkId);
     renderEpisodeChecks();
   }
-  if(tab==='promptmaker'&&currentWorkId){
+  if(tab==='promptmaker' && currentWorkId){
     loadPromptMakerTab();
   }
-  if(tab==='vault'&&currentWorkId){
+  if(tab==='vault' && currentWorkId){
     loadWritingVaultTab();
   }
 }
@@ -2584,7 +3405,7 @@ function buildDashboardNextAction(metrics, workId) {
   if (!metrics.drafts.length) {
     return {
       title: '初稿または推敲版を保存する',
-      summary: 'ChatGPT初稿、Claude推敲稿、作者修正版のどれかを保存すると、差分比較が使いやすくなります。',
+      summary: 'Claude初稿、Claude推敲稿、作者修正版のどれかを保存すると、差分比較が使いやすくなります。',
       actionHtml: `<button class="btn btn-primary" onclick="openWorkTabFromDashboard('${workId}','drafts')">初稿・差分・採用を開く</button>`
     };
   }
@@ -3537,29 +4358,6 @@ async function saveAllEpisodes() {
 
 // ======================================================
 //  EPISODES
-// ======================================================
-async function renderEpisodesAccordion(workId,count){
-  const c=document.getElementById('episodes-container');
-  if(!count||count===0){c.innerHTML='<div class="empty-state" style="padding:32px"><div class="empty-icon" style="font-size:2rem">📝</div><p style="font-size:0.85rem">メタ情報の「話数」を入力すると<br>テキストエリアが自動生成されます</p></div>';return;}
-  const existing=await dbGetByIndex(STORE_EPISODES,'workId',workId);const epMap={};existing.forEach(e=>{epMap[e.number]=e;});
-  let h='';for(let i=1;i<=count;i++){const ep=epMap[i]||{};const sub=ep.subtitle||'';const con=ep.content||'';const ps=sub?sub:'（サブタイトル未設定）';
-    h+=`<div class="accordion-item" id="acc-${i}"><div class="accordion-header" onclick="toggleAccordion(${i})"><span class="accordion-number">第${i}話</span><span class="accordion-subtitle ${sub?'':'accordion-subtitle-empty'}" id="acc-sub-${i}">${esc(ps)}</span><span class="accordion-arrow">▼</span></div><div class="accordion-body" id="acc-body-${i}"><div class="form-group"><label class="form-label">サブタイトル（任意）</label><input type="text" id="ep-subtitle-${i}" value="${esc(sub)}" placeholder="第${i}話のサブタイトル…" oninput="updateAccordionSubtitle(${i})"></div><div class="form-group"><label class="form-label">本文</label><textarea id="ep-content-${i}" class="episode-textarea" placeholder="第${i}話の本文を貼り付けてください…">${esc(con)}</textarea></div><div style="display:flex;justify-content:flex-end"><button class="btn btn-secondary btn-sm" onclick="saveEpisode(${i})">この話を保存</button></div></div></div>`;}
-  c.innerHTML=h;
-}
-function toggleAccordion(n){document.getElementById(`acc-${n}`).classList.toggle('open');}
-function updateAccordionSubtitle(n){const v=document.getElementById(`ep-subtitle-${n}`).value.trim();const s=document.getElementById(`acc-sub-${n}`);s.textContent=v||'（サブタイトル未設定）';s.classList.toggle('accordion-subtitle-empty',!v);}
-async function saveEpisode(n){
-  if(!currentWorkId)return;const sub=document.getElementById(`ep-subtitle-${n}`).value.trim();const con=document.getElementById(`ep-content-${n}`).value;
-  const existing=await dbGetByIndex(STORE_EPISODES,'workId',currentWorkId);const ep=existing.find(e=>e.number===n)||{id:genId(),workId:currentWorkId,number:n};
-  ep.subtitle=sub;ep.content=con;ep.updatedAt=Date.now();await dbPut(STORE_EPISODES,ep);showToast(`第${n}話を保存しました ✓`);
-}
-async function saveAllEpisodes(){
-  if(!currentWorkId||!currentEpisodesCount)return;
-  const existing=await dbGetByIndex(STORE_EPISODES,'workId',currentWorkId);const epMap={};existing.forEach(e=>{epMap[e.number]=e;});
-  for(let i=1;i<=currentEpisodesCount;i++){const se=document.getElementById(`ep-subtitle-${i}`);const ce=document.getElementById(`ep-content-${i}`);if(!se)continue;
-    const ep=epMap[i]||{id:genId(),workId:currentWorkId,number:i};ep.subtitle=se.value.trim();ep.content=ce?ce.value:'';ep.updatedAt=Date.now();await dbPut(STORE_EPISODES,ep);}
-  showToast('全話を保存しました ✓');
-}
 
 const WORK_BACKUP_STORE_CONFIGS = [
   { key: 'episodes', store: STORE_EPISODES, label: '話本文' },
@@ -6270,7 +7068,7 @@ async function renderCanonStudio(workId) {
 }
 
 const DRAFT_VERSION_TYPE_OPTIONS = [
-  { value: 'chatgpt_draft', label: 'ChatGPT初稿' },
+  { value: 'chatgpt_draft', label: 'Claude初稿' },
   { value: 'claude_revision', label: 'Claude推敲稿' },
   { value: 'author_edit', label: '作者修正版' },
   { value: 'adopted', label: '採用稿' },
@@ -6599,7 +7397,7 @@ async function renderDraftStudio(workId, overrideState = null) {
         <span class="icon">📝</span> 初稿・推敲・採用管理
       </div>
       <div class="form-hint">
-        ChatGPT初稿 → Claude推敲稿 → 作者修正版 → 採用稿 を別々に保存し、あとで差分比較できます。
+        Claude初稿 → Claude推敲稿 → 作者修正版 → 採用稿 を別々に保存し、あとで差分比較できます。
       </div>
     </div>
 
@@ -6656,7 +7454,7 @@ async function renderDraftStudio(workId, overrideState = null) {
           </div>
           <div class="form-group">
             <label class="form-label">版タイトル</label>
-            <input type="text" id="draft-title" value="${esc(previousState.title || defaultTitle)}" placeholder="例：第3話 ChatGPT初稿">
+            <input type="text" id="draft-title" value="${esc(previousState.title || defaultTitle)}" placeholder="例：第3話 Claude初稿">
           </div>
           <div class="form-group">
             <label class="form-label">元にした版（任意）</label>
@@ -7500,32 +8298,75 @@ async function loadPromptMakerTab(){
         ).join('');
   }
 
-  const outlineSel = document.getElementById('pm-c-outline-select');
-  if (outlineSel && currentWorkId) {
-    const vaultItems = await getWritingVaultItems(currentWorkId);
-
-    if (vaultItems.length === 0) {
-      outlineSel.innerHTML = '<option value="">（保管庫にメモがありません）</option>';
-    } else {
-      outlineSel.innerHTML =
-        '<option value="">（選択なし）</option>' +
-        vaultItems.map(item => {
-          const label = (item.title || '無題メモ').slice(0,40);
-          const typeLabel = vaultTypeLabel(item.type);
-          return `<option value="${item.id}">[${esc(typeLabel)}] ${esc(label)}</option>`;
-        }).join('');
-    }
-  }
-
-  await populateCompressedMemoSelect('pm-a2-compressed-select', 'a2');
+    await populatePromptMakerOutlineSelect();
+    await populateCompressedMemoSelect('pm-a2-compressed-select', 'a2');
   await populateCompressedMemoSelect('pm-c-compressed-select', 'c');
+  await refreshPromptMakerMemoPreview('a2');
+  await refreshPromptMakerMemoPreview('c');
 
   renderPresetsList();
-  await renderPmChapterAiPreferenceList();
-  await refreshPmDraftModelUi();
+  syncCanonChapterFilterFromWriting();
+  initPromptMakerView();
 }
 
+
 function pmRuleSelectAll(on){document.querySelectorAll('#pm-c-rules input[type=checkbox]').forEach(cb=>{cb.checked=on;cb.closest('.pm-rule-check-label').classList.toggle('pm-rule-checked',on);});}
+let currentPromptMakerView = 'writing';
+
+function setPromptMakerView(view) {
+  const allowed = ['title', 'scene', 'plot', 'outline', 'character', 'writing'];
+  const nextView = allowed.includes(view) ? view : 'writing';
+  currentPromptMakerView = nextView;
+
+  document.querySelectorAll('[data-pm-view-btn]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.pmViewBtn === nextView);
+  });
+
+  document.querySelectorAll('[data-pm-view]').forEach(panel => {
+    panel.classList.toggle('active', panel.dataset.pmView === nextView);
+  });
+}
+
+function initPromptMakerView() {
+  setPromptMakerView(currentPromptMakerView || 'writing');
+}
+
+async function populatePromptMakerOutlineSelect() {
+  const outlineSel = document.getElementById('pm-c-outline-select');
+  if (!outlineSel) return;
+
+  const currentValue = outlineSel.value || '';
+  outlineSel.innerHTML = '<option value="">（選択なし — 保管庫にアウトラインメモがない場合）</option>';
+
+  if (!currentWorkId) return;
+
+  const vaultItems = await getWritingVaultItems(currentWorkId);
+  const outlineItems = vaultItems.filter(item => {
+    const normalizedType =
+      typeof normalizeWritingVaultType === 'function'
+        ? normalizeWritingVaultType(item.type)
+        : item.type;
+    return normalizedType === 'outline';
+  });
+
+  if (outlineItems.length === 0) {
+    outlineSel.innerHTML = '<option value="">（保管庫にアウトラインメモがありません）</option>';
+    return;
+  }
+
+  outlineSel.innerHTML =
+    '<option value="">（選択なし）</option>' +
+    outlineItems.map(item => {
+      const chapterText = item.chapterNumber ? `第${esc(String(item.chapterNumber))}章 / ` : '';
+      const label = (item.title || '無題メモ').slice(0, 50);
+      return `<option value="${item.id}">${chapterText}${esc(label)}</option>`;
+    }).join('');
+
+  if (currentValue && outlineItems.some(item => item.id === currentValue)) {
+    outlineSel.value = currentValue;
+  }
+}
+
 // ======================================================
 //  PROMPT C — Section Parser
 // ======================================================
@@ -7631,6 +8472,8 @@ function onSectionSelect() {
       ? '#FCA5A5'
       : 'var(--text-muted)';
   }
+
+  syncCanonChapterFilterFromWriting();
 }
 
 // ======================================================
@@ -7823,7 +8666,7 @@ async function downloadPrompt(type) {
     A2: '章アウトライン生成',
     B: 'キャラ設計',
     C_AUTO: '既定AI初稿',
-    C_CHATGPT: 'ChatGPT初稿',
+    C_CHATGPT: 'Claude初稿（旧互換）',
     C_CLAUDE: 'Claude初稿',
     D: 'Claude推敲',
     E: '整合性チェック',
@@ -7856,21 +8699,11 @@ async function buildPM(type) {
   if (type === 'A') return pmA(records, scene);
   if (type === 'A2') return await pmA2(records);
   if (type === 'B') return pmB(records, scene);
-
-  if (type === 'C_AUTO') {
-    const base = await pmGetWritingBaseData();
-    if (!base) return null;
-    return base.effectiveModel === 'claude'
-      ? await pmDraftClaude()
-      : await pmDraftChatGPT();
-  }
-
-  if (type === 'C_CHATGPT') return await pmDraftChatGPT();
   if (type === 'C_CLAUDE') return await pmDraftClaude();
   if (type === 'D') return await pmClaudeRevisionPrompt();
-  if (type === 'E') return await pmConsistencyCheckPrompt();
-  if (type === 'F') return await pmSummaryUpdatePrompt();
-  if (type === 'G') return await pmCanonReflectionPrompt();
+  if (type === 'E') return await pmConsistencyCheckSinglePrompt();
+  if (type === 'E_SINGLE') return await pmConsistencyCheckSinglePrompt();
+  if (type === 'E_COMPARE') return await pmConsistencyCheckComparePrompt();
   if (type === 'H') return await pmDiffEvaluationPrompt();
 
   return null;
@@ -7895,8 +8728,6 @@ async function pmA2(records) {
 
   const partMin = gv('pm-a2-part-min', 3);
   const partMax = gv('pm-a2-part-max', 6);
-  const charsMin = gv('pm-a2-chars-min', 5500);
-  const charsMax = gv('pm-a2-chars-max', 11000);
 
   const policy =
     (document.getElementById('pm-a2-policy')?.value || '').trim();
@@ -7944,7 +8775,6 @@ async function pmA2(records) {
 - 作品タイトル：${writingTitle}
 - 対象章：第${chapterNum}章
 - 想定Part数：${partMin}〜${partMax}Part
-- 1Partあたりの想定文字数：${charsMin}〜${charsMax}字
 
 ---
 
@@ -7977,6 +8807,9 @@ ${policyBlock}
 「前Partから何を引き継ぎ、次Partへ何を渡すのか」
 が分かる設計にしてください。
 
+また、本文執筆は1Partずつ行う前提なので、
+各Partは独立してClaudeへ渡しやすい粒度で設計してください。
+
 ---
 
 # 必須出力形式
@@ -7998,7 +8831,7 @@ ${policyBlock}
 
 ### Part構成
 
-#### Part 1 / 全XPart
+#### pt1 / 全XPart
 - 役割：
 - 主な出来事：
 - 視点人物：
@@ -8008,9 +8841,8 @@ ${policyBlock}
 - 前Partからの引き継ぎ：
 - 次Partへの渡し：
 - R18要素：あり／なし
-- 想定文字数：
 
-#### Part 2 / 全XPart
+#### pt2 / 全XPart
 - 役割：
 - 主な出来事：
 - 視点人物：
@@ -8020,7 +8852,6 @@ ${policyBlock}
 - 前Partからの引き継ぎ：
 - 次Partへの渡し：
 - R18要素：あり／なし
-- 想定文字数：
 
 ※必要なPart数だけ繰り返してください。
 
@@ -8115,148 +8946,8 @@ function pmGetPartLabel() {
     : 'Part未指定';
 }
 
-function pmGetChapterAiPrefs(work) {
-  return work?.pmChapterAiPrefs && typeof work.pmChapterAiPrefs === 'object'
-    ? work.pmChapterAiPrefs
-    : {};
-}
 
-function pmGetAutoDraftModel(work, chapterNum, hasR18) {
-  const prefs = pmGetChapterAiPrefs(work);
-  const chapterKey = String(chapterNum || '').trim();
-
-  if (chapterKey && prefs[chapterKey]) {
-    return prefs[chapterKey];
-  }
-
-  return hasR18 ? 'claude' : 'chatgpt';
-}
-
-async function refreshPmDraftModelUi() {
-  const status = document.getElementById('pm-c-ai-pref-status');
-  if (!status || !currentWorkId) return;
-
-  const work = await dbGet(STORE_WORKS, currentWorkId);
-  if (!work) return;
-
-  const chapterNum = pmGetSelectedChapterNumber();
-  const chapterText = pmGetSelectedChapterText();
-  const hasR18 = (document.getElementById('pm-c-has-r18')?.value || 'no') === 'yes';
-  const selected = document.getElementById('pm-c-draft-model')?.value || 'auto';
-  const autoModel = pmGetAutoDraftModel(work, chapterNum, hasR18);
-  const effective = selected === 'auto' ? autoModel : selected;
-
-  const chapterLabel = chapterNum
-    ? `第${chapterNum}章`
-    : '章未指定';
-
-  const chapterNote = chapterText ? ` / ${chapterText}` : '';
-  const savedPref = chapterNum ? pmGetChapterAiPrefs(work)[String(chapterNum)] : '';
-
-  status.textContent =
-    selected === 'auto'
-      ? `${chapterLabel}${chapterNote} の既定執筆AIは ${effective === 'claude' ? 'Claude' : 'ChatGPT'} です` +
-        (savedPref
-          ? '（章設定を使用）'
-          : hasR18
-            ? '（R18ありのため自動でClaude）'
-            : '（未設定のため自動でChatGPT）')
-      : `今回は ${effective === 'claude' ? 'Claude' : 'ChatGPT'} を使う設定です（章既定より手動指定を優先）`;
-}
-
-async function renderPmChapterAiPreferenceList() {
-  const container = document.getElementById('pm-c-ai-pref-list');
-  if (!container || !currentWorkId) return;
-
-  const work = await dbGet(STORE_WORKS, currentWorkId);
-  if (!work) return;
-
-  const prefs = pmGetChapterAiPrefs(work);
-  const sectionMap = {};
-  parsedSections.forEach(section => {
-    sectionMap[String(section.num)] = section;
-  });
-
-  const chapterKeys = parsedSections.length
-    ? parsedSections.map(section => String(section.num))
-    : Object.keys(prefs).sort((a,b)=>Number(a)-Number(b));
-
-  if (!chapterKeys.length) {
-    container.innerHTML = `
-      <div class="form-hint">
-        章テーブルがまだ読めていないため、一覧表示はできません。  
-        先にプロット設計の記録を選ぶか、章番号を入力して「この章の既定AIを保存」を使ってください。
-      </div>
-    `;
-    return;
-  }
-
-  container.innerHTML = chapterKeys.map(chapterKey => {
-    const section = sectionMap[chapterKey];
-    const saved = prefs[chapterKey] || '';
-    const autoModel = saved || (section?.hasR18 ? 'claude' : 'chatgpt');
-    const sourceText = saved
-      ? '保存済み設定'
-      : section?.hasR18
-        ? 'R18ありのため自動でClaude'
-        : '未設定のため自動でChatGPT';
-
-    return `
-      <div class="card">
-        <div class="card-body" style="padding:14px 16px">
-          <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap">
-            <div>
-              <div style="font-size:0.82rem;font-weight:700;color:var(--text-primary)">
-                第${chapterKey}章${section?.heading ? `：${esc(section.heading)}` : ''}
-              </div>
-              <div class="form-hint" style="margin-top:4px">${esc(sourceText)}</div>
-            </div>
-            <span class="status-badge ${autoModel === 'claude' ? 'status-wip' : 'status-done'}">
-              ${autoModel === 'claude' ? 'Claude' : 'ChatGPT'}
-            </span>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-async function savePmCurrentChapterAiPreference() {
-  if (!currentWorkId) return;
-
-  const work = await dbGet(STORE_WORKS, currentWorkId);
-  if (!work) {
-    showToast('作品データが見つかりません', 'error');
-    return;
-  }
-
-  const chapterNum = pmGetSelectedChapterNumber();
-  if (!chapterNum) {
-    showToast('先に章を選ぶか、章番号を入力してください', 'error');
-    return;
-  }
-
-  const selected = document.getElementById('pm-c-draft-model')?.value || 'auto';
-  if (selected !== 'chatgpt' && selected !== 'claude') {
-    showToast('保存するときは「ChatGPT」か「Claude」を明示的に選んでください', 'error');
-    return;
-  }
-
-  work.pmChapterAiPrefs = {
-    ...pmGetChapterAiPrefs(work),
-    [String(chapterNum)]: selected
-  };
-  work.updatedAt = Date.now();
-
-  await dbPut(STORE_WORKS, work);
-  currentWork = work;
-
-  await renderPmChapterAiPreferenceList();
-  await refreshPmDraftModelUi();
-  showToast(`第${chapterNum}章の既定執筆AIを ${selected === 'claude' ? 'Claude' : 'ChatGPT'} に保存しました ✓`);
-}
-
-async function pmGetSelectedRecords(requirePlot = true, requireChar = true) {
+async function pmGetSelectedRecords(requirePlot = true, requireChar = true) { 
   const plotId = document.getElementById('pm-c-plot-select')?.value || '';
   const charId = document.getElementById('pm-c-char-select')?.value || '';
 
@@ -8319,6 +9010,447 @@ async function pmGetSelectedRulesMarkdown() {
   }).join('\n\n---\n\n');
 }
 
+function pmCanonNormalizeText(value) {
+  const raw = Array.isArray(value) ? value.join(' / ') : String(value || '');
+  const normalized = raw.replace(/\s+/g, ' ').trim();
+  return normalized;
+}
+
+function pmCanonClip(value, max = 220) {
+  const normalized = pmCanonNormalizeText(value);
+  if (!normalized) return '';
+  return normalized.length > max ? normalized.slice(0, max) + '…' : normalized;
+}
+
+function pmCanonLine(label, value, max = 220) {
+  const text = pmCanonClip(value, max);
+  return text ? `- ${label}：${text}` : '';
+}
+
+function pmCanonHeading(title) {
+  const text = pmCanonClip(title, 80);
+  return text ? `### ${text}` : '### （未入力）';
+}
+
+function pmCanonCharacterMarkdown(item) {
+  return [
+    pmCanonHeading(item.name),
+    pmCanonLine('役割', item.role, 100),
+    pmCanonLine('概要', item.overview, 180),
+    pmCanonLine('性格', item.personality, 180),
+    pmCanonLine('口調', item.speakingStyle, 180),
+    pmCanonLine('崩してはいけない核', item.cannotBreakCore, 220),
+    pmCanonLine('現在状態', item.currentState, 220)
+  ].filter(Boolean).join('\n');
+}
+
+function pmCanonRelationMarkdown(item) {
+  const pair = [pmCanonClip(item.fromCharacterId, 60), pmCanonClip(item.toCharacterId, 60)].filter(Boolean).join(' ↔ ');
+  const title = [pair, pmCanonClip(item.relationType, 60)].filter(Boolean).join(' / ');
+  return [
+    pmCanonHeading(title || '関係性'),
+    pmCanonLine('現在の関係要約', item.currentSummary, 220),
+    pmCanonLine('信頼段階', item.trustStage, 80),
+    pmCanonLine('恋愛段階', item.romanceStage, 80),
+    pmCanonLine('緊張段階', item.tensionStage, 80),
+    pmCanonLine('飛ばしてはいけない段階', item.cannotSkipSteps, 180)
+  ].filter(Boolean).join('\n');
+}
+
+function pmCanonForeshadowMarkdown(item) {
+  return [
+    pmCanonHeading(item.title),
+    pmCanonLine('内容', item.summary, 220),
+    pmCanonLine('重要度', item.importance, 60),
+    pmCanonLine('提示位置', [item.introducedAtChapter, item.introducedAtEpisode].filter(Boolean).join(' / '), 80),
+    pmCanonLine('回収予定', [item.plannedResolveAtChapter, item.plannedResolveAtEpisode].filter(Boolean).join(' / '), 80),
+    pmCanonLine('状態', item.status, 60)
+  ].filter(Boolean).join('\n');
+}
+
+function pmCanonQuestionMarkdown(item) {
+  return [
+    pmCanonHeading(item.title),
+    pmCanonLine('未解決の内容', item.question, 220),
+    pmCanonLine('主に抱えている人物', item.owner, 80),
+    pmCanonLine('分類', item.category, 80),
+    pmCanonLine('解決予定範囲', item.plannedResolutionScope, 80),
+    pmCanonLine('緊急度', item.urgency, 60)
+  ].filter(Boolean).join('\n');
+}
+
+function pmCanonWorldMarkdown(item) {
+  return [
+    pmCanonHeading(item.title),
+    pmCanonLine('分類', item.category, 80),
+    pmCanonLine('内容', item.body, 240),
+    pmCanonLine('確度', item.certainty, 60),
+    pmCanonLine('参照元', item.source, 80)
+  ].filter(Boolean).join('\n');
+}
+
+function pmCanonTimelineMarkdown(item) {
+  return [
+    pmCanonHeading(item.eventTitle),
+    pmCanonLine('要約', item.summary, 220),
+    pmCanonLine('公開上の話参照', item.publicEpisodeRef, 80),
+    pmCanonLine('作中順', item.inStoryOrder, 40),
+    pmCanonLine('日付ラベル', item.dateLabel, 80)
+  ].filter(Boolean).join('\n');
+}
+
+function pmCanonLocationMarkdown(item) {
+  return [
+    pmCanonHeading(item.name),
+    pmCanonLine('場所の説明', item.summary, 220),
+    pmCanonLine('感情的な意味', item.emotionalMeaning, 120),
+    pmCanonLine('関連人物', item.relatedCharacters, 120)
+  ].filter(Boolean).join('\n');
+}
+
+function pmCanonItemMarkdown(item) {
+  return [
+    pmCanonHeading(item.name),
+    pmCanonLine('説明', item.summary, 220),
+    pmCanonLine('象徴的な意味', item.symbolicMeaning, 120),
+    pmCanonLine('現在状態', item.status, 80),
+    pmCanonLine('関連人物', item.relatedCharacters, 120)
+  ].filter(Boolean).join('\n');
+}
+
+function pmCanonBuildSection(title, items, mapper) {
+  if (!items.length) return '';
+  return [
+    `## ${title}`,
+    '',
+    items.map(mapper).filter(Boolean).join('\n\n')
+  ].join('\n');
+}
+
+function pmCanonParseFocusList(raw) {
+  return String(raw || '')
+    .split(/[\n,、]/)
+    .map(value => value.trim())
+    .filter(Boolean);
+}
+
+function pmCanonFlattenText(value) {
+  if (value == null) return '';
+  if (Array.isArray(value)) {
+    return value.map(pmCanonFlattenText).filter(Boolean).join('\n');
+  }
+  if (typeof value === 'object') {
+    return Object.values(value).map(pmCanonFlattenText).filter(Boolean).join('\n');
+  }
+  return String(value);
+}
+
+function pmCanonExtractChapterNumbers(text) {
+  const result = new Set();
+  const source = String(text || '');
+  const matches = source.matchAll(/第?\s*(\d+)\s*章/g);
+  for (const match of matches) {
+    result.add(Number(match[1]));
+  }
+  return [...result];
+}
+
+function pmCanonGetFilterOptions() {
+  const autoChapter = document.getElementById('pm-c-canon-auto-chapter')?.checked !== false;
+  const currentChapterNum = pmGetSelectedChapterNumber();
+  const chapterInput = document.getElementById('pm-c-canon-chapter-num');
+
+  let chapterNum = (chapterInput?.value || '').trim();
+  if (autoChapter && currentChapterNum) {
+    chapterNum = currentChapterNum;
+  }
+
+  return {
+    autoChapter,
+    chapterNum,
+    scope: document.getElementById('pm-c-canon-scope')?.value || 'chapter',
+    characters: pmCanonParseFocusList(document.getElementById('pm-c-canon-character-focus')?.value || ''),
+    keywords: pmCanonParseFocusList(document.getElementById('pm-c-canon-keyword-focus')?.value || '')
+  };
+}
+
+function syncCanonChapterFilterFromWriting(forceOverwrite = false) {
+  const input = document.getElementById('pm-c-canon-chapter-num');
+  const autoCheckbox = document.getElementById('pm-c-canon-auto-chapter');
+  if (!input) return;
+
+  const chapterNum = pmGetSelectedChapterNumber();
+  if (!chapterNum) return;
+
+  if (autoCheckbox && !autoCheckbox.checked && !forceOverwrite) return;
+
+  if (!input.value.trim() || forceOverwrite) {
+    input.value = chapterNum;
+  }
+}
+
+function pmCanonBuildFilterSummary(options) {
+  const parts = [];
+
+  if (options.chapterNum) {
+    const scopeLabel =
+      options.scope === 'chapter'
+        ? 'その章中心'
+        : options.scope === 'near'
+          ? '前後章も含む'
+          : '広め';
+    parts.push(`第${options.chapterNum}章 / ${scopeLabel}`);
+  }
+
+  if (options.characters.length) {
+    parts.push(`人物: ${options.characters.join(', ')}`);
+  }
+
+  if (options.keywords.length) {
+    parts.push(`キーワード: ${options.keywords.join(', ')}`);
+  }
+
+  return parts.join(' / ');
+}
+
+function pmCanonScoreItem(item, options) {
+  const hasFilter =
+    !!options.chapterNum ||
+    options.characters.length > 0 ||
+    options.keywords.length > 0;
+
+  if (!hasFilter) return 0;
+
+  let score = 0;
+  const text = pmCanonFlattenText(item);
+  const chapterNums = pmCanonExtractChapterNumbers(text);
+
+  if (options.chapterNum) {
+    const current = Number(options.chapterNum);
+
+    if (chapterNums.includes(current)) {
+      score += 12;
+    }
+
+    if (options.scope !== 'chapter') {
+      if (chapterNums.includes(current - 1)) score += 5;
+      if (chapterNums.includes(current + 1)) score += 5;
+    }
+
+    if (options.scope === 'wide' && chapterNums.length === 0) {
+      score += 1;
+    }
+  }
+
+  options.characters.forEach(name => {
+    if (name && text.includes(name)) score += 8;
+  });
+
+  options.keywords.forEach(keyword => {
+    if (keyword && text.includes(keyword)) score += 5;
+  });
+
+  return score;
+}
+
+function pmCanonPrioritizeItems(items, options, limit) {
+  const hasFilter =
+    !!options.chapterNum ||
+    options.characters.length > 0 ||
+    options.keywords.length > 0;
+
+  if (!hasFilter) {
+    return items.slice(0, limit);
+  }
+
+  const scored = items
+    .map(item => ({ item, score: pmCanonScoreItem(item, options) }))
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return 0;
+    });
+
+  const picked = scored
+    .filter(entry => entry.score > 0)
+    .map(entry => entry.item);
+
+  if (picked.length >= limit) {
+    return picked.slice(0, limit);
+  }
+
+  const usedIds = new Set(picked.map(item => item.id));
+  const filler = items
+    .filter(item => !usedIds.has(item.id))
+    .slice(0, limit - picked.length);
+
+  return picked.concat(filler);
+}
+
+async function pmBuildCanonPromptMarkdown(mode = 'core') {
+  if (!currentWorkId || mode === 'off') return '';
+
+  const [
+    charactersRaw,
+    relationsRaw,
+    timelineRaw,
+    foreshadowingsRaw,
+    questionsRaw,
+    worldRaw,
+    locationsRaw,
+    itemsRaw
+  ] = await Promise.all([
+    dbGetByIndex(STORE_CANON_CHARACTERS, 'workId', currentWorkId),
+    dbGetByIndex(STORE_CANON_RELATIONS, 'workId', currentWorkId),
+    dbGetByIndex(STORE_CANON_TIMELINE_EVENTS, 'workId', currentWorkId),
+    dbGetByIndex(STORE_CANON_FORESHADOWINGS, 'workId', currentWorkId),
+    dbGetByIndex(STORE_CANON_OPEN_QUESTIONS, 'workId', currentWorkId),
+    dbGetByIndex(STORE_CANON_WORLD_RULES, 'workId', currentWorkId),
+    dbGetByIndex(STORE_CANON_LOCATIONS, 'workId', currentWorkId),
+    dbGetByIndex(STORE_CANON_ITEMS, 'workId', currentWorkId)
+  ]);
+
+  const options = pmCanonGetFilterOptions();
+
+  const characters = canonSortItems(charactersRaw, canonGetConfig('characters'));
+  const relations = canonSortItems(relationsRaw, canonGetConfig('relations'));
+  const timeline = canonSortItems(timelineRaw, canonGetConfig('timeline'));
+  const foreshadowings = canonSortItems(foreshadowingsRaw, canonGetConfig('foreshadowings'));
+  const questions = canonSortItems(questionsRaw, canonGetConfig('questions'));
+  const world = canonSortItems(worldRaw, canonGetConfig('world'));
+  const locations = canonSortItems(locationsRaw, canonGetConfig('locations'));
+  const items = canonSortItems(itemsRaw, canonGetConfig('items'));
+
+  const sections = [];
+
+  sections.push(
+    pmCanonBuildSection(
+      'キャラクター',
+      pmCanonPrioritizeItems(
+        characters,
+        options,
+        mode === 'core' ? 8 : 20
+      ),
+      pmCanonCharacterMarkdown
+    )
+  );
+
+  sections.push(
+    pmCanonBuildSection(
+      '関係性',
+      pmCanonPrioritizeItems(
+        relations,
+        options,
+        mode === 'core' ? 8 : 20
+      ),
+      pmCanonRelationMarkdown
+    )
+  );
+
+  sections.push(
+    pmCanonBuildSection(
+      '伏線',
+      pmCanonPrioritizeItems(
+        foreshadowings.filter(item =>
+          mode === 'full' ? item.status !== 'retired' : item.status === 'open'
+        ),
+        options,
+        mode === 'core' ? 10 : 20
+      ),
+      pmCanonForeshadowMarkdown
+    )
+  );
+
+  sections.push(
+    pmCanonBuildSection(
+      '未解決事項',
+      pmCanonPrioritizeItems(
+        questions,
+        options,
+        mode === 'core' ? 10 : 20
+      ),
+      pmCanonQuestionMarkdown
+    )
+  );
+
+  sections.push(
+    pmCanonBuildSection(
+      '世界設定',
+      pmCanonPrioritizeItems(
+        world.filter(item => mode === 'full' ? true : item.certainty !== 'rumor'),
+        options,
+        mode === 'core' ? 10 : 20
+      ),
+      pmCanonWorldMarkdown
+    )
+  );
+
+  if (mode === 'full') {
+    sections.push(
+      pmCanonBuildSection(
+        '時系列イベント',
+        pmCanonPrioritizeItems(timeline, options, 20),
+        pmCanonTimelineMarkdown
+      )
+    );
+
+    sections.push(
+      pmCanonBuildSection(
+        '場所',
+        pmCanonPrioritizeItems(locations, options, 20),
+        pmCanonLocationMarkdown
+      )
+    );
+
+    sections.push(
+      pmCanonBuildSection(
+        'アイテム',
+        pmCanonPrioritizeItems(items, options, 20),
+        pmCanonItemMarkdown
+      )
+    );
+  }
+
+  const normalizedSections = sections.filter(Boolean);
+  if (!normalizedSections.length) return '';
+
+  const filterSummary = pmCanonBuildFilterSummary(options);
+
+  return [
+    '# 確定設定（執筆時に厳守）',
+    '',
+    '以下は本文執筆時にブレさせてはいけない確定設定です。新事実の追加や改変をせず、本文の挙動・口調・論理・伏線処理を必ず整合させてください。',
+    filterSummary ? '' : '',
+    filterSummary ? `> 絞り込み条件：${filterSummary}` : '',
+    '',
+    ...normalizedSections
+  ].filter(Boolean).join('\n');
+}
+
+async function previewCanonPromptForWriting() {
+  const mode = document.getElementById('pm-c-canon-mode')?.value || 'core';
+  const wrap = document.getElementById('pm-c-canon-preview-wrap');
+  const preview = document.getElementById('pm-c-canon-preview');
+  if (!wrap || !preview) return;
+
+  const markdown = await pmBuildCanonPromptMarkdown(mode);
+  wrap.style.display = 'block';
+  preview.textContent = markdown || '（保存済みの固定条件用確定設定はまだありません）';
+  preview.classList.toggle('pm-scene-empty', !markdown);
+}
+
+async function copyCanonPromptForWriting() {
+  const mode = document.getElementById('pm-c-canon-mode')?.value || 'core';
+  const markdown = await pmBuildCanonPromptMarkdown(mode);
+
+  if (!markdown) {
+    showToast('保存済みの固定条件用確定設定がまだありません', 'error');
+    return;
+  }
+
+  await copyToClipboard(markdown);
+  showToast('固定条件の差し込み内容をコピーしました');
+}
+
 async function pmGetWritingBaseData() {
   if (!currentWorkId) {
     showToast('作品が選択されていません', 'error');
@@ -8340,24 +9472,29 @@ async function pmGetWritingBaseData() {
   const chapterNum = pmGetSelectedChapterNumber();
   const selectedChapterText = pmGetSelectedChapterText();
   const chapterLabel = chapterNum ? `第${chapterNum}章` : '章未指定';
-  const partLabel = pmGetPartLabel();
+
+  const partNum = pmText('pm-c-part-num');
+  const partTotal = pmText('pm-c-part-total');
+
+  if (!partNum) {
+    showToast('Part番号を入力してください', 'error');
+    return null;
+  }
+
+  const partLabel = partNum
+    ? `Part ${partNum}${partTotal ? ` / ${partTotal}` : ''}`
+    : 'Part未指定';
+
+  const partTag = `pt${partNum}`;
   const hasR18 = (document.getElementById('pm-c-has-r18')?.value || 'no') === 'yes';
   const prevText = pmText('pm-c-prev-text');
-  const nMin = gv('pm-c-normal-min', 5500);
-  const nMax = gv('pm-c-normal-max', 11000);
-  const rMin = gv('pm-c-r18-min', 5500);
-  const rMax = gv('pm-c-r18-max', 11000);
   const mMin = gv('pm-c-metaphor-min', 1);
   const mMax = gv('pm-c-metaphor-max', 2);
   const dialogRatio = gv('pm-c-dialog-ratio', '6:4〜4:6');
-
   const workScene = work.scene || '';
-  const effectiveModel = (() => {
-    const selected = document.getElementById('pm-c-draft-model')?.value || 'auto';
-    return selected === 'auto'
-      ? pmGetAutoDraftModel(work, chapterNum, hasR18)
-      : selected;
-  })();
+
+  const canonMode = document.getElementById('pm-c-canon-mode')?.value || 'core';
+  const canonMarkdown = await pmBuildCanonPromptMarkdown(canonMode);
 
   return {
     work,
@@ -8367,93 +9504,20 @@ async function pmGetWritingBaseData() {
     chapterNum,
     chapterLabel,
     selectedChapterText,
+    partNum,
+    partTotal,
     partLabel,
+    partTag,
     hasR18,
     prevText,
-    nMin,
-    nMax,
-    rMin,
-    rMax,
     mMin,
     mMax,
     dialogRatio,
     workScene,
-    effectiveModel,
+    canonMode,
+    canonMarkdown,
     rulesMarkdown: await pmGetSelectedRulesMarkdown()
   };
-}
-
-async function pmDraftChatGPT() {
-  const ctx = await pmGetWritingBaseData();
-  if (!ctx) return null;
-
-  if (ctx.hasR18) {
-    showToast('R18ありの章は ChatGPT 初稿用ではなく Claude 初稿用を使ってください', 'error');
-    return null;
-  }
-
-  return [
-    '# 役割定義',
-    '',
-    'あなたはBL / TL 長編小説の初稿作成担当です。',
-    '以下の設計資料に厳密に従い、この章内Partの本文初稿だけを書いてください。',
-    '',
-    '## 重要制約',
-    '- 分析しない',
-    '- プロットを再設計しない',
-    '- 前置きしない',
-    '- 見出しを付けない',
-    '- 箇条書きを出さない',
-    '- 本文だけを出力する',
-    '- R18本番描写は行わない',
-    '- 露骨な性描写へ踏み込まず、必要なら手前で止める',
-    '',
-    '---',
-    '',
-    '# 入力',
-    '',
-    '## プロット',
-    '',
-    ctx.plotRec.content || '（本文なし）',
-    '',
-    '## 章アウトライン',
-    '',
-    ctx.outlineBlock,
-    '',
-    '## キャラクター設定シート',
-    '',
-    ctx.charRec.content || '（本文なし）',
-    '',
-    '## 執筆対象',
-    `- 章：${ctx.chapterLabel}`,
-    ctx.selectedChapterText ? `- 選択中の章見出し：${ctx.selectedChapterText}` : '',
-    `- Part：${ctx.partLabel}`,
-    '- 使用AI：ChatGPT',
-    '- R18本番：禁止（必要な場合は手前で止める）',
-    ctx.workScene ? `- 描きたいシーン：${ctx.workScene}` : '',
-    '',
-    ctx.prevText ? '## 前Part・前章までの接続資料\n\n' + ctx.prevText + '\n' : '',
-    '## マイルール集',
-    '',
-    ctx.rulesMarkdown,
-    '',
-    '---',
-    '',
-    '# 執筆指示',
-    '',
-    '- プロットと章アウトラインの役割を最優先で守ること',
-    '- キャラクター設定シートの口調、一人称、価値観、反応を厳守すること',
-    '- 長編の一部として、前後のつながりを壊さないこと',
-    `- 文字数目安：${ctx.nMin}〜${ctx.nMax}字`,
-    `- 会話と地の文のバランス目安：${ctx.dialogRatio}`,
-    `- 比喩は1場面あたり ${ctx.mMin}〜${ctx.mMax} 個まで`,
-    '- 感情の方向、距離感、緊張の残り方を丁寧に扱うこと',
-    '- 露骨な性的本番へ入る必要がある場合は、その直前で自然に止めること',
-    '',
-    '# 出力',
-    '',
-    '本文のみを出力すること。'
-  ].filter(Boolean).join('\n');
 }
 
 async function pmDraftClaude() {
@@ -8463,16 +9527,26 @@ async function pmDraftClaude() {
   return [
     '# 役割定義',
     '',
-    'あなたはBL / TL 長編小説の初稿作成担当です。',
-    '以下の設計資料に厳密に従い、この章内Partの本文初稿だけを書いてください。',
+    'あなたはBL / TL 長編小説の本文執筆担当です。',
+    '以下の設計資料に厳密に従い、指定された1Partの本文だけを書いてください。',
     '',
-    '## 重要制約',
+    '## 最重要制約',
+    `- 今回書くのは ${ctx.partTag} だけに限定すること`,
+    `- 出力の1行目は必ず ${ctx.partTag} のみとすること`,
+    '- 2行目は空行にすること',
+    '- 3行目以降に本文を書くこと',
+    '- 次Partへ勝手に進まないこと',
+    '- 全Partをまとめて書かないこと',
+    '- 章の最後まで一気に書かないこと',
     '- 分析しない',
     '- プロットを再設計しない',
     '- 前置きしない',
-    '- 見出しを付けない',
+    '- 解説しない',
     '- 箇条書きを出さない',
-    '- 本文だけを出力する',
+    '- 確定設定は本文執筆のたびに守る固定条件として扱うこと',
+    '- 直前接続資料は今回のPartへつなぐための補助資料として扱うこと',
+    '- 固定条件と直前接続資料を混同しないこと',
+    '- 確定設定に反する新事実を勝手に追加しないこと',
     '',
     '---',
     '',
@@ -8490,15 +9564,17 @@ async function pmDraftClaude() {
     '',
     ctx.charRec.content || '（本文なし）',
     '',
+    ctx.canonMarkdown ? ctx.canonMarkdown : '',
+    '',
     '## 執筆対象',
     `- 章：${ctx.chapterLabel}`,
     ctx.selectedChapterText ? `- 選択中の章見出し：${ctx.selectedChapterText}` : '',
-    `- Part：${ctx.partLabel}`,
-    '- 使用AI：Claude',
+    `- 対象Part：${ctx.partLabel}`,
+    `- 出力タグ：${ctx.partTag}`,
     `- R18本番：${ctx.hasR18 ? 'あり' : 'なし'}`,
     ctx.workScene ? `- 描きたいシーン：${ctx.workScene}` : '',
     '',
-    ctx.prevText ? '## 前Part・前章までの接続資料\n\n' + ctx.prevText + '\n' : '',
+    ctx.prevText ? '## 直前接続資料\n\n' + ctx.prevText + '\n' : '',
     '## マイルール集',
     '',
     ctx.rulesMarkdown,
@@ -8509,18 +9585,22 @@ async function pmDraftClaude() {
     '',
     '- プロットと章アウトラインの役割を最優先で守ること',
     '- キャラクター設定シートの口調、一人称、価値観、反応を厳守すること',
+    '- 確定設定にある「崩してはいけない核」「関係性」「伏線」「未解決事項」「世界設定」と矛盾しないこと',
+    '- 直前接続資料は、直前までの感情、距離感、身体状態、未解決の緊張を自然につなぐために使うこと',
     '- 長編の一部として、前後のつながりを壊さないこと',
-    `- 文字数目安：${ctx.hasR18 ? `${ctx.rMin}〜${ctx.rMax}` : `${ctx.nMin}〜${ctx.nMax}`}字`,
+    '- 文字数目安は 5500〜11000字程度とすること',
     `- 会話と地の文のバランス目安：${ctx.dialogRatio}`,
     `- 比喩は1場面あたり ${ctx.mMin}〜${ctx.mMax} 個まで`,
     '- 感情の方向、距離感、緊張の残り方を丁寧に扱うこと',
     ctx.hasR18
       ? '- R18場面では、関係性の成熟度、心理的同意、余波の残り方を必ず本文へ反映すること'
-      : '- R18がない章では、感情や関係性の積み上がりを主軸にすること',
+      : '- R18がないPartでは、感情や関係性の積み上がりを主軸にすること',
     '',
-    '# 出力',
+    '# 出力形式',
     '',
-    '本文のみを出力すること。'
+    `${ctx.partTag}`,
+    '',
+    '本文'
   ].filter(Boolean).join('\n');
 }
 
@@ -8583,152 +9663,205 @@ async function pmClaudeRevisionPrompt() {
   ].filter(Boolean).join('\n');
 }
 
-async function pmConsistencyCheckPrompt() {
-  const selected = await pmGetSelectedRecords(false, false);
-  const checkText = pmText('pm-e-check-text');
-  const extraText = pmText('pm-e-check-extra');
-  const chapterNum = pmGetSelectedChapterNumber();
-  const chapterLabel = chapterNum ? `第${chapterNum}章` : '章未指定';
-  const partLabel = pmGetPartLabel();
-  const hasR18 = (document.getElementById('pm-c-has-r18')?.value || 'no') === 'yes';
+function pmConsistencyFocusLabel(value) {
+  const map = {
+    general: '全体',
+    character: 'キャラブレ',
+    tone: '口調・文体 / 温度感',
+    emotion: '感情推移',
+    logic: '論理・因果',
+    foreshadow: '伏線・情報開示',
+    r18: 'R18進行'
+  };
+  return map[value] || '全体';
+}
 
-  if (!checkText) {
-    showToast('チェックしたい本文を貼り付けてください', 'error');
+async function pmGetConsistencySupportBlocks() {
+  const plotId = (document.getElementById('pm-c-plot-select')?.value || '').trim();
+  const charId = (document.getElementById('pm-c-char-select')?.value || '').trim();
+  const outlineId = (document.getElementById('pm-c-outline-select')?.value || '').trim();
+  const canonMode = document.getElementById('pm-c-canon-mode')?.value || 'core';
+
+  const plotRec = plotId ? await dbGet(STORE_RECORDS, plotId) : null;
+  const charRec = charId ? await dbGet(STORE_RECORDS, charId) : null;
+  const outlineItem = outlineId ? await dbGet(STORE_WRITING_VAULT, outlineId) : null;
+  const canonMarkdown = await pmBuildCanonPromptMarkdown(canonMode);
+
+  return {
+    plotBlock: plotRec?.content || '',
+    charBlock: charRec?.content || '',
+    outlineBlock: outlineItem?.body || '',
+    canonBlock: canonMarkdown || ''
+  };
+}
+
+async function pmConsistencyCheckSinglePrompt() {
+  if (!currentWorkId) {
+    showToast('作品が選択されていません', 'error');
     return null;
   }
 
+  const work = await dbGet(STORE_WORKS, currentWorkId);
+  const writingTitle = getWritingTitleFromWork(work || {});
+  const label = pmText('pm-e-single-label') || '対象章';
+  const focus = document.getElementById('pm-e-single-focus')?.value || 'general';
+  const focusLabel = pmConsistencyFocusLabel(focus);
+  const prevInfo = pmText('pm-e-single-prev');
+  const text = pmText('pm-e-single-text');
+
+  if (!text) {
+    showToast('章本文を貼り付けてください', 'error');
+    return null;
+  }
+
+  const support = await pmGetConsistencySupportBlocks();
+
   return [
-    '# 役割定義',
+    '# 章単体整合性チェック',
     '',
-    'あなたはBL / TL 長編小説の整合性チェッカーです。',
-    '以下の本文を、作品の一貫性が崩れていないかという観点でチェックしてください。',
+    'あなたはBL / TL 長編小説の整合性確認担当編集者です。',
+    '以下の対象章本文を読み、章の内部で起きている破綻やブレを洗い出してください。',
     '',
-    '---',
-    '',
-    '# 参照資料',
-    '',
-    selected?.plotRec ? '## プロット\n\n' + (selected.plotRec.content || '（本文なし）') + '\n' : '',
-    selected?.charRec ? '## キャラクター設定シート\n\n' + (selected.charRec.content || '（本文なし）') + '\n' : '',
-    '## 対象本文',
-    '',
-    checkText,
-    '',
-    '## 対象メモ',
-    '',
-    `- 章：${chapterLabel}`,
-    `- Part：${partLabel}`,
-    `- R18：${hasR18 ? 'あり' : 'なし'}`,
-    extraText ? `- 補足：${extraText}` : '',
+    '今回の目的は、一般論の感想ではなく、執筆を続ける前に直すべき不整合を明確にすることです。',
     '',
     '---',
     '',
-    '# チェック観点',
+    '# 対象',
     '',
-    '1. キャラクター一貫性',
-    '2. 口調・呼称',
-    '3. 知識矛盾',
-    '4. 時系列',
-    '5. 伏線・回収',
-    '6. 関係性の熟れ方',
-    '7. R18 / 接近速度',
-    '8. シーン目的の維持',
+    `- 作品タイトル：${writingTitle}`,
+    `- 対象範囲：${label}`,
+    `- 重点確認項目：${focusLabel}`,
     '',
-    '# 出力形式',
+    prevInfo ? '## 前章までの補足\n\n' + prevInfo + '\n' : '',
+    support.plotBlock ? '## 参照プロット\n\n' + support.plotBlock + '\n' : '',
+    support.outlineBlock ? '## 参照章アウトライン\n\n' + support.outlineBlock + '\n' : '',
+    support.charBlock ? '## 参照キャラクター設定\n\n' + support.charBlock + '\n' : '',
+    support.canonBlock ? support.canonBlock + '\n' : '',
+    '## 対象章本文',
     '',
-    '以下の見出しで出力してください。',
+    text,
     '',
-    '## 全体判定',
-    '## 観点別所見',
-    '## 問題点一覧',
-    '## 推奨修正'
+    '---',
+    '',
+    '# チェックしてほしい観点',
+    '',
+    '- キャラクターの言動、口調、一人称、欲望、恐れが唐突に変わっていないか',
+    '- 章の冒頭から終盤までの感情推移に飛躍や逆流がないか',
+    '- 会話と行動の因果がつながっているか',
+    '- 伏線や情報開示が早すぎる、遅すぎる、説明不足になっていないか',
+    '- 既存の確定設定やプロットと矛盾していないか',
+    '- R18がある場合は、関係進行の速度、同意、余波が不自然でないか',
+    '',
+    '# 必須出力形式',
+    '',
+    '## 総評',
+    '- 章全体として致命的な破綻があるか / ないか',
+    '- 重点確認項目に照らした総評',
+    '',
+    '## 要修正ポイント',
+    '- 箇条書きで3〜7件程度',
+    '- 各項目に「問題箇所」「何がズレているか」「どう直すとよいか」を書くこと',
+    '',
+    '## 軽微な違和感',
+    '- 直さなくても進行可能だが、後で効いてくる違和感を列挙',
+    '',
+    '## 次の執筆前に固定したほうがいいこと',
+    '- 次章に入る前に作者が明文化したほうがいい前提条件',
+    '',
+    '# 出力時の注意',
+    '',
+    '- 感想を長く書かないこと',
+    '- 引用は最小限にすること',
+    '- 曖昧に「少し違和感」では済ませず、どこがどうズレるか明示すること',
+    '- Markdown形式で出力すること'
   ].filter(Boolean).join('\n');
 }
 
-async function pmSummaryUpdatePrompt() {
-  const summaryText = pmText('pm-f-summary-text');
-  const chapterNum = pmGetSelectedChapterNumber();
-  const chapterLabel = chapterNum ? `第${chapterNum}章` : '章未指定';
-  const partLabel = pmGetPartLabel();
-
-  if (!summaryText) {
-    showToast('要約元の本文を貼り付けてください', 'error');
+async function pmConsistencyCheckComparePrompt() {
+  if (!currentWorkId) {
+    showToast('作品が選択されていません', 'error');
     return null;
   }
 
-  return [
-    '# 役割定義',
-    '',
-    'あなたは長編小説運用用の引き継ぎ要約作成担当です。',
-    '以下の本文から、次回AIへ渡すための短い要約を作ってください。',
-    '',
-    '---',
-    '',
-    '# 入力',
-    '',
-    `- 対象：${chapterLabel} / ${partLabel}`,
-    '',
-    '## 本文',
-    '',
-    summaryText,
-    '',
-    '---',
-    '',
-    '# 依頼',
-    '',
-    '- 全文要約ではなく、次回の執筆に必要な文脈だけを抽出すること',
-    '- キャラの現在位置、感情、関係性、未解決要素を優先すること',
-    '- 冗長な説明は削ること',
-    '',
-    '# 出力形式',
-    '',
-    '## 引き継ぎ要約本文',
-    '## 箇条書き',
-    '## 次回重点'
-  ].join('\n');
-}
+  const work = await dbGet(STORE_WORKS, currentWorkId);
+  const writingTitle = getWritingTitleFromWork(work || {});
+  const labelA = pmText('pm-e-compare-a-label') || '比較元';
+  const labelB = pmText('pm-e-compare-b-label') || '比較先';
+  const focus = document.getElementById('pm-e-compare-focus')?.value || 'general';
+  const focusLabel = pmConsistencyFocusLabel(focus);
+  const textA = pmText('pm-e-compare-a-text');
+  const textB = pmText('pm-e-compare-b-text');
 
-async function pmCanonReflectionPrompt() {
-  const canonText = pmText('pm-g-canon-text');
-  const chapterNum = pmGetSelectedChapterNumber();
-  const chapterLabel = chapterNum ? `第${chapterNum}章` : '章未指定';
-  const partLabel = pmGetPartLabel();
-
-  if (!canonText) {
-    showToast('正史反映したい本文を貼り付けてください', 'error');
+  if (!textA || !textB) {
+    showToast('比較元本文と比較先本文の両方を貼り付けてください', 'error');
     return null;
   }
 
+  const support = await pmGetConsistencySupportBlocks();
+
   return [
-    '# 役割定義',
+    '# 2章比較整合性チェック',
     '',
-    'あなたは長編小説の正史反映整理担当です。',
-    '以下の本文から、確定設定へ反映すべき事実だけを抽出してください。',
+    'あなたはBL / TL 長編小説の章間整合性を確認する編集者です。',
+    '以下の2つの章本文を比較し、人物、関係性、情報開示、感情の進み方にブレがないか確認してください。',
     '',
-    '---',
-    '',
-    '# 入力',
-    '',
-    `- 対象：${chapterLabel} / ${partLabel}`,
-    '',
-    '## 本文',
-    '',
-    canonText,
+    '今回の目的は、次章へ進む前に「前章からのつながり」が壊れていないかを点検することです。',
     '',
     '---',
     '',
-    '# 依頼',
+    '# 対象',
     '',
-    '- 本文中の「確定した事実」だけを抽出すること',
-    '- 推測や解釈だけの情報は分けて扱うこと',
-    '- 確定設定に入れやすいよう、カテゴリ候補も付けること',
+    `- 作品タイトル：${writingTitle}`,
+    `- 比較元：${labelA}`,
+    `- 比較先：${labelB}`,
+    `- 重点確認項目：${focusLabel}`,
     '',
-    '# 出力形式',
+    support.plotBlock ? '## 参照プロット\n\n' + support.plotBlock + '\n' : '',
+    support.outlineBlock ? '## 参照章アウトライン\n\n' + support.outlineBlock + '\n' : '',
+    support.charBlock ? '## 参照キャラクター設定\n\n' + support.charBlock + '\n' : '',
+    support.canonBlock ? support.canonBlock + '\n' : '',
+    `## ${labelA}`,
     '',
-    '## 確定した事実',
-    '## まだ確定とは言い切れない候補',
-    '## 推奨カテゴリ',
-    '## 反映メモ'
-  ].join('\n');
+    textA,
+    '',
+    `## ${labelB}`,
+    '',
+    textB,
+    '',
+    '---',
+    '',
+    '# 比較してほしい観点',
+    '',
+    '- キャラクターの口調、人格、関係温度、欲望の向きが連続しているか',
+    '- 前章の終わりから次章の始まりに、感情や状況の飛びがないか',
+    '- 読者が受け取る情報の順番に破綻がないか',
+    '- 伏線の提示と回収の位置が不自然になっていないか',
+    '- R18進行が急すぎる、または逆に巻き戻っていないか',
+    '- 次章のための演出として必要な変化と、単なるブレを区別すること',
+    '',
+    '# 必須出力形式',
+    '',
+    '## 総評',
+    '- 2章間のつながりとして大きな破綻があるか / ないか',
+    '- 重点確認項目に照らした総評',
+    '',
+    '## ブレがある点',
+    '- 箇条書きで列挙',
+    '- 各項目に「どこが」「どうズレたか」「どちらを基準に直すべきか」を書くこと',
+    '',
+    '## ブレではなく妥当な変化',
+    '- 章の進行として自然な変化なら、その理由を簡潔に示すこと',
+    '',
+    '## 次章へ行く前に直す優先順位',
+    '- 高 / 中 / 低 の3段階で整理すること',
+    '',
+    '# 出力時の注意',
+    '',
+    '- ただの感想を書かないこと',
+    '- 比較元と比較先のどちらに問題があるか明記すること',
+    '- 曖昧表現を避けること',
+    '- Markdown形式で出力すること'
+  ].filter(Boolean).join('\n');
 }
 
 async function pmDiffEvaluationPrompt() {
@@ -10251,25 +11384,30 @@ async function rollbackSingleRuleHistory(history, rolledBackAt) {
 // ╚═══════════════════════════════════════════════════════
 
 const WRITING_VAULT_TYPES = {
-  draft: '原稿・シーン断片',
-  progress: '現在地・ここまでの進行状況',
-  compressed: 'AI圧縮メモ',
-  setting: 'キャラ・設定メモ',
-  instruction: 'AIへの申し送り',
-  memo: 'その他メモ'
+  draft: '本文',
+  outline: 'アウトライン',
+  compressed: '圧縮メモ'
 };
 
 const WRITING_VAULT_COMPRESSION_PURPOSES = {
-  a2: 'A-2章設計用',
-  c: 'C本文接続用',
-  general: '汎用引き継ぎ用'
+  a2: '章設計用',
+  c: '直前接続用',
+  general: '汎用補助'
 };
 
 let writingVaultFilter = '';
+let writingVaultCompressionFilter = '';
 let currentWritingVaultItems = [];
 
+function normalizeWritingVaultType(type) {
+  if (type === 'compressed') return 'compressed';
+  if (type === 'outline' || type === 'progress') return 'outline';
+  return 'draft';
+}
+
 function vaultTypeLabel(type) {
-  return WRITING_VAULT_TYPES[type] || WRITING_VAULT_TYPES.memo;
+  const normalized = normalizeWritingVaultType(type);
+  return WRITING_VAULT_TYPES[normalized] || WRITING_VAULT_TYPES.draft;
 }
 
 function vaultParseTags(raw) {
@@ -10290,15 +11428,32 @@ function vaultFormatDate(ts) {
   return `${y}/${m}/${day} ${hh}:${mm}`;
 }
 
-function vaultAutoTitle(body) {
+function buildVaultTitleSuggestion(type, chapterNumber, compressionPurpose = '') {
+  const normalized = normalizeWritingVaultType(type);
+  const number = String(chapterNumber || '').trim();
+  const prefix = number ? `第${number}章` : 'メモ';
+
+  if (normalized === 'draft') return `${prefix} 本文`;
+  if (normalized === 'outline') return `${prefix} アウトライン`;
+
+  if (compressionPurpose === 'a2') return `${prefix} 章設計メモ`;
+  if (compressionPurpose === 'c') return `${prefix} 直前接続メモ`;
+  return `${prefix} 圧縮メモ`;
+}
+
+function vaultAutoTitle(body, type = 'draft', chapterNumber = '') {
+  const suggested = buildVaultTitleSuggestion(type, chapterNumber);
+  if (chapterNumber) return suggested;
+
   const text = String(body || '').replace(/\s+/g, ' ').trim();
-  return text ? text.slice(0, 30) + (text.length > 30 ? '…' : '') : '無題メモ';
+  if (!text) return suggested;
+  return text.slice(0, 30) + (text.length > 30 ? '…' : '');
 }
 
 function vaultPreview(body) {
   const text = String(body || '').trim();
   if (!text) return '（本文なし）';
-  return text.length > 260 ? text.slice(0, 260) + '…' : text;
+  return text.length > 140 ? text.slice(0, 140) + '…' : text;
 }
 
 async function getWritingVaultItems(workId) {
@@ -10306,21 +11461,69 @@ async function getWritingVaultItems(workId) {
   const all = await dbGetAll(STORE_WRITING_VAULT);
   return all
     .filter(item => item.workId === workId)
+    .map(item => ({
+      ...item,
+      type: normalizeWritingVaultType(item.type),
+      chapterNumber: item.chapterNumber || ''
+    }))
     .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
 }
 
 async function loadWritingVaultTab() {
   if (!currentWorkId) return;
   currentWritingVaultItems = await getWritingVaultItems(currentWorkId);
+  await renderWritingVaultChapterQuickSelect();
+  renderWritingVaultList();
+}
+
+function updateVaultCompressionFilterBar() {
+  const bar = document.getElementById('vault-compression-filter-bar');
+  if (!bar) return;
+
+  const open = writingVaultFilter === 'compressed';
+  bar.classList.toggle('open', open);
+
+  document.querySelectorAll('#vault-compression-filter-bar .vault-filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.vaultCompressionFilter === writingVaultCompressionFilter);
+  });
+}
+
+function setVaultCompressionFilter(purpose) {
+  writingVaultCompressionFilter = String(purpose || '').trim();
+  updateVaultCompressionFilterBar();
   renderWritingVaultList();
 }
 
 function setVaultFilter(type) {
-  writingVaultFilter = type || '';
+  writingVaultFilter = normalizeWritingVaultType(type || '');
+
+  if (writingVaultFilter !== 'compressed') {
+    writingVaultCompressionFilter = '';
+  }
+
   document.querySelectorAll('#vault-filter-bar .vault-filter-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.vaultFilter === writingVaultFilter);
   });
+
+  updateVaultCompressionFilterBar();
   renderWritingVaultList();
+}
+
+async function renderWritingVaultChapterQuickSelect(selected = '') {
+  const select = document.getElementById('vault-quick-chapter');
+  if (!select || !currentWorkId) return;
+
+  const chapters = await getSortedChapters(currentWorkId);
+  const currentValue = String(selected || select.value || '');
+
+  select.innerHTML = ['<option value="">章を選択しない</option>']
+    .concat(chapters.map(chapter => {
+      const number = chapter.number || '';
+      const label = getChapterLabel(chapter);
+      const isSelected = String(number) === currentValue ? ' selected' : '';
+      return `<option value="${esc(String(number))}"${isSelected}>${esc(label)}</option>`;
+    }))
+    .join('');
 }
 
 function renderWritingVaultList() {
@@ -10329,9 +11532,13 @@ function renderWritingVaultList() {
   const count = document.getElementById('vault-count');
   if (!list || !empty) return;
 
-  const items = writingVaultFilter
-    ? currentWritingVaultItems.filter(item => item.type === writingVaultFilter)
+  let items = writingVaultFilter
+    ? currentWritingVaultItems.filter(item => normalizeWritingVaultType(item.type) === writingVaultFilter)
     : currentWritingVaultItems;
+
+  if (writingVaultFilter === 'compressed' && writingVaultCompressionFilter) {
+    items = items.filter(item => (item.compressionPurpose || 'general') === writingVaultCompressionFilter);
+  }
 
   if (count) count.textContent = String(currentWritingVaultItems.length);
 
@@ -10342,44 +11549,58 @@ function renderWritingVaultList() {
   }
 
   empty.style.display = 'none';
+  updateVaultCompressionFilterBar();
   list.innerHTML = items.map(buildWritingVaultCardHTML).join('');
 }
 
+
 function buildWritingVaultCardHTML(item) {
-  const tags = (item.tags || []).map(tag => `<span class="vault-tag">${esc(tag)}</span>`).join('');
+  const normalizedType = normalizeWritingVaultType(item.type);
   const checked = item.includeInAiExport ? 'checked' : '';
-  const purposeLabel =
-    item.type === 'compressed'
-      ? WRITING_VAULT_COMPRESSION_PURPOSES[item.compressionPurpose || 'general']
-      : '';
-  const purposeHtml = purposeLabel
-    ? `<span>用途：${esc(purposeLabel)}</span>`
+  const chapterText = item.chapterNumber
+    ? `<span class="vault-meta-badge">第${esc(String(item.chapterNumber))}章</span>`
     : '';
 
+  const purpose = item.compressionPurpose || 'general';
+  const purposeClass =
+    purpose === 'a2'
+      ? 'vault-purpose-a2'
+      : purpose === 'c'
+        ? 'vault-purpose-c'
+        : 'vault-purpose-general';
+
+  const purposeCardClass =
+    normalizedType === 'compressed'
+      ? ` vault-card-purpose-${esc(purpose)}`
+      : '';
+
+  const purposeBadge =
+    normalizedType === 'compressed'
+      ? `<span class="vault-purpose-badge ${purposeClass}">${esc(WRITING_VAULT_COMPRESSION_PURPOSES[purpose] || '汎用補助')}</span>`
+      : '';
+
   return `
-    <div class="vault-card" id="vault-card-${esc(item.id)}">
+    <div class="vault-card vault-card-compact${purposeCardClass}" id="vault-card-${esc(item.id)}">
       <div class="vault-card-header">
         <div class="vault-card-info">
           <div class="vault-card-title-row">
-            <span class="vault-type-badge vault-type-${esc(item.type)}">${esc(vaultTypeLabel(item.type))}</span>
+            <span class="vault-type-badge vault-type-${esc(normalizedType)}">${esc(vaultTypeLabel(normalizedType))}</span>
+            ${purposeBadge}
             <div class="vault-card-title">${esc(item.title || '無題メモ')}</div>
           </div>
           <div class="vault-card-meta">
-            <span>更新：${esc(vaultFormatDate(item.updatedAt))}</span>
-            ${purposeHtml}
+            ${chapterText}
+            <span class="vault-meta-badge">更新：${esc(vaultFormatDate(item.updatedAt))}</span>
           </div>
-          <div class="vault-card-tags">${tags}</div>
+          <div class="vault-preview">${esc(vaultPreview(item.body))}</div>
         </div>
-        <div class="vault-card-actions">
-          <button class="btn btn-secondary btn-sm" onclick="openVaultModal('${item.id}')">編集</button>
+        <div class="vault-card-actions vault-card-actions-compact">
+          <button class="btn btn-secondary btn-sm" onclick="openVaultModal('${item.id}')">開く</button>
           <button class="btn btn-ghost btn-sm" onclick="copyWritingVaultItem('${item.id}')">コピー</button>
           <button class="btn btn-danger btn-sm" onclick="deleteWritingVaultItem('${item.id}')">削除</button>
         </div>
       </div>
-      <div class="vault-card-body">
-        <div class="vault-preview">${esc(vaultPreview(item.body))}</div>
-      </div>
-      <div class="vault-card-footer">
+      <div class="vault-card-footer vault-card-footer-compact">
         <label class="vault-ai-include-label">
           <input type="checkbox" ${checked} onchange="toggleWritingVaultInclude('${item.id}', this.checked)">
           AI資料に含める
@@ -10389,7 +11610,130 @@ function buildWritingVaultCardHTML(item) {
   `;
 }
 
-async function openVaultModal(id = '') {
+async function populateVaultModalChapterSelect(selected = '') {
+  const select = document.getElementById('vault-chapter-number');
+  if (!select || !currentWorkId) return;
+
+  const chapters = await getSortedChapters(currentWorkId);
+  const currentValue = String(selected || '');
+
+  select.innerHTML = ['<option value="">章を選択しない</option>']
+    .concat(chapters.map(chapter => {
+      const number = chapter.number || '';
+      const label = getChapterLabel(chapter);
+      const isSelected = String(number) === currentValue ? ' selected' : '';
+      return `<option value="${esc(String(number))}"${isSelected}>${esc(label)}</option>`;
+    }))
+    .join('');
+}
+
+function fillVaultTitleSuggestion() {
+  const type = document.getElementById('vault-type')?.value || 'draft';
+  const chapterNumber = document.getElementById('vault-chapter-number')?.value || '';
+  const compressionPurpose = document.getElementById('vault-compression-purpose')?.value || '';
+  const titleInput = document.getElementById('vault-title');
+  if (!titleInput) return;
+  titleInput.value = buildVaultTitleSuggestion(type, chapterNumber, compressionPurpose);
+}
+
+function fillVaultCompressionTemplate(forceOverwrite = false) {
+  const type = document.getElementById('vault-type')?.value || 'draft';
+  const purpose = document.getElementById('vault-compression-purpose')?.value || 'general';
+  const body = document.getElementById('vault-body');
+  if (!body || normalizeWritingVaultType(type) !== 'compressed') return;
+  if (body.value.trim() && !forceOverwrite) return;
+
+  if (purpose === 'a2') {
+    body.value = [
+      '【今回の章で守りたいこと】',
+      '- ',
+      '',
+      '【前章からの持ち越し】',
+      '- ',
+      '',
+      '【この章で進める感情】',
+      '- ',
+      '',
+      '【この章で仕込む / 回収する要素】',
+      '- ',
+      '',
+      '【口調・関係性でブレさせないこと】',
+      '- '
+    ].join('\n');
+    return;
+  }
+
+  if (purpose === 'c') {
+    body.value = [
+      '【直前の状況】',
+      '- ',
+      '',
+      '【感情の現在地】',
+      '- ',
+      '',
+      '【距離感】',
+      '- ',
+      '',
+      '【身体状態 / 触れた情報】',
+      '- ',
+      '',
+      '【未解決の緊張】',
+      '- ',
+      '',
+      '【このPartの入口で守ること】',
+      '- '
+    ].join('\n');
+    return;
+  }
+
+  body.value = [
+    '【要点】',
+    '- ',
+    '',
+    '【次に渡したいこと】',
+    '- '
+  ].join('\n');
+}
+
+function handleVaultCompressionPurposeChange() {
+  fillVaultTitleSuggestion();
+  fillVaultCompressionTemplate(false);
+}
+
+function handleVaultTypeChange() {
+  toggleVaultCompressionPurposeField();
+  fillVaultTitleSuggestion();
+
+  const type = document.getElementById('vault-type')?.value || 'draft';
+  if (normalizeWritingVaultType(type) === 'compressed') {
+    fillVaultCompressionTemplate(false);
+  }
+}
+
+async function vaultQuickAdd(type) {
+  await renderWritingVaultChapterQuickSelect();
+  const quickChapter = document.getElementById('vault-quick-chapter');
+  const chapterNumber = quickChapter ? quickChapter.value : '';
+  await openVaultModal('', type, chapterNumber);
+}
+
+async function vaultQuickAddCompressed(purpose) {
+  await renderWritingVaultChapterQuickSelect();
+  const quickChapter = document.getElementById('vault-quick-chapter');
+  const chapterNumber = quickChapter ? quickChapter.value : '';
+
+  await openVaultModal('', 'compressed', chapterNumber);
+
+  const purposeSelect = document.getElementById('vault-compression-purpose');
+  if (purposeSelect) {
+    purposeSelect.value = purpose || 'general';
+  }
+
+  fillVaultTitleSuggestion();
+  fillVaultCompressionTemplate(false);
+}
+
+async function openVaultModal(id = '', presetType = '', presetChapterNumber = '') {
   if (!currentWorkId) {
     showToast('作品を選択してください', 'error');
     return;
@@ -10401,6 +11745,8 @@ async function openVaultModal(id = '') {
     return;
   }
 
+  await populateVaultModalChapterSelect(presetChapterNumber);
+
   document.getElementById('vault-edit-id').value = id || '';
   document.getElementById('modal-writing-vault-title').textContent = id ? '🗃 執筆保管庫メモを編集' : '🗃 執筆保管庫メモを追加';
 
@@ -10411,19 +11757,23 @@ async function openVaultModal(id = '') {
       return;
     }
 
-    document.getElementById('vault-type').value = item.type || 'draft';
+    const normalizedType = normalizeWritingVaultType(item.type);
+    document.getElementById('vault-type').value = normalizedType;
+    document.getElementById('vault-chapter-number').value = item.chapterNumber || '';
     document.getElementById('vault-title').value = item.title || '';
     document.getElementById('vault-body').value = item.body || '';
     document.getElementById('vault-tags').value = (item.tags || []).join(', ');
     document.getElementById('vault-include-ai').checked = item.includeInAiExport !== false;
     document.getElementById('vault-compression-purpose').value = item.compressionPurpose || 'general';
   } else {
-    document.getElementById('vault-type').value = 'draft';
-    document.getElementById('vault-title').value = '';
+    const normalizedPreset = normalizeWritingVaultType(presetType || 'draft');
+    document.getElementById('vault-type').value = normalizedPreset;
+    document.getElementById('vault-chapter-number').value = presetChapterNumber || '';
+    document.getElementById('vault-title').value = buildVaultTitleSuggestion(normalizedPreset, presetChapterNumber || '');
     document.getElementById('vault-body').value = '';
     document.getElementById('vault-tags').value = '';
     document.getElementById('vault-include-ai').checked = true;
-    document.getElementById('vault-compression-purpose').value = 'general';
+  document.getElementById('vault-compression-purpose').value = 'a2';
   }
 
   toggleVaultCompressionPurposeField();
@@ -10437,7 +11787,8 @@ async function saveWritingVaultItem() {
   }
 
   const id = document.getElementById('vault-edit-id').value;
-  const type = document.getElementById('vault-type').value || 'draft';
+  const type = normalizeWritingVaultType(document.getElementById('vault-type').value || 'draft');
+  const chapterNumber = document.getElementById('vault-chapter-number').value || '';
   const titleInput = document.getElementById('vault-title').value.trim();
   const body = document.getElementById('vault-body').value.trim();
 
@@ -10457,7 +11808,8 @@ async function saveWritingVaultItem() {
     id: id || 'vault_' + genId(),
     workId: currentWorkId,
     type,
-    title: titleInput || vaultAutoTitle(body),
+    chapterNumber,
+    title: titleInput || vaultAutoTitle(body, type, chapterNumber),
     body,
     tags: vaultParseTags(document.getElementById('vault-tags').value),
     includeInAiExport: document.getElementById('vault-include-ai').checked,
@@ -10470,11 +11822,11 @@ async function saveWritingVaultItem() {
   };
 
   await dbPut(STORE_WRITING_VAULT, item);
-document.getElementById('modal-writing-vault').classList.remove('open');
-await loadWritingVaultTab();
-await populateCompressedMemoSelect('pm-a2-compressed-select', 'a2');
-await populateCompressedMemoSelect('pm-c-compressed-select', 'c');
-showToast(id ? '保管庫メモを更新しました' : '保管庫メモを保存しました');
+  document.getElementById('modal-writing-vault').classList.remove('open');
+  await loadWritingVaultTab();
+  await populateCompressedMemoSelect('pm-a2-compressed-select', 'a2');
+  await populateCompressedMemoSelect('pm-c-compressed-select', 'c');
+  showToast(id ? '保管庫メモを更新しました' : '保管庫メモを保存しました');
 }
 
 async function toggleWritingVaultInclude(id, checked) {
@@ -10499,26 +11851,19 @@ async function deleteWritingVaultItem(id) {
   const title = item.title || '無題メモ';
   if (!confirm(`「${title}」を削除しますか？\nこの操作は元に戻せません。`)) return;
 
- await dbDelete(STORE_WRITING_VAULT, id);
-await loadWritingVaultTab();
-await populateCompressedMemoSelect('pm-a2-compressed-select', 'a2');
-await populateCompressedMemoSelect('pm-c-compressed-select', 'c');
-showToast('保管庫メモを削除しました');
+  await dbDelete(STORE_WRITING_VAULT, id);
+  await loadWritingVaultTab();
+  await populateCompressedMemoSelect('pm-a2-compressed-select', 'a2');
+  await populateCompressedMemoSelect('pm-c-compressed-select', 'c');
+  showToast('保管庫メモを削除しました');
 }
-// ╔═══════════════════════════════════════════════════════
-// ║ BLOCK: 執筆保管庫・AI圧縮メモ補助機能
-// ║ 依存: WRITING_VAULT_COMPRESSION_PURPOSES
-// ║ 配置: SCRIPT内、deleteWritingVaultItem 関数の直後
-// ╚═══════════════════════════════════════════════════════
 
 function toggleVaultCompressionPurposeField() {
-  const type = document.getElementById('vault-type')?.value || '';
+  const type = normalizeWritingVaultType(document.getElementById('vault-type')?.value || '');
   const group = document.getElementById('vault-compression-purpose-group');
   if (!group) return;
   group.style.display = type === 'compressed' ? 'block' : 'none';
 }
-
-// ║ END BLOCK: 執筆保管庫・AI圧縮メモ補助機能
 
 // ╔═══════════════════════════════════════════════════════
 // ║ BLOCK: 執筆保管庫・圧縮プロンプト生成 前半
@@ -10806,44 +12151,134 @@ async function downloadVaultCompressionPrompt() {
 // ║ 配置: SCRIPT内、執筆保管庫・圧縮プロンプト生成 後半ブロックの直後
 // ╚═══════════════════════════════════════════════════════
 
-async function populateCompressedMemoSelect(selectId, purpose) {
+function getCompressedMemoPurposeLabel(purpose) {
+  if (purpose === 'a2') return '章設計用';
+  if (purpose === 'c') return '直前接続用';
+  return '汎用補助';
+}
+
+async function refreshPromptMakerMemoPreview(kind) {
+  const isA2 = kind === 'a2';
+  const selectId = isA2 ? 'pm-a2-compressed-select' : 'pm-c-compressed-select';
+  const previewId = isA2 ? 'pm-a2-compressed-preview' : 'pm-c-compressed-preview';
+  const emptyText = isA2
+    ? '（まだ章設計メモを選択していません）'
+    : '（まだ直前接続メモを選択していません）';
+
   const select = document.getElementById(selectId);
-  if (!select) return;
+  const preview = document.getElementById(previewId);
+  if (!select || !preview) return;
 
-  select.innerHTML = '<option value="">（選択なし）</option>';
-
-  if (!currentWorkId) return;
-
-  const items = await getWritingVaultItems(currentWorkId);
-  const compressedItems = items.filter(item => {
-    if (item.type !== 'compressed') return false;
-    const itemPurpose = item.compressionPurpose || 'general';
-    return itemPurpose === purpose || itemPurpose === 'general';
-  });
-
-  if (!compressedItems.length) {
-    const option = document.createElement('option');
-    option.value = '';
-    option.textContent = '利用できるAI圧縮メモがありません';
-    option.disabled = true;
-    select.appendChild(option);
+  const id = select.value || '';
+  if (!id) {
+    preview.textContent = emptyText;
+    preview.classList.add('empty');
     return;
   }
 
-  compressedItems.forEach(item => {
-    const option = document.createElement('option');
-    option.value = item.id;
+  const item = await dbGet(STORE_WRITING_VAULT, id);
+  if (!item) {
+    preview.textContent = '（選択中メモの読み込みに失敗しました）';
+    preview.classList.add('empty');
+    return;
+  }
 
-    const purposeLabel =
-      item.compressionPurpose === 'a2'
-        ? 'A-2'
-        : item.compressionPurpose === 'c'
-          ? 'C'
-          : '汎用';
+  const purposeLabel = getCompressedMemoPurposeLabel(item.compressionPurpose || 'general');
+  const chapterLabel = item.chapterNumber ? `第${item.chapterNumber}章 / ` : '';
+  const title = item.title || '無題メモ';
+  const body = item.body || '（本文なし）';
 
-    option.textContent = `[${purposeLabel}] ${item.title || '無題メモ'}`;
-    select.appendChild(option);
+  preview.textContent = `${chapterLabel}${purposeLabel} / ${title}\n\n${body}`;
+  preview.classList.remove('empty');
+}
+
+function getPmLastCompressedMemoSelections(work) {
+  const raw = work && work.pmLastCompressedMemoSelections;
+  if (!raw || typeof raw !== 'object') {
+    return { a2: '', c: '' };
+  }
+  return {
+    a2: raw.a2 || '',
+    c: raw.c || ''
+  };
+}
+
+async function savePmLastCompressedMemoSelection(purpose, memoId) {
+  if (!currentWorkId) return;
+  if (purpose !== 'a2' && purpose !== 'c') return;
+
+  const work = await dbGet(STORE_WORKS, currentWorkId);
+  if (!work) return;
+
+  const selections = getPmLastCompressedMemoSelections(work);
+  selections[purpose] = memoId || '';
+
+  work.pmLastCompressedMemoSelections = selections;
+  work.updatedAt = Date.now();
+
+  await dbPut(STORE_WORKS, work);
+}
+
+async function handlePmCompressedMemoSelectChange(purpose) {
+  const selectId =
+    purpose === 'a2'
+      ? 'pm-a2-compressed-select'
+      : 'pm-c-compressed-select';
+
+  const select = document.getElementById(selectId);
+  if (!select) return;
+
+  await savePmLastCompressedMemoSelection(purpose, select.value || '');
+}
+
+async function populateCompressedMemoSelect(selectId, purpose = '') {
+  const select = document.getElementById(selectId);
+  if (!select || !currentWorkId) return;
+
+  const currentValue = select.value || '';
+  const allItems = await getWritingVaultItems(currentWorkId);
+  const work = await dbGet(STORE_WORKS, currentWorkId);
+  const savedSelections = getPmLastCompressedMemoSelections(work);
+
+  const items = allItems.filter(item => {
+    const normalizedPurpose = item.compressionPurpose || 'general';
+    return normalizeWritingVaultType(item.type) === 'compressed'
+      && (purpose ? normalizedPurpose === purpose : true);
   });
+
+  if (items.length === 0) {
+    if (purpose === 'a2') {
+      select.innerHTML = '<option value="">（章設計メモがありません）</option>';
+    } else if (purpose === 'c') {
+      select.innerHTML = '<option value="">（直前接続メモがありません）</option>';
+    } else {
+      select.innerHTML = '<option value="">（圧縮メモがありません）</option>';
+    }
+
+    select.value = '';
+    await refreshPromptMakerMemoPreview(purpose === 'a2' ? 'a2' : 'c');
+    return;
+  }
+
+  select.innerHTML =
+    '<option value="">（選択なし）</option>' +
+    items.map(item => {
+      const chapterPart = item.chapterNumber ? `第${esc(String(item.chapterNumber))}章 / ` : '';
+      const purposePart = getCompressedMemoPurposeLabel(item.compressionPurpose || 'general');
+      const titlePart = esc((item.title || '無題メモ').slice(0, 50));
+      return `<option value="${item.id}">${chapterPart}${purposePart} / ${titlePart}</option>`;
+    }).join('');
+
+  const savedValue = purpose === 'a2'
+    ? (savedSelections.a2 || '')
+    : purpose === 'c'
+      ? (savedSelections.c || '')
+      : '';
+
+  const nextValue = [currentValue, savedValue].find(value => value && items.some(item => item.id === value)) || '';
+  select.value = nextValue;
+
+  await refreshPromptMakerMemoPreview(purpose === 'a2' ? 'a2' : 'c');
 }
 
 async function insertVaultMemoToTextarea(selectId, textareaId, replace = false) {
@@ -10898,20 +12333,14 @@ async function insertVaultMemoToCPrevText(replace = false) {
 
 const WRITING_VAULT_EXPORT_ORDER = [
   'compressed',
-  'progress',
-  'setting',
-  'instruction',
-  'draft',
-  'memo'
+  'outline',
+  'draft'
 ];
 
 const WRITING_VAULT_EXPORT_HEADINGS = {
-  compressed: 'AI圧縮メモ',
-  progress: '現在地・ここまでの進行状況',
-  setting: 'キャラ・設定メモ',
-  instruction: 'AIへの申し送り',
-  draft: '原稿・シーン断片',
-  memo: 'その他メモ'
+  compressed: '圧縮メモ',
+  outline: 'アウトライン',
+  draft: '本文'
 };
 
 function vaultMarkdownInline(value, emptyText = '未入力') {
