@@ -903,85 +903,102 @@ textarea { resize: vertical; }
 /* === END RULE HISTORY === */
 
 /* === WRITING VAULT === */
+#tab-vault {
+  min-width: 0;
+}
+
+.vault-section-header {
+  margin-bottom: 10px;
+}
+
 .vault-top-sticky {
   position: sticky;
-  top: 72px;
+  top: 68px;
   z-index: 8;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 10px;
+  margin-bottom: 14px;
 }
 
-.vault-toolbar {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.vault-toolbar-primary {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 14px 16px;
-  box-shadow: var(--shadow-card);
-}
-
-.vault-toolbar-secondary {
-  background: rgba(22, 33, 62, 0.92);
+.vault-sticky-card,
+.vault-filter-wrap {
+  background: rgba(22, 33, 62, 0.96);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 12px 14px;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-card);
 }
 
-.vault-toolbar-spacer {
-  flex: 1;
+.vault-quick-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
-.vault-quick-group {
+.vault-quick-actions {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
   align-items: center;
+  flex: 1 1 640px;
+  min-width: 0;
 }
 
-.vault-quick-select {
-  min-width: 180px;
-  max-width: 240px;
+.vault-quick-actions .btn {
+  flex: 0 0 auto;
 }
 
-.vault-mini-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 14px 16px;
-  margin-bottom: 12px;
+.vault-quick-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 1 240px;
+  min-width: 200px;
+  justify-content: flex-end;
 }
 
-.vault-mini-card .form-hint {
-  margin-top: 6px;
+.vault-quick-right select {
+  width: 100%;
+  min-width: 0;
 }
 
-.vault-ai-request {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 14px 16px;
-  margin-bottom: 12px;
+.vault-export-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
 }
 
-.vault-ai-request textarea {
-  min-height: 90px;
-  line-height: 1.7;
+.vault-export-row .btn-export {
+  width: auto;
+  min-width: 280px;
 }
 
-.vault-filter-bar {
+.vault-export-row .btn-secondary {
+  min-width: 92px;
+  justify-content: center;
+}
+
+.vault-filter-row,
+.vault-compression-filter-bar {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 14px;
+}
+
+.vault-compression-filter-bar {
+  display: none;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.vault-compression-filter-bar.open {
+  display: flex;
 }
 
 .vault-filter-btn {
@@ -1008,6 +1025,40 @@ textarea { resize: vertical; }
   background: var(--purple-glow2);
 }
 
+.vault-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vault-meta-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vault-mini-card,
+.vault-ai-request {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+}
+
+.vault-mini-card .form-hint,
+.vault-ai-request .form-hint {
+  margin-top: 6px;
+}
+
+.vault-ai-request textarea {
+  min-height: 92px;
+  line-height: 1.7;
+}
+
+.vault-list-section {
+  min-width: 0;
+}
+
 .vault-list {
   display: flex;
   flex-direction: column;
@@ -1027,16 +1078,29 @@ textarea { resize: vertical; }
   box-shadow: 0 0 12px var(--purple-glow2);
 }
 
-.vault-card-compact .vault-card-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
+.vault-card-purpose-a2 {
+  border-color: rgba(168,85,247,0.4);
+  box-shadow: inset 0 0 0 1px rgba(168,85,247,0.12);
+}
+
+.vault-card-purpose-c {
+  border-color: rgba(59,130,246,0.4);
+  box-shadow: inset 0 0 0 1px rgba(59,130,246,0.12);
+}
+
+.vault-card-purpose-general {
+  border-color: rgba(251,191,36,0.4);
+  box-shadow: inset 0 0 0 1px rgba(251,191,36,0.1);
+}
+
+.vault-card-header {
   padding: 12px 14px 10px;
 }
 
-.vault-card-info {
-  flex: 1;
+.vault-card-top {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   min-width: 0;
 }
 
@@ -1045,7 +1109,7 @@ textarea { resize: vertical; }
   gap: 8px;
   flex-wrap: wrap;
   align-items: center;
-  margin-bottom: 4px;
+  min-width: 0;
 }
 
 .vault-card-title {
@@ -1054,17 +1118,19 @@ textarea { resize: vertical; }
   color: var(--text-primary);
   line-height: 1.4;
   word-break: break-word;
+  min-width: 0;
 }
 
 .vault-type-badge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   padding: 2px 9px;
   border-radius: 20px;
   font-size: 0.7rem;
   font-weight: 700;
+  border: 1px solid var(--border-hover);
   background: var(--purple-glow2);
   color: var(--purple-300);
-  border: 1px solid var(--border-hover);
   flex-shrink: 0;
 }
 
@@ -1082,21 +1148,6 @@ textarea { resize: vertical; }
   color: #FDE68A;
   border-color: rgba(251,191,36,0.35);
   background: rgba(251,191,36,0.12);
-}
-
-.vault-card-purpose-a2 {
-  border-color: rgba(168,85,247,0.35);
-  box-shadow: inset 0 0 0 1px rgba(168,85,247,0.12);
-}
-
-.vault-card-purpose-c {
-  border-color: rgba(59,130,246,0.35);
-  box-shadow: inset 0 0 0 1px rgba(59,130,246,0.12);
-}
-
-.vault-card-purpose-general {
-  border-color: rgba(251,191,36,0.35);
-  box-shadow: inset 0 0 0 1px rgba(251,191,36,0.1);
 }
 
 .vault-meta-badge,
@@ -1139,27 +1190,16 @@ textarea { resize: vertical; }
   background: rgba(251,191,36,0.12);
 }
 
-.vault-compression-filter-bar {
-  display: none;
-  gap: 8px;
-  flex-wrap: wrap;
-  padding: 0 2px 2px;
-}
-
-.vault-compression-filter-bar.open {
-  display: flex;
-}
-
 .vault-card-meta {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   font-size: 0.72rem;
   color: var(--text-muted);
-  margin-bottom: 8px;
 }
 
 .vault-preview {
+  margin-top: 8px;
   font-size: 0.78rem;
   color: var(--text-secondary);
   line-height: 1.6;
@@ -1168,31 +1208,35 @@ textarea { resize: vertical; }
   background: var(--bg-input);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 10px 12px;
-  max-height: 110px;
-  overflow-y: auto;
+  padding: 9px 11px;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-height: none;
+}
+
+.vault-card-footer,
+.vault-card-footer-compact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 8px 14px 10px;
+  border-top: 1px solid var(--border);
 }
 
 .vault-card-actions {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
-  justify-content: flex-end;
-  flex-shrink: 0;
+  align-items: center;
 }
 
 .vault-card-actions-compact .btn {
-  min-width: 62px;
+  min-width: 64px;
   justify-content: center;
-}
-
-.vault-card-footer-compact {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 8px 14px 10px;
-  border-top: 1px solid var(--border);
 }
 
 .vault-ai-include-label {
@@ -1213,7 +1257,7 @@ textarea { resize: vertical; }
 
 .vault-empty {
   text-align: center;
-  padding: 42px 24px;
+  padding: 40px 24px;
   color: var(--text-muted);
   background: var(--bg-card);
   border: 1px dashed var(--border);
@@ -1267,36 +1311,54 @@ textarea { resize: vertical; }
   min-width: 180px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 980px) {
   .vault-top-sticky {
     top: 62px;
+  }
+
+  .vault-quick-row {
+    align-items: stretch;
+  }
+
+  .vault-quick-actions,
+  .vault-quick-right {
+    flex: 1 1 100%;
+  }
+
+  .vault-quick-right {
+    justify-content: stretch;
   }
 }
 
 @media (max-width: 680px) {
-  .vault-card-compact .vault-card-header {
-    flex-direction: column;
+  .vault-sticky-card,
+  .vault-filter-wrap,
+  .vault-mini-card,
+  .vault-ai-request {
+    padding: 10px 12px;
   }
 
-  .vault-card-actions {
-    width: 100%;
-    justify-content: flex-start;
-  }
-
-  .vault-card-actions-compact .btn {
-    flex: 1 1 120px;
-  }
-
-  .vault-toolbar-primary .btn-export,
-  .vault-toolbar-primary .btn-secondary,
-  .vault-toolbar-primary .btn-primary {
+  .vault-quick-actions .btn,
+  .vault-export-row .btn {
     width: 100%;
     justify-content: center;
   }
 
-  .vault-quick-select {
-    min-width: 100%;
-    max-width: none;
+  .vault-export-row .btn-export {
+    min-width: 0;
+  }
+
+  .vault-card-footer,
+  .vault-card-footer-compact {
+    align-items: stretch;
+  }
+
+  .vault-card-actions {
+    width: 100%;
+  }
+
+  .vault-card-actions-compact .btn {
+    flex: 1 1 110px;
   }
 }
 
@@ -2375,72 +2437,84 @@ textarea { resize: vertical; }
             </div>
           </div>
         </div>
-      </div>
 
      <!-- TAB: 執筆保管庫 -->
       <div class="tab-panel" id="tab-vault">
-        <div class="section-header" style="margin-bottom:12px">
+        <div class="section-header vault-section-header">
           <div class="section-title"><span class="icon">🗃</span> 執筆保管庫 <span class="count-badge" id="vault-count">0</span></div>
         </div>
 
         <div class="vault-top-sticky">
-          <div class="vault-toolbar vault-toolbar-primary">
-            <div class="vault-quick-group">
-            <button class="btn btn-primary" onclick="vaultQuickAdd('draft')">＋ 本文メモ</button>
-<button class="btn btn-secondary" onclick="vaultQuickAdd('outline')">＋ アウトライン</button>
-<button class="btn btn-secondary" onclick="vaultQuickAddCompressed('a2')">🧩 章設計メモ</button>
-<button class="btn btn-secondary" onclick="vaultQuickAddCompressed('c')">🔗 直前接続メモ</button>
+          <div class="vault-sticky-card">
+            <div class="vault-quick-row">
+              <div class="vault-quick-actions">
+                <button class="btn btn-primary" onclick="vaultQuickAdd('draft')">＋ 本文メモ</button>
+                <button class="btn btn-secondary" onclick="vaultQuickAdd('outline')">＋ アウトライン</button>
+                <button class="btn btn-secondary" onclick="vaultQuickAddCompressed('a2')">🧩 章設計メモ</button>
+                <button class="btn btn-secondary" onclick="vaultQuickAddCompressed('c')">🔗 直前接続メモ</button>
+              </div>
+
+              <div class="vault-quick-right">
+                <select id="vault-quick-chapter" class="vault-quick-select">
+                  <option value="">章を選択しない</option>
+                </select>
+              </div>
             </div>
 
-            <div class="vault-toolbar-spacer"></div>
-
-            <select id="vault-quick-chapter" class="vault-quick-select">
-              <option value="">章を選択しない</option>
-            </select>
-
-            <button class="btn btn-export" onclick="copyWritingVaultAiMarkdown()">📋 AI引き継ぎ資料をコピー</button>
-            <button class="btn btn-secondary" onclick="downloadWritingVaultAiMarkdown()">↓ .md</button>
+            <div class="vault-export-row">
+              <button class="btn btn-export" onclick="copyWritingVaultAiMarkdown()">📋 AI引き継ぎ資料をコピー</button>
+              <button class="btn btn-secondary" onclick="downloadWritingVaultAiMarkdown()">↓ .md</button>
+            </div>
           </div>
 
-         <div class="vault-toolbar vault-toolbar-secondary" id="vault-filter-bar">
-            <button class="vault-filter-btn active" data-vault-filter="" onclick="setVaultFilter('')">すべて</button>
-            <button class="vault-filter-btn" data-vault-filter="draft" onclick="setVaultFilter('draft')">本文</button>
-            <button class="vault-filter-btn" data-vault-filter="outline" onclick="setVaultFilter('outline')">アウトライン</button>
-            <button class="vault-filter-btn" data-vault-filter="compressed" onclick="setVaultFilter('compressed')">圧縮メモ</button>
-          </div>
+          <div class="vault-filter-wrap">
+            <div class="vault-filter-row" id="vault-filter-bar">
+              <button class="vault-filter-btn active" data-vault-filter="" onclick="setVaultFilter('')">すべて</button>
+              <button class="vault-filter-btn" data-vault-filter="draft" onclick="setVaultFilter('draft')">本文</button>
+              <button class="vault-filter-btn" data-vault-filter="outline" onclick="setVaultFilter('outline')">アウトライン</button>
+              <button class="vault-filter-btn" data-vault-filter="compressed" onclick="setVaultFilter('compressed')">圧縮メモ</button>
+            </div>
 
-          <div class="vault-compression-filter-bar" id="vault-compression-filter-bar">
-            <button class="vault-filter-btn active" data-vault-compression-filter="" onclick="setVaultCompressionFilter('')">圧縮メモ：すべて</button>
-            <button class="vault-filter-btn" data-vault-compression-filter="a2" onclick="setVaultCompressionFilter('a2')">章設計メモ</button>
-            <button class="vault-filter-btn" data-vault-compression-filter="c" onclick="setVaultCompressionFilter('c')">直前接続メモ</button>
-            <button class="vault-filter-btn" data-vault-compression-filter="general" onclick="setVaultCompressionFilter('general')">汎用補助</button>
-          </div>
-
-        <div class="vault-mini-card">
-          <div class="form-group">
-            <label class="form-label" for="vault-writing-title">執筆作品タイトル</label>
-            <input type="text" id="vault-writing-title" placeholder="例：死に急ぐ推しを助けるために、モブ店員の私が物語を書き換えます">
-            <div class="form-hint">AI引き継ぎ資料のファイル名に使います。未入力なら作品タイトルを使います。</div>
-          </div>
-          <div style="margin-top:10px">
-            <button class="btn btn-primary btn-sm" onclick="saveWritingTitleFromInput('vault-writing-title')">執筆作品タイトルを保存</button>
+            <div class="vault-compression-filter-bar" id="vault-compression-filter-bar">
+              <button class="vault-filter-btn active" data-vault-compression-filter="" onclick="setVaultCompressionFilter('')">圧縮メモ：すべて</button>
+              <button class="vault-filter-btn" data-vault-compression-filter="a2" onclick="setVaultCompressionFilter('a2')">章設計メモ</button>
+              <button class="vault-filter-btn" data-vault-compression-filter="c" onclick="setVaultCompressionFilter('c')">直前接続メモ</button>
+              <button class="vault-filter-btn" data-vault-compression-filter="general" onclick="setVaultCompressionFilter('general')">汎用補助</button>
+            </div>
           </div>
         </div>
 
-        <div class="vault-ai-request">
-          <div class="form-group">
-            <label class="form-label" for="vault-ai-request">今回AIに頼みたいこと</label>
-            <textarea id="vault-ai-request" placeholder="例：第3章の続きとして、攻め視点で再会シーンを書きたい。既存設定と現在地を踏まえて、自然な会話と感情の揺れを重視してほしい。"></textarea>
-            <div class="form-hint">この内容は保存データではなく、AI引き継ぎ資料の先頭に含めます。</div>
+        <div class="vault-content">
+          <div class="vault-meta-stack">
+            <div class="vault-mini-card">
+              <div class="form-group">
+                <label class="form-label" for="vault-writing-title">執筆作品タイトル</label>
+                <input type="text" id="vault-writing-title" placeholder="例：死に急ぐ推しを助けるために、モブ店員の私が物語を書き換えます">
+                <div class="form-hint">AI引き継ぎ資料のファイル名や見出しに使います。未入力なら作品タイトルを使います。</div>
+              </div>
+              <div style="margin-top:10px">
+                <button class="btn btn-primary btn-sm" onclick="saveWritingTitleFromInput('vault-writing-title')">執筆作品タイトルを保存</button>
+              </div>
+            </div>
+
+            <div class="vault-ai-request">
+              <div class="form-group">
+                <label class="form-label" for="vault-ai-request">今回AIに頼みたいこと</label>
+                <textarea id="vault-ai-request" placeholder="例：第3章の続きとして、攻め視点で再会シーンを書きたい。既存設定と現在地を踏まえて、自然な会話と感情の揺れを重視してほしい。"></textarea>
+                <div class="form-hint">この内容は保存データそのものではなく、AI引き継ぎ資料の先頭に含めます。</div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div id="vault-list" class="vault-list"></div>
+          <div class="vault-list-section">
+            <div id="vault-list" class="vault-list"></div>
 
-        <div id="vault-empty" class="vault-empty" style="display:none">
-          <div class="vault-empty-icon">🗃</div>
-          <h3>まだ執筆保管庫にメモがありません。</h3>
-          <p>上の「本文メモ」「アウトライン」「圧縮メモ」から始めてください。</p>
+            <div id="vault-empty" class="vault-empty" style="display:none">
+              <div class="vault-empty-icon">🗃</div>
+              <h3>まだ執筆保管庫にメモがありません。</h3>
+              <p>上の「本文メモ」「アウトライン」「章設計メモ」「直前接続メモ」から始めてください。</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -11431,18 +11505,28 @@ function vaultFormatDate(ts) {
 function buildVaultTitleSuggestion(type, chapterNumber, compressionPurpose = '') {
   const normalized = normalizeWritingVaultType(type);
   const number = String(chapterNumber || '').trim();
-  const prefix = number ? `第${number}章` : 'メモ';
 
-  if (normalized === 'draft') return `${prefix} 本文`;
-  if (normalized === 'outline') return `${prefix} アウトライン`;
+  if (normalized === 'draft') {
+    return number ? `第${number}章 本文` : '本文メモ';
+  }
 
-  if (compressionPurpose === 'a2') return `${prefix} 章設計メモ`;
-  if (compressionPurpose === 'c') return `${prefix} 直前接続メモ`;
-  return `${prefix} 圧縮メモ`;
+  if (normalized === 'outline') {
+    return number ? `第${number}章 アウトライン` : 'アウトライン';
+  }
+
+  if (compressionPurpose === 'a2') {
+    return number ? `第${number}章 章設計メモ` : '章設計メモ';
+  }
+
+  if (compressionPurpose === 'c') {
+    return number ? `第${number}章 直前接続メモ` : '直前接続メモ';
+  }
+
+  return number ? `第${number}章 圧縮メモ` : '圧縮メモ';
 }
 
-function vaultAutoTitle(body, type = 'draft', chapterNumber = '') {
-  const suggested = buildVaultTitleSuggestion(type, chapterNumber);
+function vaultAutoTitle(body, type = 'draft', chapterNumber = '', compressionPurpose = '') {
+  const suggested = buildVaultTitleSuggestion(type, chapterNumber, compressionPurpose);
   if (chapterNumber) return suggested;
 
   const text = String(body || '').replace(/\s+/g, ' ').trim();
@@ -11542,6 +11626,8 @@ function renderWritingVaultList() {
 
   if (count) count.textContent = String(currentWritingVaultItems.length);
 
+  updateVaultCompressionFilterBar();
+
   if (items.length === 0) {
     list.innerHTML = '';
     empty.style.display = 'block';
@@ -11549,7 +11635,6 @@ function renderWritingVaultList() {
   }
 
   empty.style.display = 'none';
-  updateVaultCompressionFilterBar();
   list.innerHTML = items.map(buildWritingVaultCardHTML).join('');
 }
 
@@ -11582,7 +11667,7 @@ function buildWritingVaultCardHTML(item) {
   return `
     <div class="vault-card vault-card-compact${purposeCardClass}" id="vault-card-${esc(item.id)}">
       <div class="vault-card-header">
-        <div class="vault-card-info">
+        <div class="vault-card-top">
           <div class="vault-card-title-row">
             <span class="vault-type-badge vault-type-${esc(normalizedType)}">${esc(vaultTypeLabel(normalizedType))}</span>
             ${purposeBadge}
@@ -11592,19 +11677,22 @@ function buildWritingVaultCardHTML(item) {
             ${chapterText}
             <span class="vault-meta-badge">更新：${esc(vaultFormatDate(item.updatedAt))}</span>
           </div>
-          <div class="vault-preview">${esc(vaultPreview(item.body))}</div>
         </div>
-        <div class="vault-card-actions vault-card-actions-compact">
-          <button class="btn btn-secondary btn-sm" onclick="openVaultModal('${item.id}')">開く</button>
-          <button class="btn btn-ghost btn-sm" onclick="copyWritingVaultItem('${item.id}')">コピー</button>
-          <button class="btn btn-danger btn-sm" onclick="deleteWritingVaultItem('${item.id}')">削除</button>
-        </div>
+
+        <div class="vault-preview">${esc(vaultPreview(item.body))}</div>
       </div>
+
       <div class="vault-card-footer vault-card-footer-compact">
         <label class="vault-ai-include-label">
           <input type="checkbox" ${checked} onchange="toggleWritingVaultInclude('${item.id}', this.checked)">
           AI資料に含める
         </label>
+
+        <div class="vault-card-actions vault-card-actions-compact">
+          <button class="btn btn-secondary btn-sm" onclick="openVaultModal('${item.id}')">開く</button>
+          <button class="btn btn-ghost btn-sm" onclick="copyWritingVaultItem('${item.id}')">コピー</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteWritingVaultItem('${item.id}')">削除</button>
+        </div>
       </div>
     </div>
   `;
@@ -11721,19 +11809,10 @@ async function vaultQuickAddCompressed(purpose) {
   await renderWritingVaultChapterQuickSelect();
   const quickChapter = document.getElementById('vault-quick-chapter');
   const chapterNumber = quickChapter ? quickChapter.value : '';
-
-  await openVaultModal('', 'compressed', chapterNumber);
-
-  const purposeSelect = document.getElementById('vault-compression-purpose');
-  if (purposeSelect) {
-    purposeSelect.value = purpose || 'general';
-  }
-
-  fillVaultTitleSuggestion();
-  fillVaultCompressionTemplate(false);
+  await openVaultModal('', 'compressed', chapterNumber, purpose || 'general');
 }
 
-async function openVaultModal(id = '', presetType = '', presetChapterNumber = '') {
+async function openVaultModal(id = '', presetType = '', presetChapterNumber = '', presetCompressionPurpose = '') {
   if (!currentWorkId) {
     showToast('作品を選択してください', 'error');
     return;
@@ -11767,16 +11846,27 @@ async function openVaultModal(id = '', presetType = '', presetChapterNumber = ''
     document.getElementById('vault-compression-purpose').value = item.compressionPurpose || 'general';
   } else {
     const normalizedPreset = normalizeWritingVaultType(presetType || 'draft');
+    const presetPurpose = normalizedPreset === 'compressed'
+      ? (presetCompressionPurpose || 'general')
+      : 'general';
+
     document.getElementById('vault-type').value = normalizedPreset;
     document.getElementById('vault-chapter-number').value = presetChapterNumber || '';
-    document.getElementById('vault-title').value = buildVaultTitleSuggestion(normalizedPreset, presetChapterNumber || '');
+    document.getElementById('vault-title').value = buildVaultTitleSuggestion(normalizedPreset, presetChapterNumber || '', presetPurpose);
     document.getElementById('vault-body').value = '';
     document.getElementById('vault-tags').value = '';
     document.getElementById('vault-include-ai').checked = true;
-  document.getElementById('vault-compression-purpose').value = 'a2';
+    document.getElementById('vault-compression-purpose').value = presetPurpose;
   }
 
   toggleVaultCompressionPurposeField();
+  fillVaultTitleSuggestion();
+
+  const isNewCompressed = !id && normalizeWritingVaultType(document.getElementById('vault-type').value) === 'compressed';
+  if (isNewCompressed) {
+    fillVaultCompressionTemplate(false);
+  }
+
   modal.classList.add('open');
 }
 
@@ -11791,6 +11881,10 @@ async function saveWritingVaultItem() {
   const chapterNumber = document.getElementById('vault-chapter-number').value || '';
   const titleInput = document.getElementById('vault-title').value.trim();
   const body = document.getElementById('vault-body').value.trim();
+  const compressionPurpose =
+    type === 'compressed'
+      ? (document.getElementById('vault-compression-purpose')?.value || 'general')
+      : '';
 
   if (!titleInput && !body) {
     showToast('タイトルまたは本文を入力してください', 'error');
@@ -11809,14 +11903,11 @@ async function saveWritingVaultItem() {
     workId: currentWorkId,
     type,
     chapterNumber,
-    title: titleInput || vaultAutoTitle(body, type, chapterNumber),
+    title: titleInput || vaultAutoTitle(body, type, chapterNumber, compressionPurpose),
     body,
     tags: vaultParseTags(document.getElementById('vault-tags').value),
     includeInAiExport: document.getElementById('vault-include-ai').checked,
-    compressionPurpose:
-      type === 'compressed'
-        ? (document.getElementById('vault-compression-purpose')?.value || 'general')
-        : '',
+    compressionPurpose,
     createdAt: existing?.createdAt || now,
     updatedAt: now
   };
@@ -12379,9 +12470,21 @@ function vaultBuildMemoMarkdown(item) {
 
 function vaultBuildGroupedSectionMarkdown(type, items) {
   const heading = WRITING_VAULT_EXPORT_HEADINGS[type] || WRITING_VAULT_EXPORT_HEADINGS.memo;
+  const purposeOrder = { a2: 0, c: 1, general: 2 };
+
   const group = items
     .filter(item => item.type === type)
-    .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+    .sort((a, b) => {
+      if (type === 'compressed') {
+        const purposeDiff = (purposeOrder[a.compressionPurpose || 'general'] ?? 99) - (purposeOrder[b.compressionPurpose || 'general'] ?? 99);
+        if (purposeDiff !== 0) return purposeDiff;
+
+        const chapterDiff = Number(a.chapterNumber || 9999) - Number(b.chapterNumber || 9999);
+        if (chapterDiff !== 0) return chapterDiff;
+      }
+
+      return (b.updatedAt || 0) - (a.updatedAt || 0);
+    });
 
   if (group.length === 0) {
     return [`## ${heading}`, '', '（該当メモなし）'].join('\n');
