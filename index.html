@@ -2864,6 +2864,7 @@ textarea { resize: vertical; }
     </div>
    <div class="modal-body vault-modal-body">
       <input type="hidden" id="vault-edit-id">
+      <input type="hidden" id="vault-source-item-id">
 
       <div class="form-row form-row-2">
         <div class="form-group">
@@ -2894,24 +2895,42 @@ textarea { resize: vertical; }
         </div>
       </div>
 
-    <div class="form-group" id="vault-compression-purpose-group" style="display:none">
-  <label class="form-label" for="vault-compression-purpose">圧縮メモの用途</label>
-  <div style="display:flex;gap:8px;align-items:end;flex-wrap:wrap">
-    <div style="flex:1;min-width:220px">
-      <select id="vault-compression-purpose" onchange="handleVaultCompressionPurposeChange()">
-        <option value="a2">章設計用（A-2へ入れる）</option>
-        <option value="c">直前接続用（C本文へ入れる）</option>
-        <option value="general">汎用補助</option>
-      </select>
-    </div>
-    <div>
-      <button type="button" class="btn btn-secondary btn-sm" onclick="fillVaultCompressionTemplate(true)">テンプレ入力</button>
-    </div>
-  </div>
-  <div class="form-hint">
-    章設計用はA-2の方針補助、直前接続用はC本文の「直前接続資料」へ入れる前提です。
-  </div>
-</div>
+      <div class="form-group" id="vault-compression-purpose-group" style="display:none">
+        <label class="form-label" for="vault-compression-purpose">圧縮メモの用途</label>
+        <div style="display:flex;gap:8px;align-items:end;flex-wrap:wrap">
+          <div style="flex:1;min-width:220px">
+            <select id="vault-compression-purpose" onchange="handleVaultCompressionPurposeChange()">
+              <option value="a2">章設計用（A-2へ入れる）</option>
+              <option value="c">直前接続用（C本文へ入れる）</option>
+              <option value="general">汎用補助</option>
+            </select>
+          </div>
+          <div>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="fillVaultCompressionTemplate(true)">テンプレ入力</button>
+          </div>
+        </div>
+        <div class="form-hint">
+          章設計用はA-2の方針補助、直前接続用はC本文の「直前接続資料」へ入れる前提です。
+        </div>
+      </div>
+
+      <div class="form-group" id="vault-source-item-group" style="display:none">
+        <label class="form-label" for="vault-source-item-select">元にする既存メモ</label>
+        <div style="display:flex;gap:8px;align-items:end;flex-wrap:wrap">
+          <div style="flex:1;min-width:220px">
+            <select id="vault-source-item-select" onchange="handleVaultSourceItemChange()">
+              <option value="">（既存メモを選択）</option>
+            </select>
+          </div>
+          <div>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="applyVaultSourceToCompression(true)">元メモを本文へ反映</button>
+          </div>
+        </div>
+        <div class="form-hint">
+          本文 / アウトライン / 既存メモを土台にして圧縮メモを作成できます。選択直後は元メモ本文を初期入力として差し込みます。
+        </div>
+        <div id="vault-source-item-preview" class="pm-memo-preview-box empty" style="margin-top:8px">（まだ元メモを選択していません）</div>
+      </div>
 
       <div class="form-group">
         <label class="form-label" for="vault-body">本文</label>
@@ -11889,6 +11908,7 @@ function buildWritingVaultCardHTML(item) {
 
         <div class="vault-card-actions vault-card-actions-compact">
           <button class="btn btn-secondary btn-sm" onclick="openVaultModal('${item.id}')">開く</button>
+          <button class="btn btn-ghost btn-sm" onclick="openVaultCompressionFromItem('${item.id}')">圧縮メモ化</button>
           <button class="btn btn-ghost btn-sm" onclick="copyWritingVaultItem('${item.id}')">コピー</button>
           <button class="btn btn-danger btn-sm" onclick="deleteWritingVaultItem('${item.id}')">削除</button>
         </div>
@@ -11923,15 +11943,9 @@ function fillVaultTitleSuggestion() {
   titleInput.value = buildVaultTitleSuggestion(type, chapterNumber, compressionPurpose);
 }
 
-function fillVaultCompressionTemplate(forceOverwrite = false) {
-  const type = document.getElementById('vault-type')?.value || 'draft';
-  const purpose = document.getElementById('vault-compression-purpose')?.value || 'general';
-  const body = document.getElementById('vault-body');
-  if (!body || normalizeWritingVaultType(type) !== 'compressed') return;
-  if (body.value.trim() && !forceOverwrite) return;
-
+function getVaultCompressionTemplateText(purpose = 'general') {
   if (purpose === 'a2') {
-    body.value = [
+    return [
       '【今回の章で守りたいこと】',
       '- ',
       '',
@@ -11947,11 +11961,10 @@ function fillVaultCompressionTemplate(forceOverwrite = false) {
       '【口調・関係性でブレさせないこと】',
       '- '
     ].join('\n');
-    return;
   }
 
   if (purpose === 'c') {
-    body.value = [
+    return [
       '【直前の状況】',
       '- ',
       '',
@@ -11970,10 +11983,9 @@ function fillVaultCompressionTemplate(forceOverwrite = false) {
       '【このPartの入口で守ること】',
       '- '
     ].join('\n');
-    return;
   }
 
-  body.value = [
+  return [
     '【要点】',
     '- ',
     '',
@@ -11982,18 +11994,220 @@ function fillVaultCompressionTemplate(forceOverwrite = false) {
   ].join('\n');
 }
 
-function handleVaultCompressionPurposeChange() {
+function fillVaultCompressionTemplate(forceOverwrite = false) {
+  const type = document.getElementById('vault-type')?.value || 'draft';
+  const purpose = document.getElementById('vault-compression-purpose')?.value || 'general';
+  const body = document.getElementById('vault-body');
+  if (!body || normalizeWritingVaultType(type) !== 'compressed') return;
+  if (body.value.trim() && !forceOverwrite) return;
+  body.value = getVaultCompressionTemplateText(purpose);
+}
+
+function buildVaultCompressionSourceLabel(item) {
+  if (!item) return '未選択';
+  const parts = [];
+
+  if (item.chapterNumber) {
+    parts.push(`第${item.chapterNumber}章`);
+  }
+
+  parts.push(vaultTypeLabel(item.type));
+
+  if (normalizeWritingVaultType(item.type) === 'compressed') {
+    parts.push(getCompressedMemoPurposeLabel(item.compressionPurpose || 'general'));
+  }
+
+  parts.push(item.title || '無題メモ');
+
+  return parts.join(' / ');
+}
+
+function buildVaultCompressionBodyFromSource(item, purpose = 'general') {
+  const template = getVaultCompressionTemplateText(purpose);
+  const sourceLabel = buildVaultCompressionSourceLabel(item);
+  const sourceBody = String(item?.body || '').trim() || '（本文なし）';
+
+  return [
+    template,
+    '',
+    '---',
+    '',
+    `【元メモ】${sourceLabel}`,
+    '',
+    sourceBody
+  ].join('\n');
+}
+
+function setVaultSourcePreview(item) {
+  const preview = document.getElementById('vault-source-item-preview');
+  if (!preview) return;
+
+  if (!item) {
+    preview.textContent = '（まだ元メモを選択していません）';
+    preview.classList.add('empty');
+    return;
+  }
+
+  preview.textContent = `${buildVaultCompressionSourceLabel(item)}\n\n${item.body || '（本文なし）'}`;
+  preview.classList.remove('empty');
+}
+
+function clearVaultCompressionSourceSelection(keepSelectValue = false) {
+  const hidden = document.getElementById('vault-source-item-id');
+  const select = document.getElementById('vault-source-item-select');
+
+  if (hidden) hidden.value = '';
+  if (select && !keepSelectValue) select.value = '';
+
+  setVaultSourcePreview(null);
+}
+
+async function populateVaultSourceItemSelect(selectedId = '') {
+  const select = document.getElementById('vault-source-item-select');
+  if (!select) return;
+
+  const editingId = document.getElementById('vault-edit-id')?.value || '';
+  const items = currentWorkId ? await getWritingVaultItems(currentWorkId) : [];
+  const options = ['<option value="">（既存メモを選択）</option>']
+    .concat(items
+      .filter(item => item.id !== editingId)
+      .map(item => {
+        const chapterText = item.chapterNumber ? `第${esc(String(item.chapterNumber))}章 / ` : '';
+        const purposeText =
+          normalizeWritingVaultType(item.type) === 'compressed'
+            ? ` / ${esc(getCompressedMemoPurposeLabel(item.compressionPurpose || 'general'))}`
+            : '';
+        const label = `${chapterText}${esc(vaultTypeLabel(item.type))}${purposeText} / ${esc((item.title || '無題メモ').slice(0, 50))}`;
+        return `<option value="${item.id}">${label}</option>`;
+      }));
+
+  select.innerHTML = options.join('');
+
+  if (selectedId && items.some(item => item.id === selectedId && item.id !== editingId)) {
+    select.value = selectedId;
+  } else {
+    select.value = '';
+  }
+}
+
+async function applyVaultSourceToCompression(forceOverwrite = false) {
+  const type = normalizeWritingVaultType(document.getElementById('vault-type')?.value || 'draft');
+  if (type !== 'compressed') return;
+
+  const select = document.getElementById('vault-source-item-select');
+  const hidden = document.getElementById('vault-source-item-id');
+  const body = document.getElementById('vault-body');
+  const tags = document.getElementById('vault-tags');
+  const chapterSelect = document.getElementById('vault-chapter-number');
+
+  if (!select || !hidden || !body) return;
+
+  const sourceId = select.value || hidden.value || '';
+  if (!sourceId) {
+    clearVaultCompressionSourceSelection(false);
+    return;
+  }
+
+  const sourceItem = await dbGet(STORE_WRITING_VAULT, sourceId);
+  if (!sourceItem || sourceItem.workId !== currentWorkId) {
+    showToast('元メモが見つかりません', 'error');
+    clearVaultCompressionSourceSelection(false);
+    return;
+  }
+
+  hidden.value = sourceItem.id;
+  if (select.value !== sourceItem.id) {
+    select.value = sourceItem.id;
+  }
+
+  if (!chapterSelect?.value && sourceItem.chapterNumber) {
+    chapterSelect.value = sourceItem.chapterNumber;
+  }
+
+  if (tags && !tags.value.trim() && Array.isArray(sourceItem.tags) && sourceItem.tags.length) {
+    tags.value = sourceItem.tags.join(', ');
+  }
+
+  setVaultSourcePreview(sourceItem);
+
+  if (!body.value.trim() || forceOverwrite) {
+    const purpose = document.getElementById('vault-compression-purpose')?.value || 'general';
+    body.value = buildVaultCompressionBodyFromSource(sourceItem, purpose);
+  }
+
   fillVaultTitleSuggestion();
+}
+
+async function handleVaultSourceItemChange() {
+  const type = normalizeWritingVaultType(document.getElementById('vault-type')?.value || 'draft');
+  if (type !== 'compressed') return;
+
+  const body = document.getElementById('vault-body');
+  const select = document.getElementById('vault-source-item-select');
+
+  if (!select || !body) return;
+
+  if (!select.value) {
+    clearVaultCompressionSourceSelection(false);
+    return;
+  }
+
+  const hadBody = !!body.value.trim();
+  await applyVaultSourceToCompression(!hadBody);
+
+  if (hadBody) {
+    showToast('元メモを変更しました。本文を入れ替えるには「元メモを本文へ反映」を押してください');
+  }
+}
+
+async function handleVaultCompressionPurposeChange() {
+  fillVaultTitleSuggestion();
+
+  const type = normalizeWritingVaultType(document.getElementById('vault-type')?.value || 'draft');
+  if (type !== 'compressed') return;
+
+  const sourceId = document.getElementById('vault-source-item-id')?.value || '';
+  const body = document.getElementById('vault-body');
+
+  if (sourceId && body && !body.value.trim()) {
+    await applyVaultSourceToCompression(false);
+    return;
+  }
+
   fillVaultCompressionTemplate(false);
 }
 
-function handleVaultTypeChange() {
+function toggleVaultCompressionPurposeField() {
+  const type = normalizeWritingVaultType(document.getElementById('vault-type')?.value || '');
+  const purposeGroup = document.getElementById('vault-compression-purpose-group');
+  const sourceGroup = document.getElementById('vault-source-item-group');
+
+  if (purposeGroup) {
+    purposeGroup.style.display = type === 'compressed' ? 'block' : 'none';
+  }
+
+  if (sourceGroup) {
+    sourceGroup.style.display = type === 'compressed' ? 'block' : 'none';
+  }
+
+  if (type !== 'compressed') {
+    clearVaultCompressionSourceSelection(false);
+  }
+}
+
+async function handleVaultTypeChange() {
   toggleVaultCompressionPurposeField();
   fillVaultTitleSuggestion();
 
   const type = document.getElementById('vault-type')?.value || 'draft';
   if (normalizeWritingVaultType(type) === 'compressed') {
-    fillVaultCompressionTemplate(false);
+    await populateVaultSourceItemSelect(document.getElementById('vault-source-item-id')?.value || '');
+    const sourceId = document.getElementById('vault-source-item-id')?.value || '';
+    if (sourceId) {
+      await applyVaultSourceToCompression(false);
+    } else {
+      fillVaultCompressionTemplate(false);
+    }
   }
 }
 
@@ -12011,7 +12225,26 @@ async function vaultQuickAddCompressed(purpose) {
   await openVaultModal('', 'compressed', chapterNumber, purpose || 'general');
 }
 
-async function openVaultModal(id = '', presetType = '', presetChapterNumber = '', presetCompressionPurpose = '') {
+async function openVaultCompressionFromItem(sourceId, presetPurpose = '') {
+  if (!currentWorkId) {
+    showToast('作品を選択してください', 'error');
+    return;
+  }
+
+  const sourceItem = await dbGet(STORE_WRITING_VAULT, sourceId);
+  if (!sourceItem || sourceItem.workId !== currentWorkId) {
+    showToast('元メモが見つかりません', 'error');
+    return;
+  }
+
+  const quickChapter = document.getElementById('vault-quick-chapter');
+  const presetChapterNumber = sourceItem.chapterNumber || (quickChapter ? quickChapter.value : '') || '';
+  const purpose = presetPurpose || 'general';
+
+  await openVaultModal('', 'compressed', presetChapterNumber, purpose, sourceItem.id);
+}
+
+async function openVaultModal(id = '', presetType = '', presetChapterNumber = '', presetCompressionPurpose = '', presetSourceItemId = '') {
   if (!currentWorkId) {
     showToast('作品を選択してください', 'error');
     return;
@@ -12027,6 +12260,7 @@ async function openVaultModal(id = '', presetType = '', presetChapterNumber = ''
 
   document.getElementById('vault-edit-id').value = id || '';
   document.getElementById('modal-writing-vault-title').textContent = id ? '🗃 執筆保管庫メモを編集' : '🗃 執筆保管庫メモを追加';
+  clearVaultCompressionSourceSelection(false);
 
   if (id) {
     const item = await dbGet(STORE_WRITING_VAULT, id);
@@ -12043,6 +12277,13 @@ async function openVaultModal(id = '', presetType = '', presetChapterNumber = ''
     document.getElementById('vault-tags').value = (item.tags || []).join(', ');
     document.getElementById('vault-include-ai').checked = item.includeInAiExport !== false;
     document.getElementById('vault-compression-purpose').value = item.compressionPurpose || 'general';
+    document.getElementById('vault-source-item-id').value = item.sourceItemId || '';
+    await populateVaultSourceItemSelect(item.sourceItemId || '');
+    if (item.sourceItemId) {
+      await applyVaultSourceToCompression(false);
+    } else {
+      setVaultSourcePreview(null);
+    }
   } else {
     const normalizedPreset = normalizeWritingVaultType(presetType || 'draft');
     const presetPurpose = normalizedPreset === 'compressed'
@@ -12056,13 +12297,21 @@ async function openVaultModal(id = '', presetType = '', presetChapterNumber = ''
     document.getElementById('vault-tags').value = '';
     document.getElementById('vault-include-ai').checked = true;
     document.getElementById('vault-compression-purpose').value = presetPurpose;
+    document.getElementById('vault-source-item-id').value = presetSourceItemId || '';
+    await populateVaultSourceItemSelect(presetSourceItemId || '');
+
+    if (normalizedPreset === 'compressed' && presetSourceItemId) {
+      const select = document.getElementById('vault-source-item-select');
+      if (select) select.value = presetSourceItemId;
+      await applyVaultSourceToCompression(true);
+    }
   }
 
   toggleVaultCompressionPurposeField();
   fillVaultTitleSuggestion();
 
   const isNewCompressed = !id && normalizeWritingVaultType(document.getElementById('vault-type').value) === 'compressed';
-  if (isNewCompressed) {
+  if (isNewCompressed && !document.getElementById('vault-source-item-id').value) {
     fillVaultCompressionTemplate(false);
   }
 
@@ -12083,6 +12332,10 @@ async function saveWritingVaultItem() {
   const compressionPurpose =
     type === 'compressed'
       ? (document.getElementById('vault-compression-purpose')?.value || 'general')
+      : '';
+  const sourceItemId =
+    type === 'compressed'
+      ? (document.getElementById('vault-source-item-id')?.value || document.getElementById('vault-source-item-select')?.value || '')
       : '';
 
   if (!titleInput && !body) {
@@ -12107,6 +12360,7 @@ async function saveWritingVaultItem() {
     tags: vaultParseTags(document.getElementById('vault-tags').value),
     includeInAiExport: document.getElementById('vault-include-ai').checked,
     compressionPurpose,
+    sourceItemId,
     createdAt: existing?.createdAt || now,
     updatedAt: now
   };
@@ -12147,14 +12401,6 @@ async function deleteWritingVaultItem(id) {
   await populateCompressedMemoSelect('pm-c-compressed-select', 'c');
   showToast('保管庫メモを削除しました');
 }
-
-function toggleVaultCompressionPurposeField() {
-  const type = normalizeWritingVaultType(document.getElementById('vault-type')?.value || '');
-  const group = document.getElementById('vault-compression-purpose-group');
-  if (!group) return;
-  group.style.display = type === 'compressed' ? 'block' : 'none';
-}
-
 // ╔═══════════════════════════════════════════════════════
 // ║ BLOCK: 執筆保管庫・圧縮プロンプト生成 前半
 // ║ 依存: currentWorkId, showToast, getWritingVaultItems, dbGet,
