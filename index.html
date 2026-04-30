@@ -1068,6 +1068,53 @@ textarea { resize: vertical; }
   flex: 0 0 auto;
 }
 
+.vault-guide-trigger {
+  min-width: 108px;
+  justify-content: center;
+}
+
+.vault-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.vault-guide-card {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vault-guide-card-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--purple-300);
+}
+
+.vault-guide-card-body {
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.vault-guide-note {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.vault-guide-note strong {
+  color: var(--purple-300);
+}
+
 .vault-quick-right {
   display: flex;
   align-items: center;
@@ -2561,9 +2608,10 @@ textarea { resize: vertical; }
               <div class="vault-quick-actions">
                 <button class="btn btn-primary" onclick="vaultQuickAdd('draft')">＋ 本文メモ</button>
                 <button class="btn btn-secondary" onclick="vaultQuickAdd('outline')">＋ アウトライン</button>
-                <button class="btn btn-secondary" onclick="vaultQuickAddCompressed('a2')">🧩 章設計メモ</button>
-                <button class="btn btn-secondary" onclick="vaultQuickAddCompressed('c')">🔗 直前接続メモ</button>
-                <button class="btn btn-ghost" onclick="openVaultCompressionPromptModal()">🪄 圧縮プロンプト</button>
+                <button class="btn btn-secondary" onclick="openVaultCompressionPromptWorkflow('a2')">🧩 章設計用を作る</button>
+                <button class="btn btn-secondary" onclick="openVaultCompressionPromptWorkflow('c')">🔗 直前接続用を作る</button>
+                <button class="btn btn-ghost" onclick="openVaultCompressionPromptWorkflow('general')">🪄 圧縮プロンプト</button>
+                <button class="btn btn-ghost vault-guide-trigger" onclick="openVaultCompressionGuideModal()">🧭 使い方</button>
               </div>
 
               <div class="vault-quick-right">
@@ -2972,6 +3020,7 @@ textarea { resize: vertical; }
       <div class="pm-pane-intro" style="margin-bottom:0">
         ここで作るのは単なる要約ではなく、<strong>次の執筆で破綻を防ぐための状態圧縮プロンプト</strong>です。
         前回圧縮メモを更新元に1件置き、今回増えた本文や最新アウトラインだけを圧縮対象にすると、トークン節約しやすくなります。
+        章設計用・直前接続用も、ここから目的別に作る運用が基本です。
       </div>
 
       <div class="form-row form-row-2">
@@ -3030,6 +3079,71 @@ textarea { resize: vertical; }
       <button class="btn btn-primary" onclick="copyVaultCompressionPrompt()">コピー</button>
       <button class="btn btn-secondary" onclick="openCompressionMemoDraftFromPromptModal()">同条件で圧縮メモ追加を開く</button>
       <button class="btn btn-secondary btn-sm" onclick="downloadVaultCompressionPrompt()">↓ .md</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-vault-compression-guide">
+  <div class="modal" style="max-width: 860px;">
+    <div class="modal-header">
+      <div class="modal-title">🧭 圧縮プロンプトの使い方</div>
+      <button class="modal-close" onclick="closeModal('modal-vault-compression-guide')">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="pm-pane-intro" style="margin-bottom:0">
+        執筆保管庫の中心機能は <strong>圧縮プロンプト</strong> です。章設計メモと直前接続メモは独立した手書きメモではなく、
+        <strong>圧縮プロンプトで作った圧縮結果の保存先</strong>として使います。
+      </div>
+
+      <div class="vault-guide-grid">
+        <div class="vault-guide-card">
+          <div class="vault-guide-card-title">① 全体整合性を更新する</div>
+          <div class="vault-guide-card-body">
+            使うもの：前回の全体整合性メモ / 最新本文 / 必要なら最新アウトライン<br>
+            圧縮目的：<strong>全体整合性用</strong><br>
+            圧縮方式：<strong>既存圧縮メモを更新</strong><br>
+            効果：設定・因果・キャラ状態の破綻防止
+          </div>
+        </div>
+
+        <div class="vault-guide-card">
+          <div class="vault-guide-card-title">② 次の章を設計する</div>
+          <div class="vault-guide-card-body">
+            使うもの：全体整合性メモ / 対象章アウトライン / 必要な補助メモ<br>
+            圧縮目的：<strong>章設計用</strong><br>
+            保存先：<strong>章設計メモ</strong><br>
+            効果：この章で進める感情・仕込み・回収・禁止事項を整理
+          </div>
+        </div>
+
+        <div class="vault-guide-card">
+          <div class="vault-guide-card-title">③ 本文を書く直前に接続を作る</div>
+          <div class="vault-guide-card-body">
+            使うもの：直近本文 / 全体整合性メモ / 必要なら章設計メモ<br>
+            圧縮目的：<strong>直前接続用</strong><br>
+            保存先：<strong>直前接続メモ</strong><br>
+            効果：感情温度・距離感・物理状況・継続中の因果を接続
+          </div>
+        </div>
+      </div>
+
+      <div class="vault-guide-note">
+        <strong>おすすめ運用：</strong>
+        毎回本文全量をAIへ渡すのではなく、まず全体整合性メモを差分更新し、その後に章設計用・直前接続用へ分岐します。
+        こうするとトークン節約と破綻防止を両立しやすくなります。
+      </div>
+
+      <div class="vault-guide-note">
+        <strong>入口の考え方：</strong>
+        「🧩 章設計用を作る」「🔗 直前接続用を作る」は圧縮プロンプトの目的別ショートカットです。
+        圧縮プロンプトで整えた結果を、それぞれ章設計メモ / 直前接続メモとして保存してください。
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-vault-compression-guide')">閉じる</button>
+      <button class="btn btn-secondary" onclick="closeModal('modal-vault-compression-guide'); openVaultCompressionPromptWorkflow('general');">🪄 圧縮プロンプトを開く</button>
     </div>
   </div>
 </div>
@@ -11940,7 +12054,7 @@ function buildWritingVaultCardHTML(item) {
 
         <div class="vault-card-actions vault-card-actions-compact">
           <button class="btn btn-secondary btn-sm" onclick="openVaultModal('${item.id}')">開く</button>
-          <button class="btn btn-ghost btn-sm" onclick="openVaultCompressionFromItem('${item.id}')">圧縮メモ化</button>
+          <button class="btn btn-ghost btn-sm" onclick="openVaultCompressionPromptWorkflow('general', ['${item.id}'])">圧縮プロンプト化</button>
           <button class="btn btn-ghost btn-sm" onclick="copyWritingVaultItem('${item.id}')">コピー</button>
           <button class="btn btn-danger btn-sm" onclick="deleteWritingVaultItem('${item.id}')">削除</button>
         </div>
@@ -12376,10 +12490,16 @@ async function vaultQuickAdd(type) {
 }
 
 async function vaultQuickAddCompressed(purpose) {
+  await openVaultCompressionPromptWorkflow(purpose || 'general');
+}
+
+async function openVaultCompressionPromptWorkflow(presetMode = 'general', preselectedSourceIds = [], presetBaseMemoId = '') {
   await renderWritingVaultChapterQuickSelect();
-  const quickChapter = document.getElementById('vault-quick-chapter');
-  const chapterNumber = quickChapter ? quickChapter.value : '';
-  await openVaultModal('', 'compressed', chapterNumber, purpose || 'general');
+  await openVaultCompressionPromptModal(preselectedSourceIds, presetMode || 'general', presetBaseMemoId || '');
+}
+
+function openVaultCompressionGuideModal() {
+  openModal('modal-vault-compression-guide');
 }
 
 async function openVaultCompressionFromItem(sourceId, presetPurpose = '') {
