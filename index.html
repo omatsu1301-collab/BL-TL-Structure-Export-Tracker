@@ -2563,6 +2563,7 @@ textarea { resize: vertical; }
                 <button class="btn btn-secondary" onclick="vaultQuickAdd('outline')">＋ アウトライン</button>
                 <button class="btn btn-secondary" onclick="vaultQuickAddCompressed('a2')">🧩 章設計メモ</button>
                 <button class="btn btn-secondary" onclick="vaultQuickAddCompressed('c')">🔗 直前接続メモ</button>
+                <button class="btn btn-ghost" onclick="openVaultCompressionPromptModal()">🪄 圧縮プロンプト</button>
               </div>
 
               <div class="vault-quick-right">
@@ -2866,6 +2867,10 @@ textarea { resize: vertical; }
       <input type="hidden" id="vault-edit-id">
       <input type="hidden" id="vault-source-item-id">
       <input type="hidden" id="vault-source-item-ids">
+      <input type="hidden" id="vault-based-on-compressed-id">
+      <input type="hidden" id="vault-compression-profile">
+      <input type="hidden" id="vault-coverage-chapter-start">
+      <input type="hidden" id="vault-coverage-chapter-end">
 
       <div class="form-row form-row-2">
         <div class="form-group">
@@ -2957,39 +2962,65 @@ textarea { resize: vertical; }
   </div>
 </div>
 <div class="modal-overlay" id="modal-vault-compression">
-  <div class="modal">
+  <div class="modal" style="max-width: 980px;">
     <div class="modal-header">
       <div class="modal-title">🧩 圧縮プロンプト生成</div>
       <button class="modal-close" onclick="closeModal('modal-vault-compression')">×</button>
     </div>
 
     <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">圧縮目的</label>
-        <select id="vault-compress-mode">
-          <option value="a2">A-2章設計用：章アウトライン・Part設計に使う</option>
-          <option value="c">C本文接続用：本文執筆の前セクション資料に使う</option>
-          <option value="general">汎用引き継ぎ用：全体把握・継続管理に使う</option>
-        </select>
+      <div class="pm-pane-intro" style="margin-bottom:0">
+        ここで作るのは単なる要約ではなく、<strong>次の執筆で破綻を防ぐための状態圧縮プロンプト</strong>です。
+        前回圧縮メモを更新元に1件置き、今回増えた本文や最新アウトラインだけを圧縮対象にすると、トークン節約しやすくなります。
+      </div>
+
+      <div class="form-row form-row-2">
+        <div class="form-group">
+          <label class="form-label" for="vault-compress-mode">圧縮目的</label>
+          <select id="vault-compress-mode" onchange="handleVaultCompressionModeChange(true)">
+            <option value="general">全体整合性用（正史圧縮メモ）</option>
+            <option value="a2">章設計用（A-2へ入れる）</option>
+            <option value="c">直前接続用（C本文へ入れる）</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="vault-compress-strategy">圧縮方式</label>
+          <select id="vault-compress-strategy" onchange="handleVaultCompressionStrategyChange()">
+            <option value="fresh">選択資料から新規作成</option>
+            <option value="update">既存圧縮メモを更新</option>
+          </select>
+          <div class="form-hint" id="vault-compress-strategy-hint">
+            初回作成向けです。選択した資料から1本の新しい圧縮メモを作る前提でプロンプトを出します。
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" id="vault-compress-base-group" style="display:none">
+        <label class="form-label" for="vault-compress-base-memo">更新元の既存圧縮メモ</label>
+        <select id="vault-compress-base-memo" onchange="previewVaultCompressionPrompt(false)"></select>
+        <div class="form-hint">
+          既存圧縮メモを全面再読させる代わりに、前回圧縮メモをここで1件だけ更新元として渡し、今回増えた本文や最新アウトラインだけを圧縮対象にすると効率的です。
+        </div>
       </div>
 
       <div class="form-group">
         <label class="form-label">圧縮対象メモを選択</label>
         <div class="form-hint">
-          章全文・原稿・設定メモなど、圧縮したい保管庫メモを選択してください。
+          本文 / アウトライン / 補助メモを複数選択できます。差分更新時は、更新元メモを上で1件選び、ここでは新たに増えた本文や最新アウトラインだけに絞るのがおすすめです。
         </div>
         <div id="vault-compress-item-list" class="vault-compress-item-list"></div>
       </div>
 
       <div class="form-group">
-        <label class="form-label">追加指示（任意）</label>
+        <label class="form-label" for="vault-compress-extra">追加指示（任意）</label>
         <textarea id="vault-compress-extra" rows="4"
-          placeholder="例：第3章の執筆に使うため、主人公と相手役の関係変化を特に重視してください。"></textarea>
+          placeholder="例：第8章直前接続用として、主人公の疲労感と相手役との距離感の変化を特に重視してください。"></textarea>
       </div>
 
       <div class="form-group">
-        <label class="form-label">生成プレビュー</label>
-        <textarea id="vault-compress-output" rows="12" readonly></textarea>
+        <label class="form-label" for="vault-compress-output">生成プレビュー</label>
+        <textarea id="vault-compress-output" rows="20" readonly placeholder="圧縮対象を選んで「プレビュー更新」を押すと、構造化された圧縮プロンプトがここに出ます。"></textarea>
       </div>
     </div>
 
@@ -2997,6 +3028,7 @@ textarea { resize: vertical; }
       <button class="btn btn-ghost" onclick="closeModal('modal-vault-compression')">閉じる</button>
       <button class="btn btn-secondary" onclick="previewVaultCompressionPrompt()">プレビュー更新</button>
       <button class="btn btn-primary" onclick="copyVaultCompressionPrompt()">コピー</button>
+      <button class="btn btn-secondary" onclick="openCompressionMemoDraftFromPromptModal()">同条件で圧縮メモ追加を開く</button>
       <button class="btn btn-secondary btn-sm" onclick="downloadVaultCompressionPrompt()">↓ .md</button>
     </div>
   </div>
@@ -12386,6 +12418,7 @@ async function openVaultModal(id = '', presetType = '', presetChapterNumber = ''
   document.getElementById('vault-edit-id').value = id || '';
   document.getElementById('modal-writing-vault-title').textContent = id ? '🗃 執筆保管庫メモを編集' : '🗃 執筆保管庫メモを追加';
   clearVaultCompressionSourceSelection(false);
+  syncVaultCompressionMetadata({});
 
   if (id) {
     const item = await dbGet(STORE_WRITING_VAULT, id);
@@ -12404,6 +12437,12 @@ async function openVaultModal(id = '', presetType = '', presetChapterNumber = ''
     document.getElementById('vault-tags').value = (item.tags || []).join(', ');
     document.getElementById('vault-include-ai').checked = item.includeInAiExport !== false;
     document.getElementById('vault-compression-purpose').value = item.compressionPurpose || 'general';
+    syncVaultCompressionMetadata({
+      basedOnCompressedId: item.basedOnCompressedId || '',
+      compressionProfile: item.compressionProfile || '',
+      coverageChapterStart: item.coverageChapterStart || '',
+      coverageChapterEnd: item.coverageChapterEnd || ''
+    });
     syncVaultSourceHiddenFields(sourceIds);
     await populateVaultSourceItemSelect(sourceIds);
     if (sourceIds.length) {
@@ -12425,6 +12464,7 @@ async function openVaultModal(id = '', presetType = '', presetChapterNumber = ''
     document.getElementById('vault-tags').value = '';
     document.getElementById('vault-include-ai').checked = true;
     document.getElementById('vault-compression-purpose').value = presetPurpose;
+    syncVaultCompressionMetadata({});
     syncVaultSourceHiddenFields(sourceIds);
     await populateVaultSourceItemSelect(sourceIds);
 
@@ -12465,6 +12505,15 @@ async function saveWritingVaultItem() {
       ? getVaultSelectedSourceIds()
       : [];
   const sourceItemId = sourceItemIds[0] || '';
+  const metadata =
+    type === 'compressed'
+      ? readVaultCompressionMetadata()
+      : {
+          basedOnCompressedId: '',
+          compressionProfile: '',
+          coverageChapterStart: '',
+          coverageChapterEnd: ''
+        };
 
   if (!titleInput && !body) {
     showToast('タイトルまたは本文を入力してください', 'error');
@@ -12490,6 +12539,10 @@ async function saveWritingVaultItem() {
     compressionPurpose,
     sourceItemId,
     sourceItemIds,
+    basedOnCompressedId: metadata.basedOnCompressedId,
+    compressionProfile: metadata.compressionProfile,
+    coverageChapterStart: metadata.coverageChapterStart,
+    coverageChapterEnd: metadata.coverageChapterEnd,
     createdAt: existing?.createdAt || now,
     updatedAt: now
   };
@@ -12539,54 +12592,57 @@ async function deleteWritingVaultItem(id) {
 // ║ 配置: SCRIPT内、執筆保管庫・AI圧縮メモ補助機能ブロックの直後
 // ╚═══════════════════════════════════════════════════════
 
-async function openVaultCompressionPromptModal() {
-  if (!currentWorkId) {
-    showToast('作品を選択してください', 'error');
-    return;
-  }
+const VAULT_COMPRESSION_PROMPT_PROFILES = {
+  general: 'canonical_update',
+  a2: 'chapter_design',
+  c: 'pre_write_bridge'
+};
 
-  const items = await getWritingVaultItems(currentWorkId);
-  const list = document.getElementById('vault-compress-item-list');
-  const output = document.getElementById('vault-compress-output');
-  const extra = document.getElementById('vault-compress-extra');
+const VAULT_COMPRESSION_SOURCE_PRIORITY = [
+  ['draft', '執筆済み本文'],
+  ['outline', '最新アウトライン'],
+  ['compressed', '既存圧縮メモ'],
+  ['note', '補助メモ']
+];
 
-  if (!list || !output) {
-    showToast('圧縮プロンプト用UIが見つかりません', 'error');
-    return;
-  }
-
-  if (extra) extra.value = '';
-  output.value = '';
-
-  list.innerHTML = items.length
-    ? buildVaultCompressItemListHTML(items)
-    : '<div class="form-hint">保管庫メモがありません。</div>';
-
-  openModal('modal-vault-compression');
+function getVaultCompressionModeLabel(mode) {
+  if (mode === 'a2') return '章設計用';
+  if (mode === 'c') return '直前接続用';
+  return '全体整合性用';
 }
 
-function buildVaultCompressItemListHTML(items) {
-  return items.map(item => {
-    const typeLabel = vaultTypeLabel(item.type);
-    const title = item.title || '無題メモ';
-    const updated = vaultFormatDate(item.updatedAt);
-    const preview = vaultPreview(item.body);
-    const purpose =
-      item.type === 'compressed'
-        ? ` / ${WRITING_VAULT_COMPRESSION_PURPOSES[item.compressionPurpose || 'general'] || '汎用引き継ぎ用'}`
-        : '';
+function getVaultCompressionProfileKey(mode) {
+  return VAULT_COMPRESSION_PROMPT_PROFILES[mode] || 'canonical_update';
+}
 
-    return `
-      <label class="vault-compress-item">
-        <input type="checkbox" value="${esc(item.id)}">
-        <div class="vault-compress-info">
-          <div class="vault-compress-title">${esc(title)}</div>
-          <div class="vault-compress-meta">[${esc(typeLabel)}${esc(purpose)}] 更新：${esc(updated)}</div>
-          <div class="vault-compress-preview">${esc(preview)}</div>
-        </div>
-      </label>
-    `;
-  }).join('');
+function getVaultCompressionStrategyLabel(strategy) {
+  return strategy === 'update' ? '既存圧縮メモを更新' : '選択資料から新規作成';
+}
+
+function syncVaultCompressionMetadata(meta = {}) {
+  const safe = meta && typeof meta === 'object' ? meta : {};
+  const basedOn = document.getElementById('vault-based-on-compressed-id');
+  const profile = document.getElementById('vault-compression-profile');
+  const start = document.getElementById('vault-coverage-chapter-start');
+  const end = document.getElementById('vault-coverage-chapter-end');
+
+  if (basedOn) basedOn.value = safe.basedOnCompressedId || '';
+  if (profile) profile.value = safe.compressionProfile || '';
+  if (start) start.value = safe.coverageChapterStart || '';
+  if (end) end.value = safe.coverageChapterEnd || '';
+}
+
+function readVaultCompressionMetadata() {
+  return {
+    basedOnCompressedId: document.getElementById('vault-based-on-compressed-id')?.value || '',
+    compressionProfile: document.getElementById('vault-compression-profile')?.value || '',
+    coverageChapterStart: document.getElementById('vault-coverage-chapter-start')?.value || '',
+    coverageChapterEnd: document.getElementById('vault-coverage-chapter-end')?.value || ''
+  };
+}
+
+function getVaultCompressionBaseMemoId() {
+  return document.getElementById('vault-compress-base-memo')?.value || '';
 }
 
 function getVaultCompressionCheckedIds() {
@@ -12595,11 +12651,74 @@ function getVaultCompressionCheckedIds() {
     .filter(Boolean);
 }
 
-async function getVaultCompressionSelectedItems() {
+function buildVaultCompressItemListHTML(items, preselectedIds = []) {
+  const selected = new Set(Array.isArray(preselectedIds) ? preselectedIds.filter(Boolean) : []);
+
+  return items.map(item => {
+    const typeLabel = vaultTypeLabel(item.type);
+    const title = item.title || '無題メモ';
+    const updated = vaultFormatDate(item.updatedAt);
+    const preview = vaultPreview(item.body);
+    const purpose =
+      normalizeWritingVaultType(item.type) === 'compressed'
+        ? ` / ${WRITING_VAULT_COMPRESSION_PURPOSES[item.compressionPurpose || 'general'] || '汎用補助'}`
+        : '';
+    const chapterText = item.chapterNumber ? `第${esc(String(item.chapterNumber))}章 / ` : '';
+    const checked = selected.has(item.id) ? 'checked' : '';
+
+    return `
+      <label class="vault-compress-item">
+        <input type="checkbox" value="${esc(item.id)}" ${checked} onchange="previewVaultCompressionPrompt(false)">
+        <div class="vault-compress-info">
+          <div class="vault-compress-title">${esc(title)}</div>
+          <div class="vault-compress-meta">${chapterText}[${esc(typeLabel)}${esc(purpose)}] 更新：${esc(updated)}</div>
+          <div class="vault-compress-preview">${esc(preview)}</div>
+        </div>
+      </label>
+    `;
+  }).join('');
+}
+
+async function populateVaultCompressionBaseMemoSelect(selectedId = '') {
+  const select = document.getElementById('vault-compress-base-memo');
+  if (!select) return;
+
+  const items = currentWorkId ? await getWritingVaultItems(currentWorkId) : [];
+  const compressedItems = items
+    .filter(item => normalizeWritingVaultType(item.type) === 'compressed')
+    .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+
+  select.innerHTML = [
+    '<option value="">（更新元なし / 新規作成扱い）</option>',
+    ...compressedItems.map(item => {
+      const purpose = getCompressedMemoPurposeLabel(item.compressionPurpose || 'general');
+      const chapter = item.chapterNumber ? `第${esc(String(item.chapterNumber))}章 / ` : '';
+      const label = `${chapter}${esc(item.title || '無題メモ')} / ${esc(purpose)} / 更新:${esc(vaultFormatDate(item.updatedAt))}`;
+      const selected = selectedId && item.id === selectedId ? 'selected' : '';
+      return `<option value="${esc(item.id)}" ${selected}>${label}</option>`;
+    })
+  ].join('');
+}
+
+async function getVaultCompressionBaseMemo() {
+  const id = getVaultCompressionBaseMemoId();
+  if (!id) return null;
+
+  const item = await dbGet(STORE_WRITING_VAULT, id);
+  if (!item || item.workId !== currentWorkId || normalizeWritingVaultType(item.type) !== 'compressed') {
+    return null;
+  }
+
+  return item;
+}
+
+async function getVaultCompressionSelectedItems(showError = true) {
   const ids = getVaultCompressionCheckedIds();
 
   if (ids.length === 0) {
-    showToast('圧縮対象メモを選択してください', 'error');
+    if (showError) {
+      showToast('圧縮対象メモを選択してください', 'error');
+    }
     return [];
   }
 
@@ -12615,6 +12734,95 @@ async function getVaultCompressionSelectedItems() {
   return items;
 }
 
+function updateVaultCompressionStrategyUI() {
+  const strategy = document.getElementById('vault-compress-strategy')?.value || 'fresh';
+  const baseGroup = document.getElementById('vault-compress-base-group');
+  const hint = document.getElementById('vault-compress-strategy-hint');
+
+  if (baseGroup) {
+    baseGroup.style.display = strategy === 'update' ? 'block' : 'none';
+  }
+
+  if (hint) {
+    hint.textContent =
+      strategy === 'update'
+        ? '差分更新向けです。前回の圧縮メモを更新元に1件だけ置き、今回追加された本文や最新アウトラインだけを圧縮対象にするとトークン効率が上がります。'
+        : '初回作成向けです。選択した資料を統合し、新しい圧縮メモを1本作る前提でプロンプトを出します。';
+  }
+}
+
+async function handleVaultCompressionModeChange(autoPreview = false) {
+  const strategy = document.getElementById('vault-compress-strategy');
+  const baseSelect = document.getElementById('vault-compress-base-memo');
+  const mode = document.getElementById('vault-compress-mode')?.value || 'general';
+
+  if (strategy && !strategy.dataset.userPicked) {
+    strategy.value = mode === 'general' ? 'update' : 'fresh';
+  }
+
+  const keepSelectedId = baseSelect?.value || '';
+  await populateVaultCompressionBaseMemoSelect(keepSelectedId);
+  updateVaultCompressionStrategyUI();
+
+  if (autoPreview) {
+    await previewVaultCompressionPrompt(false);
+  }
+}
+
+async function handleVaultCompressionStrategyChange() {
+  const strategy = document.getElementById('vault-compress-strategy');
+  if (strategy) {
+    strategy.dataset.userPicked = '1';
+  }
+  updateVaultCompressionStrategyUI();
+  await previewVaultCompressionPrompt(false);
+}
+
+async function openVaultCompressionPromptModal(preselectedSourceIds = [], presetMode = '', presetBaseMemoId = '') {
+  if (!currentWorkId) {
+    showToast('作品を選択してください', 'error');
+    return;
+  }
+
+  const items = await getWritingVaultItems(currentWorkId);
+  const list = document.getElementById('vault-compress-item-list');
+  const output = document.getElementById('vault-compress-output');
+  const extra = document.getElementById('vault-compress-extra');
+  const modeSelect = document.getElementById('vault-compress-mode');
+  const strategySelect = document.getElementById('vault-compress-strategy');
+
+  if (!list || !output || !modeSelect || !strategySelect) {
+    showToast('圧縮プロンプト用UIが見つかりません', 'error');
+    return;
+  }
+
+  const normalizedPreselectedIds = normalizeVaultSourceIdList(preselectedSourceIds);
+
+  if (presetMode) {
+    modeSelect.value = presetMode;
+  } else {
+    modeSelect.value = 'general';
+  }
+
+  strategySelect.dataset.userPicked = '';
+  strategySelect.value = modeSelect.value === 'general' ? 'update' : 'fresh';
+
+  if (extra) extra.value = '';
+  output.value = '';
+
+  list.innerHTML = items.length
+    ? buildVaultCompressItemListHTML(items, normalizedPreselectedIds)
+    : '<div class="form-hint">保管庫メモがありません。</div>';
+
+  await populateVaultCompressionBaseMemoSelect(presetBaseMemoId);
+  updateVaultCompressionStrategyUI();
+  openModal('modal-vault-compression');
+
+  if (normalizedPreselectedIds.length) {
+    await previewVaultCompressionPrompt(false);
+  }
+}
+
 // ║ END BLOCK: 執筆保管庫・圧縮プロンプト生成 前半
 
 // ╔═══════════════════════════════════════════════════════
@@ -12626,163 +12834,280 @@ async function getVaultCompressionSelectedItems() {
 // ║ 配置: SCRIPT内、執筆保管庫・圧縮プロンプト生成 前半ブロックの直後
 // ╚═══════════════════════════════════════════════════════
 
-function buildVaultCompressionPrompt(mode, items, extra = '') {
-  const modeLabel =
-    mode === 'a2'
-      ? 'A-2章設計用'
-      : mode === 'c'
-        ? 'C本文接続用'
-        : '汎用引き継ぎ用';
+function buildVaultCompressionCommonRules() {
+  return [
+    '## 共通ルール',
+    '',
+    '- 本文で確定した事実を最優先してください。',
+    '- 本文と既存メモが矛盾する場合、本文を採用し、矛盾は「要確認」に残してください。',
+    '- 予定と確定を混ぜないでください。',
+    '- 雰囲気説明や長いあらすじは禁止です。',
+    '- 今後の執筆で必要な制約・状態・因果だけを残してください。',
+    '- 重複する情報は統合してください。',
+    '- 不明点は断定せず、「未確定」または「要確認」に入れてください。',
+    '- 箇条書き中心で短く書いてください。'
+  ].join('\n');
+}
 
-  const instruction =
-    mode === 'a2'
-      ? buildA2CompressionInstruction()
-      : mode === 'c'
-        ? buildCCompressionInstruction()
-        : buildGeneralCompressionInstruction();
+function buildVaultCompressionPriorityGuide() {
+  return [
+    '## ソース優先順位',
+    '',
+    '1. 執筆済み本文',
+    '2. 最新アウトライン',
+    '3. 既存圧縮メモ',
+    '4. 補助メモ'
+  ].join('\n');
+}
 
-  const sourceBlocks = items.map((item, index) => {
+function buildVaultCompressionUpdateGuide(strategy, baseMemo) {
+  if (strategy === 'update' && baseMemo) {
     return [
-      `## 対象資料 ${index + 1}：${vaultMarkdownInline(item.title || '無題メモ', '無題メモ')}`,
+      '## 更新指示',
       '',
-      `- 種別：${vaultMarkdownInline(vaultTypeLabel(item.type))}`,
-      item.type === 'compressed'
-        ? `- 用途：${vaultMarkdownInline(WRITING_VAULT_COMPRESSION_PURPOSES[item.compressionPurpose || 'general'] || '汎用引き継ぎ用')}`
-        : '',
-      `- タグ：${vaultMarkdownInline((item.tags || []).join(', '), 'なし')}`,
-      `- 更新日時：${vaultMarkdownInline(vaultFormatDate(item.updatedAt))}`,
+      '- 既存圧縮メモを全面的に書き直すのではなく、今回追加された資料に応じて必要箇所だけ更新してください。',
+      '- 変更がない項目は維持してください。',
+      '- 解消済みの未回収要素は整理し、新しく生じた未回収要素を追加してください。',
+      '- 出力は「更新後の完全版」だけを返してください。'
+    ].join('\n');
+  }
+
+  if (strategy === 'update') {
+    return [
+      '## 更新指示',
       '',
-      vaultMarkdownBlock(item.body, '（本文なし）')
-    ].filter(Boolean).join('\n');
-  }).join('\n\n---\n\n');
+      '- 差分更新モードですが更新元の既存圧縮メモは未指定です。',
+      '- 選択資料だけを根拠に、新規の圧縮メモを1本作成してください。'
+    ].join('\n');
+  }
 
   return [
-    `# 長編小説・圧縮メモ作成依頼（${modeLabel}）`,
+    '## 新規作成指示',
     '',
-    instruction,
+    '- 選択資料を統合して、新しい圧縮メモを1本だけ作成してください。',
+    '- 「読むための要約」ではなく、「次の執筆で参照する状態圧縮」として出力してください。'
+  ].join('\n');
+}
+
+function buildVaultCompressionOutputFormat(mode) {
+  if (mode === 'a2') {
+    return [
+      '## 出力形式',
+      '',
+      '以下の固定見出しで出力してください。',
+      '',
+      '```text',
+      '【この章の役割】',
+      '- ',
+      '',
+      '【開始時点の状態】',
+      '- 主人公：',
+      '- 相手役：',
+      '- 二人の関係：',
+      '- 直前から引き継ぐ問題：',
+      '',
+      '【この章で進める感情】',
+      '- ',
+      '',
+      '【この章で仕込む / 回収する要素】',
+      '- 仕込む：',
+      '- 回収する：',
+      '',
+      '【場面運用の注意】',
+      '- 視点：',
+      '- 温度感：',
+      '- テンポ：',
+      '- R要素の扱い：',
+      '',
+      '【口調・関係性でブレさせないこと】',
+      '- ',
+      '',
+      '【この章での禁止事項】',
+      '- ',
+      '```'
+    ].join('\n');
+  }
+
+  if (mode === 'c') {
+    return [
+      '## 出力形式',
+      '',
+      '以下の固定見出しで出力してください。',
+      '',
+      '```text',
+      '【直前の確定事実】',
+      '- ',
+      '',
+      '【直前の感情温度】',
+      '- 主人公：',
+      '- 相手役：',
+      '- 二人の空気：',
+      '',
+      '【口調・距離感】',
+      '- ',
+      '',
+      '【物理状況】',
+      '- 場所：',
+      '- 時刻：',
+      '- 姿勢 / 行動の流れ：',
+      '- 周囲条件：',
+      '',
+      '【継続中の因果】',
+      '- 今なお効いている出来事：',
+      '- 忘れてはいけない情報：',
+      '',
+      '【書き出し注意】',
+      '- ',
+      '',
+      '【禁止】',
+      '- ',
+      '```'
+    ].join('\n');
+  }
+
+  return [
+    '## 出力形式',
     '',
-    extra ? '## 追加指示\n\n' + extra.trim() + '\n' : '',
+    '以下の固定見出しで出力してください。',
+    '',
+    '```text',
+    '【現在地】',
+    '- ',
+    '',
+    '【人物の確定状態】',
+    '- 主人公：',
+    '- 相手役：',
+    '- 主要脇役：',
+    '',
+    '【関係性の現在値】',
+    '- ',
+    '',
+    '【進行中の因果】',
+    '- ',
+    '',
+    '【未回収 / 今後必要】',
+    '- ',
+    '',
+    '【禁則】',
+    '- ',
+    '',
+    '【矛盾 / 要確認】',
+    '- ',
+    '```'
+  ].join('\n');
+}
+
+function buildVaultCompressionTaskLead(mode, strategy) {
+  const modeLabel = getVaultCompressionModeLabel(mode);
+  const strategyLabel = getVaultCompressionStrategyLabel(strategy);
+
+  if (mode === 'a2') {
+    return [
+      `## 今回の目的`,
+      '',
+      `- 用途：${modeLabel}`,
+      `- 方式：${strategyLabel}`,
+      '- 目的は、次の章を書く前に「この章で何を進め、何を仕込み、何を壊してはいけないか」を圧縮することです。',
+      '- 章全体のあらすじではなく、この章の設計判断に必要な情報だけを残してください。'
+    ].join('\n');
+  }
+
+  if (mode === 'c') {
+    return [
+      `## 今回の目的`,
+      '',
+      `- 用途：${modeLabel}`,
+      `- 方式：${strategyLabel}`,
+      '- 目的は、直前の続きが自然に書けるよう、「感情温度・距離感・物理状況・継続中の因果」を圧縮することです。',
+      '- 直前接続に不要な遠い過去の要約は削ってください。'
+    ].join('\n');
+  }
+
+  return [
+    `## 今回の目的`,
+    '',
+    `- 用途：${modeLabel}`,
+    `- 方式：${strategyLabel}`,
+    '- 目的は、次回以降の執筆で論理破綻・物語破綻・キャラ破綻を起こさないための「正史圧縮メモ」を更新または作成することです。',
+    '- 作品を読むための要約ではなく、将来の執筆で参照する状態圧縮として出力してください。'
+  ].join('\n');
+}
+
+function buildVaultCompressionSourceBlock(item, heading) {
+  const purpose =
+    normalizeWritingVaultType(item.type) === 'compressed'
+      ? ` / ${WRITING_VAULT_COMPRESSION_PURPOSES[item.compressionPurpose || 'general'] || '汎用補助'}`
+      : '';
+
+  return [
+    heading,
+    '',
+    `- タイトル：${vaultMarkdownInline(item.title || '無題メモ', '無題メモ')}`,
+    `- 種別：${vaultMarkdownInline(vaultTypeLabel(item.type))}${purpose ? vaultMarkdownInline(purpose) : ''}`,
+    `- 章：${vaultMarkdownInline(item.chapterNumber ? `第${item.chapterNumber}章` : '未設定')}`,
+    `- タグ：${vaultMarkdownInline((item.tags || []).join(', '), 'なし')}`,
+    `- 更新日時：${vaultMarkdownInline(vaultFormatDate(item.updatedAt))}`,
+    '',
+    vaultMarkdownBlock(item.body, '（本文なし）')
+  ].join('\n');
+}
+
+function buildVaultCompressionPrompt(mode, items, extra = '', strategy = 'fresh', baseMemo = null) {
+  const modeLabel = getVaultCompressionModeLabel(mode);
+  const sourceBlocks = items.map((item, index) =>
+    buildVaultCompressionSourceBlock(item, `## 圧縮対象資料 ${index + 1}`)
+  ).join('\n\n---\n\n');
+
+  const baseBlock = baseMemo
+    ? buildVaultCompressionSourceBlock(baseMemo, '# 更新元の既存圧縮メモ')
+    : '# 更新元の既存圧縮メモ\n\n（指定なし）';
+
+  return [
+    `# 長編小説・${modeLabel}圧縮メモ作成依頼`,
+    '',
+    'あなたは長編小説の continuity editor です。',
+    '目的は「読んだ内容の要約」ではなく、「今後の執筆で破綻を防ぐための状態圧縮」を作ることです。',
+    '',
+    buildVaultCompressionTaskLead(mode, strategy),
+    '',
+    buildVaultCompressionPriorityGuide(),
+    '',
+    buildVaultCompressionCommonRules(),
+    '',
+    buildVaultCompressionUpdateGuide(strategy, baseMemo),
+    '',
+    buildVaultCompressionOutputFormat(mode),
+    '',
+    extra ? `## 追加指示\n\n${extra.trim()}` : '',
+    '',
     '---',
     '',
-    '# 圧縮対象資料',
+    baseBlock,
+    '',
+    '---',
+    '',
+    '# 今回の圧縮対象資料',
     '',
     sourceBlocks
   ].join('\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
 }
 
-function buildA2CompressionInstruction() {
-  return [
-    '## 依頼内容',
-    '',
-    '以下の資料を、次回以降の「章アウトライン生成」「Part設計」に使えるよう、短く実用的な圧縮メモにしてください。',
-    '',
-    '## 圧縮方針',
-    '',
-    '- 章設計に必要な情報を優先してください。',
-    '- キャラクターの目的、関係性、感情の変化を整理してください。',
-    '- 伏線、未回収要素、今後使うべき設定を残してください。',
-    '- すでに完了した出来事と、次章以降に引き継ぐべき出来事を分けてください。',
-    '- 本文の美文調や細部の台詞は、必要なもの以外は削ってください。',
-    '',
-    '## 出力形式',
-    '',
-    '以下のMarkdown形式で出力してください。',
-    '',
-    '```markdown',
-    '# AI圧縮メモ：A-2章設計用',
-    '',
-    '## ここまでの進行',
-    '',
-    '## 主要キャラクターの現在地',
-    '',
-    '## 関係性・感情変化',
-    '',
-    '## 未回収の伏線・引き継ぎ事項',
-    '',
-    '## 次章設計で重視すべきこと',
-    '```'
-  ].join('\n');
-}
-
-function buildCCompressionInstruction() {
-  return [
-    '## 依頼内容',
-    '',
-    '以下の資料を、次回以降の「本文執筆プロンプトC」に入れる前セクション接続資料として圧縮してください。',
-    '',
-    '## 圧縮方針',
-    '',
-    '- 直前の場面から自然に続きを書くための情報を優先してください。',
-    '- 場所、時間帯、登場人物、直前の行動、会話の流れを残してください。',
-    '- キャラクターの直近の感情、身体状態、緊張感、沈黙、未完了のやり取りを残してください。',
-    '- 次の本文で拾うべき小道具、状況、約束、違和感を残してください。',
-    '- 長い本文そのものではなく、接続に必要な情報へ圧縮してください。',
-    '',
-    '## 出力形式',
-    '',
-    '以下のMarkdown形式で出力してください。',
-    '',
-    '```markdown',
-    '# AI圧縮メモ：C本文接続用',
-    '',
-    '## 直前までの状況',
-    '',
-    '## 現在の場面位置',
-    '',
-    '## 登場人物の状態',
-    '',
-    '## 直前の会話・行動',
-    '',
-    '## 次セクションで必ず拾うこと',
-    '```'
-  ].join('\n');
-}
-
-function buildGeneralCompressionInstruction() {
-  return [
-    '## 依頼内容',
-    '',
-    '以下の資料を、長編小説の継続執筆で再利用しやすい汎用引き継ぎメモに圧縮してください。',
-    '',
-    '## 圧縮方針',
-    '',
-    '- 物語全体の流れ、設定、キャラクター、伏線を整理してください。',
-    '- 重複情報は統合してください。',
-    '- 今後の執筆で参照する価値が低い細部は削ってください。',
-    '- 重要な固有名詞、関係性、ルール、未解決事項は残してください。',
-    '- AIに次回投入しやすいMarkdownにしてください。',
-    '',
-    '## 出力形式',
-    '',
-    '以下のMarkdown形式で出力してください。',
-    '',
-    '```markdown',
-    '# AI圧縮メモ：汎用引き継ぎ用',
-    '',
-    '## 作品全体の現在地',
-    '',
-    '## 主要キャラクター',
-    '',
-    '## 重要設定',
-    '',
-    '## 進行中の出来事',
-    '',
-    '## 未回収事項',
-    '',
-    '## 次回以降の注意点',
-    '```'
-  ].join('\n');
-}
-
-async function previewVaultCompressionPrompt() {
-  const items = await getVaultCompressionSelectedItems();
-  if (!items.length) return '';
+async function previewVaultCompressionPrompt(showError = true) {
+  const items = await getVaultCompressionSelectedItems(showError);
+  const output = document.getElementById('vault-compress-output');
+  if (!items.length) {
+    if (output && !showError) {
+      output.value = '';
+    }
+    return '';
+  }
 
   const mode = document.getElementById('vault-compress-mode')?.value || 'general';
+  const strategy = document.getElementById('vault-compress-strategy')?.value || 'fresh';
   const extra = document.getElementById('vault-compress-extra')?.value || '';
-  const output = document.getElementById('vault-compress-output');
+  const baseMemo = strategy === 'update' ? await getVaultCompressionBaseMemo() : null;
 
-  const markdown = buildVaultCompressionPrompt(mode, items, extra);
+  const markdown = buildVaultCompressionPrompt(mode, items, extra, strategy, baseMemo);
   if (output) output.value = markdown;
 
   return markdown;
@@ -12805,6 +13130,35 @@ async function downloadVaultCompressionPrompt() {
   const filename = `vault-compression-prompt-${mode}-${date}.md`;
 
   downloadFile(filename, markdown);
+}
+
+async function openCompressionMemoDraftFromPromptModal() {
+  const items = await getVaultCompressionSelectedItems();
+  if (!items.length) return;
+
+  const mode = document.getElementById('vault-compress-mode')?.value || 'general';
+  const strategy = document.getElementById('vault-compress-strategy')?.value || 'fresh';
+  const baseMemo = strategy === 'update' ? await getVaultCompressionBaseMemo() : null;
+  const chapterNumbers = items
+    .map(item => String(item.chapterNumber || '').trim())
+    .filter(Boolean)
+    .map(value => Number(value))
+    .filter(Number.isFinite);
+  const chapterStart = chapterNumbers.length ? String(Math.min(...chapterNumbers)) : '';
+  const chapterEnd = chapterNumbers.length ? String(Math.max(...chapterNumbers)) : '';
+  const presetChapter = chapterEnd || chapterStart || '';
+  const sourceIds = items.map(item => item.id);
+
+  await openVaultModal('', 'compressed', presetChapter, mode, sourceIds);
+  syncVaultCompressionMetadata({
+    basedOnCompressedId: baseMemo?.id || '',
+    compressionProfile: getVaultCompressionProfileKey(mode),
+    coverageChapterStart: chapterStart,
+    coverageChapterEnd: chapterEnd
+  });
+
+  closeModal('modal-vault-compression');
+  showToast('同条件の圧縮メモ追加モーダルを開きました');
 }
 
 // ║ END BLOCK: 執筆保管庫・圧縮プロンプト生成 後半
