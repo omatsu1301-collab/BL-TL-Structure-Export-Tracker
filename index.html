@@ -1609,6 +1609,228 @@ textarea { resize: vertical; }
 
 
 /* === 2026 redesign: prompt maker / writing vault === */
+
+.work-tab-header {
+  position: sticky;
+  top: 56px;
+  z-index: 12;
+  background: linear-gradient(180deg, rgba(26,26,46,0.98), rgba(26,26,46,0.92));
+  backdrop-filter: blur(12px);
+  padding: 12px 0 10px;
+  margin: 0 0 16px;
+}
+
+.core-tab-bar {
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 6px;
+  border-bottom: none;
+  padding: 8px;
+  background: rgba(13,13,31,0.94);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.core-tab-bar .tab-btn {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  margin-bottom: 0;
+  padding: 10px 18px;
+  background: transparent;
+}
+
+.core-tab-bar .tab-btn.active {
+  border-color: var(--border-hover);
+  background: var(--purple-glow2);
+  box-shadow: 0 0 12px var(--purple-glow2);
+}
+
+.pmx-top-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.pmx-top-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pmx-top-card-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--purple-300);
+}
+
+.pmx-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.pmx-layout {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.pmx-sidebar {
+  position: sticky;
+  top: 142px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pmx-sidebar-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--purple-300);
+}
+
+.pmx-sidebar-desc {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.pmx-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pmx-nav-btn {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.pmx-nav-btn:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.pmx-nav-btn.active {
+  border-color: var(--purple-500);
+  background: var(--purple-glow2);
+  color: var(--purple-300);
+  box-shadow: 0 0 12px var(--purple-glow2);
+}
+
+.pmx-main {
+  min-width: 0;
+}
+
+.pmx-pane {
+  display: none;
+}
+
+.pmx-pane.active {
+  display: block;
+}
+
+.pmx-pane-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.pmx-pane-head {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, rgba(109,40,217,0.14), rgba(139,92,246,0.05));
+}
+
+.pmx-pane-kicker {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--purple-300);
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+
+.pmx-pane-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.pmx-pane-body {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (max-width: 1100px) {
+  .pmx-top-grid,
+  .pmx-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .pmx-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .pmx-sidebar {
+    position: static;
+  }
+
+  .pmx-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .pmx-nav-btn {
+    width: auto;
+    min-width: 160px;
+  }
+}
+
+@media (max-width: 680px) {
+  .work-tab-header {
+    top: 56px;
+  }
+
+  .core-tab-bar {
+    position: static;
+  }
+
+  .pmx-nav {
+    flex-direction: column;
+  }
+
+  .pmx-nav-btn {
+    width: 100%;
+    min-width: 100%;
+  }
+}
+
 .pmx-intro {
   background: var(--bg-surface);
   border: 1px solid var(--border);
@@ -2172,41 +2394,12 @@ textarea { resize: vertical; }
     <!-- PAGE 2: 作品編集 -->
     <section class="page" id="page-work">
       <div class="breadcrumb"><a onclick="showPage('list')">← 作品リスト</a><span>/</span><span id="breadcrumb-title">作品詳細</span></div>
-   <div class="work-tab-header">
-  <div class="tab-bar">
-    <button class="tab-btn active" data-tab="meta" onclick="switchTab('meta')">メタ情報・本文</button>
-    <button class="tab-btn" data-tab="analysis" onclick="switchTab('analysis')">分析結果・エクスポート</button>
+   <div class="work-tab-header app-core-tabs">
+  <div class="tab-bar core-tab-bar" role="tablist" aria-label="主要機能">
+    <button class="tab-btn active" data-tab="analysis" onclick="switchTab('analysis')">分析</button>
     <button class="tab-btn" data-tab="promptmaker" onclick="switchTab('promptmaker')">プロンプトメーカー</button>
-    <button class="tab-btn" data-tab="vault" onclick="switchTab('vault')">執筆保管庫</button>
-  </div>
-
-  <div class="work-tab-side">
-    <button
-      type="button"
-      class="btn btn-ghost btn-sm work-utility-btn"
-      data-hidden-tab="backup"
-      onclick="toggleWorkUtilityPanel(false); switchTab('backup')"
-    >🗄 バックアップ</button>
-
-    <button
-      type="button"
-      class="btn btn-ghost btn-sm work-utility-btn"
-      id="work-utility-toggle"
-      aria-expanded="false"
-      onclick="toggleWorkUtilityPanel()"
-    >＋ 補助機能</button>
-  </div>
-</div>
-
-<div class="work-utility-panel" id="work-utility-panel">
-  <div class="work-utility-title">今は上部から外した機能</div>
-  <div class="work-utility-desc">完全削除ではなく退避です。必要なときだけここから開けます。</div>
-  <div class="work-utility-actions">
-    <button type="button" class="btn btn-ghost btn-sm work-utility-btn" data-hidden-tab="drafts" onclick="openHiddenWorkTab('drafts')">初稿・差分・採用</button>
-    <button type="button" class="btn btn-ghost btn-sm work-utility-btn" data-hidden-tab="canon" onclick="openHiddenWorkTab('canon')">確定設定</button>
-    <button type="button" class="btn btn-ghost btn-sm work-utility-btn" data-hidden-tab="consistency" onclick="openHiddenWorkTab('consistency')">整合性チェック</button>
-    <button type="button" class="btn btn-ghost btn-sm work-utility-btn" data-hidden-tab="summaries" onclick="openHiddenWorkTab('summaries')">引き継ぎ要約</button>
-    <button type="button" class="btn btn-ghost btn-sm work-utility-btn" data-hidden-tab="reflection" onclick="openHiddenWorkTab('reflection')">正史反映アシスト</button>
+    <button class="tab-btn" data-tab="meta" onclick="switchTab('meta')">執筆</button>
+    <button class="tab-btn" data-tab="vault" onclick="switchTab('vault')">引き継ぎ資料</button>
   </div>
 </div>
 
@@ -2547,223 +2740,242 @@ textarea { resize: vertical; }
         </div>
 
         <div class="pmx-intro">
-          今回の主導線は、<strong>描きたいシーン → 作品プロット設計 → キャラクター設計 → 引継ぎ資料生成 → 執筆プロンプト</strong>です。<br>
-          Claudeへ渡すための「生成用プロンプト」と、Claudeから返ってきた「完成版テキスト」の保存欄を分けています。
+          この画面でやることは5つだけです。<strong>描きたいシーン → 作品プロット設計 → キャラクター設計 → 引継ぎ資料生成 → 執筆プロンプト</strong>。<br>
+          完成版プロットと完成版キャラクターシートは、この画面に貼り付けず、<strong>分析結果の保存</strong>から選びます。引継ぎ資料は<strong>執筆 / 引き継ぎ資料</strong>で保存したものを参照します。
         </div>
 
-        <div class="pmx-stack">
-          <details class="pmx-section" open>
-            <summary>
-              <span>1. 執筆作品タイトル</span>
-              <small>執筆ファイル名と出力名に使うタイトル</small>
-            </summary>
-            <div class="pmx-section-body">
+        <div class="pmx-top-grid">
+          <div class="pmx-top-card">
+            <div class="pmx-top-card-title">執筆作品タイトル</div>
+            <div class="form-group">
+              <label class="form-label" for="pmx-writing-title">執筆作品タイトル <span class="req">*</span></label>
+              <input type="text" id="pmx-writing-title" placeholder="未入力なら作品タイトルを使います">
+            </div>
+          </div>
+
+          <div class="pmx-top-card">
+            <div class="pmx-top-card-title">執筆に使う完成版資料</div>
+            <div class="pmx-grid-3">
               <div class="form-group">
-                <label class="form-label" for="pmx-writing-title">執筆作品タイトル <span class="req">*</span></label>
-                <input type="text" id="pmx-writing-title" placeholder="未入力なら作品タイトルを使います">
-                <div class="form-hint">作品タイトルとは別に、執筆用の呼び名を持たせたいときだけ変更してください。</div>
+                <label class="form-label" for="pmx-final-plot-record">完成版プロット</label>
+                <select id="pmx-final-plot-record" onchange="pmxRenderSourceSummary()"></select>
+                <div class="form-hint">分析結果の保存から、完成版プロットとして使うレコードを1つ選びます。</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="pmx-final-character-record">完成版キャラクターシート</label>
+                <select id="pmx-final-character-record" onchange="pmxRenderSourceSummary()"></select>
+                <div class="form-hint">分析結果の保存から、完成版キャラクターシートとして使うレコードを1つ選びます。</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="pmx-writing-handoff-source">引継ぎ資料</label>
+                <select id="pmx-writing-handoff-source" onchange="pmxRenderSourceSummary()"></select>
+                <div class="form-hint">未選択なら「前章の引継ぎ資料」を自動使用します。必要なら別章の保存済み引継ぎ資料も選べます。</div>
               </div>
             </div>
-          </details>
+          </div>
+        </div>
 
-          <details class="pmx-section" open>
-            <summary>
-              <span>2. 描きたいシーン</span>
-              <small>自由記述の発想メモ</small>
-            </summary>
-            <div class="pmx-section-body">
-              <div class="form-group">
-                <label class="form-label" for="pmx-scene-free">描きたいシーン <span class="req">*</span></label>
-                <textarea id="pmx-scene-free" rows="16" placeholder="題名、世界観、人物像、入れたいセリフ、入れたい場面をまとめて自由に書いてください。"></textarea>
-                <div class="form-hint">「どんな場面」「どんなセリフ」を分けず、普段どおりの書き方でそのまま入れられます。</div>
-              </div>
+        <div class="pmx-layout">
+          <aside class="pmx-sidebar">
+            <div class="pmx-sidebar-title">切り替え</div>
+            <div class="pmx-sidebar-desc">左から1つずつ開いて作業します。縦に長くスクロールしないための導線です。</div>
+            <div class="pmx-nav">
+              <button type="button" class="pmx-nav-btn active" data-pane="scene" onclick="pmxSwitchPane('scene')">1. 描きたいシーン</button>
+              <button type="button" class="pmx-nav-btn" data-pane="plot" onclick="pmxSwitchPane('plot')">2. 作品プロット設計</button>
+              <button type="button" class="pmx-nav-btn" data-pane="character" onclick="pmxSwitchPane('character')">3. キャラクター設計</button>
+              <button type="button" class="pmx-nav-btn" data-pane="handoff" onclick="pmxSwitchPane('handoff')">4. 引継ぎ資料生成</button>
+              <button type="button" class="pmx-nav-btn" data-pane="writing" onclick="pmxSwitchPane('writing')">5. 執筆プロンプト</button>
             </div>
-          </details>
+          </aside>
 
-          <details class="pmx-section" open>
-            <summary>
-              <span>3. 作品プロット設計</span>
-              <small>Claudeに完成版プロットを作らせるための独立パーツ</small>
-            </summary>
-            <div class="pmx-section-body">
-              <div class="pmx-note-box">
-                分析結果の保存から必要な資料を選び、<strong>Claudeが理解しやすいプロット設計用プロンプト</strong>を作ります。完成版プロットはClaudeの返答を下の保存欄へ貼り戻してください。<strong>章立てまで含んだ完成版</strong>を必須にします。
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="pmx-plot-note">プロット設計で特に反映したいこと</label>
-                <textarea id="pmx-plot-note" rows="5" placeholder="構成の強み、絶対に入れたい要素、避けたい方向、各章で何を進めたいか、章立てで特に重視したいことなど"></textarea>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">参照する分析結果の保存</label>
-                <div id="pmx-plot-records" class="pmx-record-picker"></div>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="pmx-plot-prompt">Claudeへ渡す作品プロット設計プロンプト</label>
-                <textarea id="pmx-plot-prompt" class="pmx-generated-prompt pmx-generated-prompt-mid" rows="16" placeholder="「プロット設計プロンプト生成」を押すとここに出力されます。"></textarea>
-              </div>
-
-              <div class="pmx-inline-actions">
-                <div class="form-hint">完成版プロットは次の「執筆プロンプト」で使用されます。</div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap">
-                  <button class="btn btn-secondary" type="button" onclick="pmxGeneratePlotPrompt()">プロット設計プロンプト生成</button>
-                  <button class="btn btn-secondary" type="button" onclick="pmxCopyTextById('pmx-plot-prompt','作品プロット設計プロンプトをコピーしました')">コピー</button>
+          <div class="pmx-main">
+            <section class="pmx-pane active" data-pane="scene">
+              <div class="pmx-pane-card">
+                <div class="pmx-pane-head">
+                  <div>
+                    <div class="pmx-pane-kicker">1. 描きたいシーン</div>
+                    <div class="pmx-pane-title">普段どおりの自由記述をそのまま入れる欄</div>
+                  </div>
+                </div>
+                <div class="pmx-pane-body">
+                  <div class="form-group">
+                    <label class="form-label" for="pmx-scene-free">描きたいシーン <span class="req">*</span></label>
+                    <textarea id="pmx-scene-free" rows="18" placeholder="題名、世界観、人物像、入れたいセリフ、入れたい場面をまとめて自由に書いてください。"></textarea>
+                    <div class="form-hint">分割欄は使わず、あなたの書き方のままで入れられます。</div>
+                  </div>
                 </div>
               </div>
+            </section>
 
-              <div class="form-group">
-                <label class="form-label" for="pmx-plot-completed">完成版プロット（章立て必須） <span class="req">*</span></label>
-                <textarea id="pmx-plot-completed" class="pmx-generated-prompt pmx-generated-prompt-mid" rows="16" placeholder="Claudeが返した、章立てまで含む完成版プロットをここへ保存します。各章で何を描くかが分かる形で保存してください。"></textarea>
-                <div class="form-hint">執筆プロンプトでは、この欄に保存した完成版プロットをそのまま参照します。章ごとの進行が見える形で保存してください。</div>
-              </div>
-            </div>
-          </details>
-
-          <details class="pmx-section" open>
-            <summary>
-              <span>4. キャラクター設計</span>
-              <small>Claudeに完成版キャラクターシートを作らせるための独立パーツ</small>
-            </summary>
-            <div class="pmx-section-body">
-              <div class="pmx-note-box">
-                分析結果の保存から必要な資料を選び、<strong>Claudeが理解しやすいキャラクター設計用プロンプト</strong>を作ります。完成版キャラクターシートはClaudeの返答を下の保存欄へ貼り戻してください。
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="pmx-character-note">キャラクター設計で特に反映したいこと</label>
-                <textarea id="pmx-character-note" rows="5" placeholder="主人公 / ヒロインの軸、会話温度、関係性、読者に感じさせたい魅力など"></textarea>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">参照する分析結果の保存</label>
-                <div id="pmx-character-records" class="pmx-record-picker"></div>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="pmx-character-prompt">Claudeへ渡すキャラクター設計プロンプト</label>
-                <textarea id="pmx-character-prompt" class="pmx-generated-prompt pmx-generated-prompt-mid" rows="16" placeholder="「キャラクター設計プロンプト生成」を押すとここに出力されます。"></textarea>
-              </div>
-
-              <div class="pmx-inline-actions">
-                <div class="form-hint">必要なら完成版プロットも前提資料として使われます。</div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap">
-                  <button class="btn btn-secondary" type="button" onclick="pmxGenerateCharacterPrompt()">キャラクター設計プロンプト生成</button>
-                  <button class="btn btn-secondary" type="button" onclick="pmxCopyTextById('pmx-character-prompt','キャラクター設計プロンプトをコピーしました')">コピー</button>
+            <section class="pmx-pane" data-pane="plot">
+              <div class="pmx-pane-card">
+                <div class="pmx-pane-head">
+                  <div>
+                    <div class="pmx-pane-kicker">2. 作品プロット設計</div>
+                    <div class="pmx-pane-title">分析結果と描きたいシーンから、Claude向けの完成版プロット生成プロンプトを作る</div>
+                  </div>
+                </div>
+                <div class="pmx-pane-body">
+                  <div class="pmx-note-box">
+                    完成版プロット本文はここに保存しません。<strong>分析結果の保存</strong>へ保存し、その中から完成版として使うレコードを上で選びます。完成版プロットは<strong>章立て必須</strong>です。
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="pmx-plot-note">プロット設計で特に反映したいこと</label>
+                    <textarea id="pmx-plot-note" rows="6" placeholder="構成の強み、絶対に入れたい要素、避けたい方向、各章で何を進めたいか、章立てで重視したいことなど"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">参照する分析結果の保存</label>
+                    <div id="pmx-plot-records" class="pmx-record-picker"></div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="pmx-plot-prompt">Claudeへ渡す作品プロット設計プロンプト</label>
+                    <textarea id="pmx-plot-prompt" class="pmx-generated-prompt pmx-generated-prompt-mid" rows="16" placeholder="「プロット設計プロンプト生成」を押すとここに出力されます。"></textarea>
+                  </div>
+                  <div class="pmx-inline-actions">
+                    <div class="form-hint">出力は、Claudeが読みやすい XML風の構造化形式です。</div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap">
+                      <button class="btn btn-secondary" type="button" onclick="pmxGeneratePlotPrompt()">プロット設計プロンプト生成</button>
+                      <button class="btn btn-secondary" type="button" onclick="pmxCopyTextById('pmx-plot-prompt','作品プロット設計プロンプトをコピーしました')">コピー</button>
+                    </div>
+                  </div>
                 </div>
               </div>
+            </section>
 
-              <div class="form-group">
-                <label class="form-label" for="pmx-character-completed">完成版キャラクターシート</label>
-                <textarea id="pmx-character-completed" class="pmx-generated-prompt pmx-generated-prompt-mid" rows="16" placeholder="Claudeが返した完成版キャラクターシートをここへ保存します。"></textarea>
-              </div>
-            </div>
-          </details>
-
-          <details class="pmx-section" open>
-            <summary>
-              <span>5. 引継ぎ資料生成</span>
-              <small>章本文から次章へ渡す資料を作るための独立パーツ</small>
-            </summary>
-            <div class="pmx-section-body">
-              <div class="pmx-note-box">
-                章本文をもとに、<strong>論理の破綻・物語の破綻・感情の破綻を防ぐ引継ぎ資料</strong>をClaudeに作らせるためのプロンプトです。出力形式は<strong>要約＋固定フォーマット</strong>で完全固定します。Claudeの返答は、執筆保管庫のその章の「次章へ渡す引継ぎ資料」へ保存します。
-              </div>
-
-              <div class="pmx-grid-2">
-                <div class="form-group">
-                  <label class="form-label" for="pmx-handoff-source-chapter">引継ぎ資料を作る章</label>
-                  <select id="pmx-handoff-source-chapter"></select>
+            <section class="pmx-pane" data-pane="character">
+              <div class="pmx-pane-card">
+                <div class="pmx-pane-head">
+                  <div>
+                    <div class="pmx-pane-kicker">3. キャラクター設計</div>
+                    <div class="pmx-pane-title">分析結果と描きたいシーンから、Claude向けの完成版キャラクターシート生成プロンプトを作る</div>
+                  </div>
                 </div>
-                <div class="form-group">
-                  <label class="form-label" for="pmx-handoff-note">引継ぎ資料で強調したいこと</label>
-                  <textarea id="pmx-handoff-note" rows="4" placeholder="次章で絶対に破綻させたくない論理、感情、伏線、関係性など"></textarea>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">参照する分析結果の保存</label>
-                <div id="pmx-handoff-records" class="pmx-record-picker"></div>
-              </div>
-
-              <div class="pmx-note-box" style="margin-top:0">
-                出力フォーマットは固定です。<br>
-                <strong>引継ぎ資料要約 → 事実状態 → 感情状態 → 関係性状態 → 物理状況 → 未解決事項 → 表現上の注意 → 次章で崩してはいけないこと → 次章へ自然に残る圧力</strong>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="pmx-handoff-prompt">Claudeへ渡す引継ぎ資料生成プロンプト</label>
-                <textarea id="pmx-handoff-prompt" class="pmx-generated-prompt pmx-generated-prompt-mid" rows="16" placeholder="「引継ぎ資料生成プロンプト生成」を押すとここに出力されます。"></textarea>
-              </div>
-
-              <div class="pmx-inline-actions">
-                <div class="form-hint">Claudeの返答は、このアプリ内では自動保存せず、執筆保管庫へ貼り戻す運用です。要約欄と固定フォーマット欄の両方へ反映してください。</div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap">
-                  <button class="btn btn-secondary" type="button" onclick="pmxGenerateHandoffPrompt()">引継ぎ資料生成プロンプト生成</button>
-                  <button class="btn btn-secondary" type="button" onclick="pmxCopyTextById('pmx-handoff-prompt','引継ぎ資料生成プロンプトをコピーしました')">コピー</button>
+                <div class="pmx-pane-body">
+                  <div class="pmx-note-box">
+                    完成版キャラクターシート本文もここに貼りません。<strong>分析結果の保存</strong>に保存し、その中から完成版として使うレコードを上で選びます。
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="pmx-character-note">キャラクター設計で特に反映したいこと</label>
+                    <textarea id="pmx-character-note" rows="6" placeholder="主人公 / ヒロインの軸、会話温度、関係性、魅力、崩してはいけない芯など"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">参照する分析結果の保存</label>
+                    <div id="pmx-character-records" class="pmx-record-picker"></div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="pmx-character-prompt">Claudeへ渡すキャラクター設計プロンプト</label>
+                    <textarea id="pmx-character-prompt" class="pmx-generated-prompt pmx-generated-prompt-mid" rows="16" placeholder="「キャラクター設計プロンプト生成」を押すとここに出力されます。"></textarea>
+                  </div>
+                  <div class="pmx-inline-actions">
+                    <div class="form-hint">必要なら、上で選んだ完成版プロットを前提資料として自動参照します。</div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap">
+                      <button class="btn btn-secondary" type="button" onclick="pmxGenerateCharacterPrompt()">キャラクター設計プロンプト生成</button>
+                      <button class="btn btn-secondary" type="button" onclick="pmxCopyTextById('pmx-character-prompt','キャラクター設計プロンプトをコピーしました')">コピー</button>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </details>
+            </section>
 
-          <details class="pmx-section" open>
-            <summary>
-              <span>6. 執筆プロンプト</span>
-              <small>完成版プロット（章立て必須） / 完成版キャラ / 前章引継ぎ資料で執筆を開始する出口</small>
-            </summary>
-            <div class="pmx-section-body">
-              <div class="pmx-grid-2">
-                <div class="form-group">
-                  <label class="form-label" for="pmx-target-chapter">執筆する章</label>
-                  <select id="pmx-target-chapter" onchange="pmxHandleChapterChange()"></select>
+            <section class="pmx-pane" data-pane="handoff">
+              <div class="pmx-pane-card">
+                <div class="pmx-pane-head">
+                  <div>
+                    <div class="pmx-pane-kicker">4. 引継ぎ資料生成</div>
+                    <div class="pmx-pane-title">章本文から、次章で破綻しないための引継ぎ資料を作る</div>
+                  </div>
                 </div>
-                <div class="form-group">
-                  <label class="form-label" for="pmx-output-conditions">出力条件</label>
-                  <textarea id="pmx-output-conditions" rows="4" placeholder="文体、視点、長さ、禁止事項など。未入力なら標準条件を使います。"></textarea>
+                <div class="pmx-pane-body">
+                  <div class="pmx-note-box">
+                    引継ぎ資料の出力形式は<strong>要約＋固定フォーマット</strong>で完全固定です。Claudeの返答は、<strong>引き継ぎ資料</strong>タブに保存してください。
+                  </div>
+                  <div class="pmx-grid-2">
+                    <div class="form-group">
+                      <label class="form-label" for="pmx-handoff-source-chapter">引継ぎ資料を作る章</label>
+                      <select id="pmx-handoff-source-chapter"></select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="pmx-handoff-note">引継ぎ資料で強調したいこと</label>
+                      <textarea id="pmx-handoff-note" rows="4" placeholder="次章で絶対に破綻させたくない論理、感情、伏線、関係性など"></textarea>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">参照する分析結果の保存</label>
+                    <div id="pmx-handoff-records" class="pmx-record-picker"></div>
+                  </div>
+                  <div class="pmx-note-box" style="margin-top:0">
+                    固定フォーマット：<br>
+                    <strong>引継ぎ資料要約 → 事実状態 → 感情状態 → 関係性状態 → 物理状況 → 未解決事項 → 表現上の注意 → 次章で崩してはいけないこと → 次章へ自然に残る圧力</strong>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="pmx-handoff-prompt">Claudeへ渡す引継ぎ資料生成プロンプト</label>
+                    <textarea id="pmx-handoff-prompt" class="pmx-generated-prompt pmx-generated-prompt-mid" rows="16" placeholder="「引継ぎ資料生成プロンプト生成」を押すとここに出力されます。"></textarea>
+                  </div>
+                  <div class="pmx-inline-actions">
+                    <div class="form-hint">完成版プロット / 完成版キャラクターシートは、上で選んだ保存済みレコードを自動参照します。</div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap">
+                      <button class="btn btn-secondary" type="button" onclick="pmxGenerateHandoffPrompt()">引継ぎ資料生成プロンプト生成</button>
+                      <button class="btn btn-secondary" type="button" onclick="pmxCopyTextById('pmx-handoff-prompt','引継ぎ資料生成プロンプトをコピーしました')">コピー</button>
+                    </div>
+                  </div>
                 </div>
               </div>
+            </section>
 
-              <div class="pmx-grid-2">
-                <div class="pmx-info-card">
-                  <div class="pmx-info-title">今回の執筆に使う資料</div>
-                  <div id="pmx-source-summary" class="pmx-info-body"></div>
+            <section class="pmx-pane" data-pane="writing">
+              <div class="pmx-pane-card">
+                <div class="pmx-pane-head">
+                  <div>
+                    <div class="pmx-pane-kicker">5. 執筆プロンプト</div>
+                    <div class="pmx-pane-title">完成版プロット / 完成版キャラクターシート / 引継ぎ資料で対象章を書き始める</div>
+                  </div>
                 </div>
-                <div class="pmx-info-card">
-                  <div class="pmx-info-title">執筆プロンプトの構成順</div>
-                  <ol class="pmx-order-list">
-                    <li>完成版プロット（章立て込み）</li>
-                    <li>完成版キャラクターシート</li>
-                    <li>前章の引継ぎ資料</li>
-                    <li>今回の対象章情報</li>
-                    <li>描きたいシーン</li>
-                    <li>出力条件</li>
-                  </ol>
+                <div class="pmx-pane-body">
+                  <div class="pmx-grid-2">
+                    <div class="form-group">
+                      <label class="form-label" for="pmx-target-chapter">執筆する章</label>
+                      <select id="pmx-target-chapter" onchange="pmxHandleChapterChange()"></select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="pmx-output-conditions">出力条件</label>
+                      <textarea id="pmx-output-conditions" rows="4" placeholder="文体、視点、長さ、禁止事項など。未入力なら標準条件を使います。"></textarea>
+                    </div>
+                  </div>
+
+                  <div class="pmx-grid-2">
+                    <div class="pmx-info-card">
+                      <div class="pmx-info-title">今回の執筆に使う資料</div>
+                      <div id="pmx-source-summary" class="pmx-info-body"></div>
+                    </div>
+                    <div class="pmx-info-card">
+                      <div class="pmx-info-title">Claude向け出力形式</div>
+                      <div class="pmx-info-body">このアプリでは、Markdown見出しだけよりも<strong>XML風のタグで区切った構造化プロンプト</strong>を優先します。JSONより自然文の長文資料を入れやすく、Claudeに意図が伝わりやすい構成です。</div>
+                    </div>
+                  </div>
+
+                  <div id="pmx-validation" class="pmx-validation" style="display:none"></div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="pmx-generated-prompt">Claudeへ渡す執筆プロンプト</label>
+                    <textarea id="pmx-generated-prompt" class="pmx-generated-prompt" rows="22" placeholder="上の「執筆プロンプト生成」を押すと、ここに完成版が出力されます。"></textarea>
+                  </div>
+
+                  <div class="pmx-inline-actions">
+                    <button class="btn btn-secondary" type="button" onclick="pmxGenerateWritingPrompt()">再生成</button>
+                    <button class="btn btn-secondary" type="button" onclick="pmxCopyGeneratedPrompt()">コピー</button>
+                    <button class="btn btn-primary" type="button" onclick="pmxDownloadGeneratedPrompt()">ダウンロード</button>
+                  </div>
                 </div>
               </div>
-
-              <div id="pmx-validation" class="pmx-validation" style="display:none"></div>
-
-              <div class="form-group">
-                <label class="form-label" for="pmx-generated-prompt">Claudeへ渡す執筆プロンプト</label>
-                <textarea id="pmx-generated-prompt" class="pmx-generated-prompt" rows="22" placeholder="上の「執筆プロンプト生成」を押すと、ここに完成版が出力されます。"></textarea>
-              </div>
-
-              <div class="pmx-inline-actions">
-                <button class="btn btn-secondary" type="button" onclick="pmxGenerateWritingPrompt()">再生成</button>
-                <button class="btn btn-secondary" type="button" onclick="pmxCopyGeneratedPrompt()">コピー</button>
-                <button class="btn btn-primary" type="button" onclick="pmxDownloadGeneratedPrompt()">ダウンロード</button>
-              </div>
-            </div>
-          </details>
+            </section>
+          </div>
         </div>
       </div>
-
 
 <!-- TAB: 執筆保管庫 -->
       <div class="tab-panel" id="tab-vault">
         <div class="section-header">
-          <div class="section-title"><span class="icon">🗃</span> 執筆保管庫 <span class="count-badge" id="vault2-count">0</span></div>
+          <div class="section-title"><span class="icon">🗃</span> 引き継ぎ資料 <span class="count-badge" id="vault2-count">0</span></div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="btn btn-secondary" type="button" onclick="loadWritingVaultTab()">再読み込み</button>
             <button class="btn btn-primary" type="button" onclick="vault2AddChapter()">＋ 章を追加</button>
@@ -3396,7 +3608,7 @@ textarea { resize: vertical; }
 //  DB LAYER : IndexedDB
 // ======================================================
 const DB_NAME = 'NovelAnalysisDB';
-const DB_VERSION = 6;
+const DB_VERSION = 7;
 
 const STORE_WORKS = 'works';
 const STORE_EPISODES = 'episodes';
@@ -3731,7 +3943,22 @@ const INITIAL_RULES=[
 
 async function seedRules(){
   const existing=await dbGetAll(STORE_RULES);
-  if(existing.length===0){for(const r of INITIAL_RULES){await dbPut(STORE_RULES,r);}}
+  if(existing.length===0){
+    for(const r of INITIAL_RULES){
+      await dbPut(STORE_RULES,{...r});
+    }
+  }
+}
+
+async function ensureRulesAvailable(){
+  let rules = await dbGetAll(STORE_RULES);
+  if(rules.length===0){
+    for(const r of INITIAL_RULES){
+      await dbPut(STORE_RULES,{...r});
+    }
+    rules = await dbGetAll(STORE_RULES);
+  }
+  return rules;
 }
 
 // ======================================================
@@ -3772,7 +3999,7 @@ function showPage(page,workId){
     document.getElementById('top-bar-actions').innerHTML=
       `<button class="btn btn-secondary btn-sm" onclick="showPage('dashboard','${targetWorkId}')">📊 制作ダッシュボード</button>`;
     loadWorkPage(targetWorkId);
-    switchTab('meta');
+    switchTab('analysis');
     updateNavWorksList(targetWorkId);
   }else if(page==='rules'){
     document.getElementById('page-rules').classList.add('active');
@@ -8386,7 +8613,7 @@ function toggleEpCheck(n){document.getElementById(`ep-lbl-${n}`).classList.toggl
 const RULE_CATEGORIES=['描写技法','キャラクター','シーン構成','物語構成','読者意識'];
 
 async function renderRulesPage(){
-  const rules=await dbGetAll(STORE_RULES);rules.sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
+  const rules=await ensureRulesAvailable();rules.sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
   document.getElementById('rules-count').textContent=rules.length;
   renderRuleFilterBar();
   const filtered=ruleFilterCategory==='all'?rules:rules.filter(r=>r.category===ruleFilterCategory);
@@ -15303,6 +15530,24 @@ init();
     };
   };
 
+  
+  function pmxSwitchPaneDom(activePane) {
+    const pane = activePane || 'scene';
+    document.querySelectorAll('#tab-promptmaker .pmx-nav-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.pane === pane);
+    });
+    document.querySelectorAll('#tab-promptmaker .pmx-pane').forEach(section => {
+      section.classList.toggle('active', section.dataset.pane === pane);
+    });
+  }
+
+  window.pmxSwitchPane = function (pane) {
+    pmxSwitchPaneDom(pane || 'scene');
+    if (currentWorkId) {
+      window.pmxSaveSupport(false);
+    }
+  };
+
   window.pmxNormalizeSupport = function (work) {
     const src = work && typeof work.writingSupport === 'object' && work.writingSupport ? work.writingSupport : {};
     const legacyScene = pmxJoinNonEmpty([
@@ -15315,6 +15560,7 @@ init();
     ], '\n');
 
     const legacyPlotNote = pmxJoinNonEmpty([
+      src.plotDesign?.note,
       src.promptA?.style,
       src.promptA?.avoid ? `避けたい方向: ${src.promptA.avoid}` : '',
       src.promptA?.dialogue ? `セリフの効かせ方: ${src.promptA.dialogue}` : '',
@@ -15329,14 +15575,12 @@ init();
       plotDesign: {
         note: String(src.plotDesign?.note || legacyPlotNote || '').trim(),
         recordIds: pmxSafeArray(src.plotDesign?.recordIds),
-        prompt: String(src.plotDesign?.prompt || '').trim(),
-        completed: String(src.plotDesign?.completed || '').trim()
+        prompt: String(src.plotDesign?.prompt || '').trim()
       },
       characterDesign: {
         note: String(src.characterDesign?.note || '').trim(),
         recordIds: pmxSafeArray(src.characterDesign?.recordIds),
-        prompt: String(src.characterDesign?.prompt || '').trim(),
-        completed: String(src.characterDesign?.completed || pmxLegacyCharacterCompleted(src.characters) || '').trim()
+        prompt: String(src.characterDesign?.prompt || '').trim()
       },
       handoffDesign: {
         chapterId: String(src.handoffDesign?.chapterId || src.targetChapterId || '').trim(),
@@ -15344,8 +15588,18 @@ init();
         recordIds: pmxSafeArray(src.handoffDesign?.recordIds),
         prompt: String(src.handoffDesign?.prompt || '').trim()
       },
+      writingAssets: {
+        plotRecordId: String(src.writingAssets?.plotRecordId || '').trim(),
+        characterRecordId: String(src.writingAssets?.characterRecordId || '').trim(),
+        handoffSource: String(src.writingAssets?.handoffSource || 'auto-prev').trim() || 'auto-prev'
+      },
+      legacyCompleted: {
+        plot: String(src.plotDesign?.completed || '').trim(),
+        character: String(src.characterDesign?.completed || pmxLegacyCharacterCompleted(src.characters) || '').trim()
+      },
       outputConditions: String(src.outputConditions || '').trim(),
-      targetChapterId: String(src.targetChapterId || '').trim()
+      targetChapterId: String(src.targetChapterId || '').trim(),
+      activePane: String(src.activePane || 'scene').trim() || 'scene'
     };
 
     if (!normalized.outputConditions) {
@@ -15353,7 +15607,7 @@ init();
         '・対象章だけを書く',
         '・完成版プロットの章立てを守る',
         '・完成版キャラクターシートを優先する',
-        '・前章の引継ぎ資料（要約＋固定フォーマット）を破らない',
+        '・引継ぎ資料を破らない',
         '・場面の感情と会話の熱を保ちながら、日本語の小説本文として出力する'
       ].join('\n');
     }
@@ -15377,6 +15631,132 @@ init();
       .filter(Boolean);
   }
 
+  function pmxRecordDisplayTitle(record) {
+    if (!record) return '未選択';
+    const tags = Array.isArray(record.tags) ? record.tags.filter(Boolean) : [];
+    if (tags.length) return tags.join(' / ');
+    const excerpt = String(record.content || '').trim().replace(/\s+/g, ' ');
+    return excerpt ? excerpt.slice(0, 36) : '分析記録';
+  }
+
+  function pmxFindRecordById(records, id) {
+    return records.find(record => String(record.id) === String(id || '').trim()) || null;
+  }
+
+  function pmxRecordBundle(selectedIds, records) {
+    if (!selectedIds.length) return '（選択なし）';
+    const byId = new Map(records.map(record => [String(record.id), record]));
+    return selectedIds.map((id, index) => {
+      const record = byId.get(String(id));
+      if (!record) return '';
+      const title = pmxRecordDisplayTitle(record);
+      const date = new Date(record.updatedAt || record.createdAt || Date.now()).toLocaleString('ja-JP');
+      return [
+        `<analysis_material index="${index + 1}">`,
+        `<title>${title}</title>`,
+        `<updated_at>${date}</updated_at>`,
+        `<body>`,
+        String(record.content || '').trim() || '本文なし',
+        `</body>`,
+        `</analysis_material>`
+      ].join('\n');
+    }).filter(Boolean).join('\n\n');
+  }
+
+  function pmxWorkMetaBlock(work) {
+    return [
+      `<title>${work?.title || '無題'}</title>`,
+      work?.genre ? `<genre>${work.genre}</genre>` : '',
+      work?.synopsis ? `<synopsis>\n${work.synopsis.trim()}\n</synopsis>` : ''
+    ].filter(Boolean).join('\n');
+  }
+
+  function pmxPlotHasChapterOutline(text) {
+    const value = String(text || '').trim();
+    if (!value) return false;
+    return /(第\s*[0-9０-９一二三四五六七八九十]+\s*章|第\s*[0-9０-９一二三四五六七八九十]+\s*話|第一章|章立て|chapter\s*[0-9]+)/i.test(value);
+  }
+
+  function pmxRecordOptionHtml(records, selectedId, placeholder) {
+    const options = [`<option value="">${esc(placeholder || '選択してください')}</option>`];
+    records.forEach(record => {
+      const label = pmxRecordDisplayTitle(record);
+      const date = new Date(record.updatedAt || record.createdAt || Date.now()).toLocaleDateString('ja-JP');
+      const selected = String(record.id) === String(selectedId || '') ? ' selected' : '';
+      options.push(`<option value="${esc(String(record.id))}"${selected}>${esc(label)}｜${esc(date)}</option>`);
+    });
+    return options.join('');
+  }
+
+  function pmxResolvedPlotText(support, records) {
+    const selected = pmxFindRecordById(records, support.writingAssets.plotRecordId);
+    return {
+      text: String(selected?.content || support.legacyCompleted.plot || '').trim(),
+      label: selected ? pmxRecordDisplayTitle(selected) : (support.legacyCompleted.plot ? '旧保存データ' : '未選択')
+    };
+  }
+
+  function pmxResolvedCharacterText(support, records) {
+    const selected = pmxFindRecordById(records, support.writingAssets.characterRecordId);
+    return {
+      text: String(selected?.content || support.legacyCompleted.character || '').trim(),
+      label: selected ? pmxRecordDisplayTitle(selected) : (support.legacyCompleted.character ? '旧保存データ' : '未選択')
+    };
+  }
+
+  function pmxBuildHandoffChoiceOptions(chapters, selectedValue) {
+    const options = [
+      `<option value="auto-prev"${selectedValue === 'auto-prev' ? ' selected' : ''}>自動（前章の引継ぎ資料）</option>`,
+      `<option value="none"${selectedValue === 'none' ? ' selected' : ''}>使わない</option>`
+    ];
+
+    chapters
+      .filter(chapter => window.vault2HasHandoff(chapter))
+      .forEach(chapter => {
+        const state = chapter._writingState || window.vault2NormalizeChapterState(chapter, vault2EpisodeCache || []);
+        const label = `指定: 第${chapter.number || '?'}章｜${chapter.title || `第${chapter.number || '?'}章`}（${state.handoff?.summary ? state.handoff.summary.length : 0}字）`;
+        const value = `chapter:${chapter.id}`;
+        options.push(`<option value="${esc(value)}"${selectedValue === value ? ' selected' : ''}>${esc(label)}</option>`);
+      });
+
+    return options.join('');
+  }
+
+  function pmxResolveSelectedHandoff(chapters, selectedChapterId, sourceValue) {
+    const normalizedSource = String(sourceValue || 'auto-prev').trim() || 'auto-prev';
+    if (normalizedSource === 'none') {
+      return { text: '（引継ぎ資料を使わない）', label: '使わない', chapter: null, missing: false };
+    }
+
+    if (normalizedSource.startsWith('chapter:')) {
+      const chapterId = normalizedSource.slice('chapter:'.length);
+      const chapter = (chapters || []).find(item => item.id === chapterId) || null;
+      if (!chapter) {
+        return { text: '（指定した引継ぎ資料が見つかりません）', label: '指定資料なし', chapter: null, missing: true };
+      }
+      const state = chapter._writingState || window.vault2NormalizeChapterState(chapter, vault2EpisodeCache || []);
+      return {
+        text: vault2BuildHandoffStructuredText(state.handoff),
+        label: `第${chapter.number || '?'}章｜${chapter.title || `第${chapter.number || '?'}章`}`,
+        chapter,
+        missing: !window.vault2HasHandoff(chapter)
+      };
+    }
+
+    const selectedChapter = (chapters || []).find(item => item.id === selectedChapterId) || null;
+    const prev = selectedChapter ? pmxGetPreviousChapter(chapters || [], selectedChapter.id) : null;
+    if (!prev) {
+      return { text: '（前章なし / 第1章）', label: '前章なし', chapter: null, missing: false };
+    }
+    const state = prev._writingState || window.vault2NormalizeChapterState(prev, vault2EpisodeCache || []);
+    return {
+      text: vault2BuildHandoffStructuredText(state.handoff),
+      label: `前章: 第${prev.number || '?'}章｜${prev.title || `第${prev.number || '?'}章`}`,
+      chapter: prev,
+      missing: !window.vault2HasHandoff(prev)
+    };
+  }
+
   function pmxRenderRecordPicker(containerId, records, selectedIds) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -15387,7 +15767,7 @@ init();
     }
 
     container.innerHTML = records.map(record => {
-      const title = (record.tags && record.tags.length ? record.tags.join(' / ') : '分析記録');
+      const title = pmxRecordDisplayTitle(record);
       const excerpt = String(record.content || '').trim().slice(0, 180);
       const checked = selected.has(String(record.id)) ? ' checked' : '';
       return `
@@ -15407,15 +15787,34 @@ init();
     }).join('');
   }
 
-  async function pmxRenderAllRecordPickers(support) {
+  async function pmxRenderAllRecordPickersAndSelects(support) {
     const records = await pmxGetCurrentRecords();
     pmxRenderRecordPicker('pmx-plot-records', records, support.plotDesign.recordIds);
     pmxRenderRecordPicker('pmx-character-records', records, support.characterDesign.recordIds);
     pmxRenderRecordPicker('pmx-handoff-records', records, support.handoffDesign.recordIds);
+
+    const plotSelect = document.getElementById('pmx-final-plot-record');
+    if (plotSelect) {
+      plotSelect.innerHTML = pmxRecordOptionHtml(records, support.writingAssets.plotRecordId, '完成版プロットを選択');
+    }
+
+    const characterSelect = document.getElementById('pmx-final-character-record');
+    if (characterSelect) {
+      characterSelect.innerHTML = pmxRecordOptionHtml(records, support.writingAssets.characterRecordId, '完成版キャラクターシートを選択');
+    }
+
+    const handoffSelect = document.getElementById('pmx-writing-handoff-source');
+    if (handoffSelect) {
+      const chapters = (vault2ChapterCache && vault2ChapterCache.length)
+        ? vault2ChapterCache
+        : [];
+      handoffSelect.innerHTML = pmxBuildHandoffChoiceOptions(chapters, support.writingAssets.handoffSource || 'auto-prev');
+    }
   }
 
   window.pmxReadSupportFromDom = function () {
     const base = window.pmxNormalizeSupport(currentWork || {});
+    const activePane = document.querySelector('#tab-promptmaker .pmx-nav-btn.active')?.dataset.pane || base.activePane || 'scene';
     return {
       ...base,
       writingTitle: pickText('pmx-writing-title') || base.writingTitle,
@@ -15425,14 +15824,12 @@ init();
       plotDesign: {
         note: pickText('pmx-plot-note'),
         recordIds: pmxSelectedRecordIds('pmx-plot-records'),
-        prompt: pickText('pmx-plot-prompt'),
-        completed: pickText('pmx-plot-completed')
+        prompt: pickText('pmx-plot-prompt')
       },
       characterDesign: {
         note: pickText('pmx-character-note'),
         recordIds: pmxSelectedRecordIds('pmx-character-records'),
-        prompt: pickText('pmx-character-prompt'),
-        completed: pickText('pmx-character-completed')
+        prompt: pickText('pmx-character-prompt')
       },
       handoffDesign: {
         chapterId: String(document.getElementById('pmx-handoff-source-chapter')?.value || '').trim(),
@@ -15440,8 +15837,14 @@ init();
         recordIds: pmxSelectedRecordIds('pmx-handoff-records'),
         prompt: pickText('pmx-handoff-prompt')
       },
+      writingAssets: {
+        plotRecordId: String(document.getElementById('pmx-final-plot-record')?.value || '').trim(),
+        characterRecordId: String(document.getElementById('pmx-final-character-record')?.value || '').trim(),
+        handoffSource: String(document.getElementById('pmx-writing-handoff-source')?.value || 'auto-prev').trim() || 'auto-prev'
+      },
       outputConditions: pickText('pmx-output-conditions') || base.outputConditions,
-      targetChapterId: String(document.getElementById('pmx-target-chapter')?.value || '').trim()
+      targetChapterId: String(document.getElementById('pmx-target-chapter')?.value || '').trim(),
+      activePane
     };
   };
 
@@ -15461,32 +15864,6 @@ init();
     return support;
   };
 
-  function pmxRecordBundle(selectedIds, records) {
-    if (!selectedIds.length) return '（選択なし）';
-    const byId = new Map(records.map(record => [String(record.id), record]));
-    return selectedIds.map((id, index) => {
-      const record = byId.get(String(id));
-      if (!record) return '';
-      const title = (record.tags && record.tags.length ? record.tags.join(' / ') : `記録${index + 1}`);
-      const date = new Date(record.updatedAt || record.createdAt || Date.now()).toLocaleString('ja-JP');
-      return [
-        `### 分析資料 ${index + 1}`,
-        `- タグ: ${title}`,
-        `- 更新: ${date}`,
-        '',
-        String(record.content || '').trim()
-      ].join('\n');
-    }).filter(Boolean).join('\n\n');
-  }
-
-  function pmxWorkMetaBlock(work) {
-    return [
-      `- 作品タイトル: ${work?.title || '無題'}`,
-      work?.genre ? `- ジャンル: ${work.genre}` : '',
-      work?.synopsis ? `- 作品あらすじ:\n${work.synopsis.trim()}` : ''
-    ].filter(Boolean).join('\n');
-  }
-
   window.pmxShowValidation = function (errors) {
     const box = document.getElementById('pmx-validation');
     if (!box) return;
@@ -15503,19 +15880,22 @@ init();
     `;
   };
 
-  window.pmxValidateBeforeBuild = function (support, chapter) {
+  window.pmxValidateBeforeBuild = function (support, chapter, records) {
     const errors = [];
+    const resolvedPlot = pmxResolvedPlotText(support, records);
+    const resolvedCharacter = pmxResolvedCharacterText(support, records);
+    const handoffInfo = pmxResolveSelectedHandoff(vault2ChapterCache || [], chapter?.id || '', support.writingAssets.handoffSource);
+
     if (!support.writingTitle && !(currentWork?.title || '').trim()) errors.push('執筆作品タイトル');
     if (!support.scene.freeText) errors.push('描きたいシーン');
-    if (!support.plotDesign.completed) {
-      errors.push('完成版プロット（章立て必須）');
-    } else if (!pmxPlotHasChapterOutline(support.plotDesign.completed)) {
+    if (!resolvedPlot.text) {
+      errors.push('完成版プロットの選択');
+    } else if (!pmxPlotHasChapterOutline(resolvedPlot.text)) {
       errors.push('完成版プロットの章立て');
     }
-    if (!support.characterDesign.completed) errors.push('完成版キャラクターシート');
+    if (!resolvedCharacter.text) errors.push('完成版キャラクターシートの選択');
     if (!chapter) errors.push('執筆する章');
-    const prev = chapter ? pmxGetPreviousChapter(vault2ChapterCache || [], chapter.id) : null;
-    if (prev && !window.vault2HasHandoff(prev)) errors.push('前章の引継ぎ資料（要約＋固定フォーマット）');
+    if (handoffInfo.missing) errors.push('使用する引継ぎ資料（要約＋固定フォーマット）');
     return errors;
   };
 
@@ -15548,6 +15928,7 @@ init();
       handoffSelect.value = chapters.some(ch => ch.id === currentValue) ? currentValue : (chapters[0]?.id || '');
     }
 
+    await pmxRenderAllRecordPickersAndSelects(support);
     window.pmxRenderSourceSummary();
   };
 
@@ -15555,20 +15936,17 @@ init();
     const box = document.getElementById('pmx-source-summary');
     if (!box) return;
     const support = window.pmxReadSupportFromDom();
-    const selectedChapter = (vault2ChapterCache || []).find(item => item.id === support.targetChapterId);
-    const prev = selectedChapter ? pmxGetPreviousChapter(vault2ChapterCache || [], selectedChapter.id) : null;
-    const prevState = prev ? (prev._writingState || window.vault2NormalizeChapterState(prev, vault2EpisodeCache || [])) : null;
-    const plotStatus = !support.plotDesign.completed
-      ? '未保存'
-      : (pmxPlotHasChapterOutline(support.plotDesign.completed) ? '保存済み（章立てあり）' : '保存済み（章立て不足）');
-    const prevMissing = prevState ? vault2MissingHandoffFields(prevState.handoff) : [];
+    const records = pmxRecordCacheV2 || [];
+    const selectedChapter = (vault2ChapterCache || []).find(item => item.id === support.targetChapterId) || null;
+    const plotInfo = pmxResolvedPlotText(support, records);
+    const characterInfo = pmxResolvedCharacterText(support, records);
+    const handoffInfo = pmxResolveSelectedHandoff(vault2ChapterCache || [], support.targetChapterId, support.writingAssets.handoffSource);
     const lines = [
-      `・完成版プロット: ${plotStatus}`,
-      `・完成版キャラクターシート: ${support.characterDesign.completed ? '保存済み' : '未保存'}`,
-      `・前章の引継ぎ資料: ${prev ? (window.vault2HasHandoff(prev) ? '保存済み（要約＋固定フォーマット）' : `未完成（${prevMissing.length}項目不足）`) : '第1章のため不要'}`,
-      `・執筆する章: ${selectedChapter ? `第${selectedChapter.number || '?'}章` : '未選択'}`,
-      `・描きたいシーン: ${support.scene.freeText ? '入力済み' : '未入力'}`,
-      `・前章引継ぎの要約長: ${prevState?.handoff?.summary ? String(prevState.handoff.summary.length) + '字' : '0字'}`
+      `・完成版プロット: ${plotInfo.text ? `${plotInfo.label}${pmxPlotHasChapterOutline(plotInfo.text) ? '（章立てあり）' : '（章立て不足）'}` : '未選択'}`,
+      `・完成版キャラクターシート: ${characterInfo.text ? characterInfo.label : '未選択'}`,
+      `・引継ぎ資料: ${handoffInfo.label}${handoffInfo.missing ? '（未完成）' : ''}`,
+      `・執筆する章: ${selectedChapter ? `第${selectedChapter.number || '?'}章｜${selectedChapter.title || `第${selectedChapter.number || '?'}章`}` : '未選択'}`,
+      `・描きたいシーン: ${support.scene.freeText ? '入力済み' : '未入力'}`
     ];
     box.textContent = lines.join('\n');
   };
@@ -15592,25 +15970,26 @@ init();
     return [
       '# 作品プロット設計プロンプト',
       '',
-      'あなたは長編小説の設計担当です。',
-      '以下の資料を読み、今回執筆する作品の完成版プロットを日本語で設計してください。',
-      '出力は、Claudeが後続の執筆で再利用しやすいように、見出しつき・抜け漏れのない形で整理してください。',
-      '',
-      '## 作品メタ情報',
+      '<role>',
+      'あなたは長編小説の構造設計担当です。',
+      '</role>',
+      '<goal>',
+      '作者の描きたいシーンと分析資料から、章立てまで含む完成版プロットを設計してください。',
+      '</goal>',
+      '<work_meta>',
       pmxWorkMetaBlock(work),
-      '',
-      '## 描きたいシーン（作者メモ・自由記述）',
+      '</work_meta>',
+      '<scene_memo>',
       support.scene.freeText,
-      '',
-      '## プロット設計で特に反映したいこと',
+      '</scene_memo>',
+      '<plot_design_focus>',
       support.plotDesign.note || '（追加指定なし）',
-      '',
-      '## 参照する分析結果の保存',
+      '</plot_design_focus>',
+      '<analysis_sources>',
       pmxRecordBundle(support.plotDesign.recordIds, records),
-      '',
-      '## 出力要件',
+      '</analysis_sources>',
+      '<required_output>',
       [
-        '見出しつきで、次の順に必ず整理してください。',
         '1. 作品コンセプト',
         '2. 主人公とヒロインの物語上の役割',
         '3. 全体プロット（導入・中盤・転換・山場・終着点）',
@@ -15620,9 +15999,11 @@ init();
         '7. 絶対に外してはいけない見せ場',
         '8. 避けるべき破綻ポイント'
       ].join('\n'),
-      '',
+      '</required_output>',
+      '<must_follow>',
       '章立て一覧では、少なくとも各章ごとに「章番号」「章タイトル案」「その章の役割」「そこで必ず起こすこと」が分かる形で出力してください。',
-      '作者メモの口調や熱量は尊重しつつ、構造は整理してください。'
+      '作者メモの口調や熱量は尊重しつつ、構造は整理してください。',
+      '</must_follow>'
     ].join('\n');
   }
 
@@ -15632,6 +16013,7 @@ init();
     if (!work) return null;
     const support = await window.pmxSaveSupport(false);
     const records = await pmxGetCurrentRecords();
+    const plotInfo = pmxResolvedPlotText(support, records);
 
     if (!support.scene.freeText) {
       showToast('先に「描きたいシーン」を入力してください', 'error');
@@ -15641,25 +16023,28 @@ init();
     return [
       '# キャラクター設計プロンプト',
       '',
+      '<role>',
       'あなたは長編小説のキャラクター設計担当です。',
-      '以下の資料を読み、今回執筆する作品の完成版キャラクターシートを日本語で設計してください。',
-      '',
-      '## 作品メタ情報',
+      '</role>',
+      '<goal>',
+      '作者の描きたいシーンと分析資料から、完成版キャラクターシートを設計してください。',
+      '</goal>',
+      '<work_meta>',
       pmxWorkMetaBlock(work),
-      '',
-      '## 描きたいシーン（作者メモ・自由記述）',
+      '</work_meta>',
+      '<scene_memo>',
       support.scene.freeText,
-      '',
-      '## 完成版プロット（章立て込み。あれば前提として利用）',
-      support.plotDesign.completed || '（未保存）',
-      '',
-      '## キャラクター設計で特に反映したいこと',
+      '</scene_memo>',
+      '<completed_plot_reference>',
+      plotInfo.text || '（未選択）',
+      '</completed_plot_reference>',
+      '<character_design_focus>',
       support.characterDesign.note || '（追加指定なし）',
-      '',
-      '## 参照する分析結果の保存',
+      '</character_design_focus>',
+      '<analysis_sources>',
       pmxRecordBundle(support.characterDesign.recordIds, records),
-      '',
-      '## 出力要件',
+      '</analysis_sources>',
+      '<required_output>',
       [
         '1. 主要キャラクターごとのプロフィール',
         '2. 外見・雰囲気・第一印象',
@@ -15670,8 +16055,10 @@ init();
         '7. 崩してはいけない反応',
         '8. 物語上の役割'
       ].join('\n'),
-      '',
-      'あとで執筆プロンプトへそのまま貼り込める粒度で、具体的かつ再利用しやすくまとめてください。'
+      '</required_output>',
+      '<must_follow>',
+      'あとで執筆プロンプトへそのまま貼り込める粒度で、具体的かつ再利用しやすくまとめてください。',
+      '</must_follow>'
     ].join('\n');
   }
 
@@ -15681,6 +16068,8 @@ init();
     if (!work) return null;
     const support = await window.pmxSaveSupport(false);
     const records = await pmxGetCurrentRecords();
+    const plotInfo = pmxResolvedPlotText(support, records);
+    const characterInfo = pmxResolvedCharacterText(support, records);
 
     const chapter = (vault2ChapterCache || []).find(item => item.id === support.handoffDesign.chapterId)
       || (vault2ChapterCache || [])[0]
@@ -15698,32 +16087,33 @@ init();
     return [
       '# 引継ぎ資料生成プロンプト',
       '',
-      'あなたは小説の継続執筆用サマライザーです。',
-      '以下の章本文と資料を読み、次章の執筆で論理・物語・感情が破綻しないための引継ぎ資料を日本語で作成してください。',
-      '',
-      '## 作品メタ情報',
+      '<role>',
+      'あなたは継続執筆用の引継ぎ資料を作る編集者です。',
+      '</role>',
+      '<goal>',
+      '章本文から、次章で論理・物語・感情が破綻しないための引継ぎ資料を作成してください。',
+      '</goal>',
+      '<work_meta>',
       pmxWorkMetaBlock(work),
-      '',
-      '## 完成版プロット',
-      support.plotDesign.completed || '（未保存）',
-      '',
-      '## 完成版キャラクターシート',
-      support.characterDesign.completed || '（未保存）',
-      '',
-      `## 対象章\n第${chapter.number || '?'}章｜${chapter.title || `第${chapter.number || '?'}章`}`,
-      '',
-      '## 章本文',
+      '</work_meta>',
+      '<completed_plot>',
+      plotInfo.text || '（未選択）',
+      '</completed_plot>',
+      '<completed_character_sheet>',
+      characterInfo.text || '（未選択）',
+      '</completed_character_sheet>',
+      `<target_chapter>\n第${chapter.number || '?'}章｜${chapter.title || `第${chapter.number || '?'}章`}\n</target_chapter>`,
+      '<chapter_body>',
       state.body,
-      '',
-      '## 作者が特に引き継がせたいこと',
+      '</chapter_body>',
+      '<author_focus>',
       support.handoffDesign.note || '（追加指定なし）',
-      '',
-      '## 参照する分析結果の保存',
+      '</author_focus>',
+      '<analysis_sources>',
       pmxRecordBundle(support.handoffDesign.recordIds, records),
-      '',
-      '## 出力要件',
+      '</analysis_sources>',
+      '<fixed_output_format>',
       [
-        '出力形式は固定です。以下の見出し名を変えず、この順番で必ず出力してください。',
         '【引継ぎ資料要約】',
         '【事実状態】',
         '【感情状態】',
@@ -15734,8 +16124,11 @@ init();
         '【次章で崩してはいけないこと】',
         '【次章へ自然に残る圧力】'
       ].join('\n'),
-      '',
-      '感想ではなく、次章の執筆者がそのまま参照できる引継ぎ資料として出力してください。要約と固定フォーマットの両方を必ず埋めてください。'
+      '</fixed_output_format>',
+      '<must_follow>',
+      '感想ではなく、次章の執筆者がそのまま参照できる引継ぎ資料として出力してください。',
+      '要約と固定フォーマットの両方を必ず埋めてください。',
+      '</must_follow>'
     ].join('\n');
   }
 
@@ -15748,57 +16141,72 @@ init();
     if (!vault2ChapterCache || !vault2ChapterCache.length) {
       await window.loadWritingVaultTab();
     }
+    const records = await pmxGetCurrentRecords();
 
     const selectedChapter = (vault2ChapterCache || []).find(item => item.id === support.targetChapterId)
       || (vault2ChapterCache || [])[0]
       || null;
 
-    const validationErrors = window.pmxValidateBeforeBuild(support, selectedChapter);
+    const validationErrors = window.pmxValidateBeforeBuild(support, selectedChapter, records);
     window.pmxShowValidation(validationErrors);
     if (validationErrors.length) return null;
 
-    const prev = selectedChapter ? pmxGetPreviousChapter(vault2ChapterCache || [], selectedChapter.id) : null;
-    const prevState = prev ? (prev._writingState || window.vault2NormalizeChapterState(prev, vault2EpisodeCache || [])) : null;
+    const plotInfo = pmxResolvedPlotText(support, records);
+    const characterInfo = pmxResolvedCharacterText(support, records);
+    const handoffInfo = pmxResolveSelectedHandoff(vault2ChapterCache || [], selectedChapter?.id || '', support.writingAssets.handoffSource);
     const writingTitle = support.writingTitle || work.title || '無題';
 
     return [
       '# 執筆プロンプト',
       '',
+      '<role>',
       'あなたは長編小説の執筆アシスタントです。',
-      `作品名は「${writingTitle}」です。`,
-      '以下の資料を優先し、完成版プロットの章立てを守りながら、対象章だけを日本語の小説本文として書いてください。',
-      '',
-      '## 完成版プロット（章立て込み）',
-      support.plotDesign.completed,
-      '',
-      '## 完成版キャラクターシート',
-      support.characterDesign.completed,
-      '',
-      '## 前章の引継ぎ資料',
-      prevState ? vault2BuildHandoffStructuredText(prevState.handoff) : '（前章なし / 第1章）',
-      '',
-      '## 今回執筆する章',
+      '</role>',
+      '<goal>',
+      `作品名「${writingTitle}」の対象章だけを書いてください。`,
+      '</goal>',
+      '<priority_order>',
       [
-        `- 章番号: 第${selectedChapter.number || '?'}章`,
-        `- 章タイトル: ${selectedChapter.title || `第${selectedChapter.number || '?'}章`}`,
-        `- 状態: ${getChapterStatusLabel(selectedChapter.status) || '未設定'}`
+        '1. 完成版プロット（章立て込み）',
+        '2. 完成版キャラクターシート',
+        '3. 引継ぎ資料',
+        '4. 対象章情報',
+        '5. 描きたいシーン',
+        '6. 出力条件'
       ].join('\n'),
-      '',
-      '## 描きたいシーン（作者メモ・自由記述）',
-      support.scene.freeText,
-      '',
-      '## 出力条件',
-      support.outputConditions,
-      '',
-      '## 厳守事項',
+      '</priority_order>',
+      '<completed_plot>',
+      plotInfo.text,
+      '</completed_plot>',
+      '<completed_character_sheet>',
+      characterInfo.text,
+      '</completed_character_sheet>',
+      '<handoff_material>',
+      handoffInfo.text,
+      '</handoff_material>',
+      '<target_chapter>',
       [
-        '・対象章の外まで話を先走らせない',
-        '・完成版プロットの章立てと章ごとの役割を崩さない',
-        '・完成版キャラクターシートに反する改変をしない',
-        '・前章の引継ぎ資料（要約＋固定フォーマット）を破らない',
-        '・会話、感情、叙述の温度差を丁寧に扱う',
-        '・本文だけを出力する'
-      ].join('\n')
+        `章番号: 第${selectedChapter.number || '?'}章`,
+        `章タイトル: ${selectedChapter.title || `第${selectedChapter.number || '?'}章`}`,
+        `状態: ${getChapterStatusLabel(selectedChapter.status) || '未設定'}`
+      ].join('\n'),
+      '</target_chapter>',
+      '<scene_memo>',
+      support.scene.freeText,
+      '</scene_memo>',
+      '<output_conditions>',
+      support.outputConditions,
+      '</output_conditions>',
+      '<must_follow>',
+      [
+        '対象章の外まで話を先走らせない',
+        '完成版プロットの章立てと章ごとの役割を崩さない',
+        '完成版キャラクターシートに反する改変をしない',
+        '引継ぎ資料を破らない',
+        '会話、感情、叙述の温度差を丁寧に扱う',
+        '回答は日本語の小説本文だけを出力する'
+      ].join('\n'),
+      '</must_follow>'
     ].join('\n');
   };
 
@@ -15874,21 +16282,19 @@ init();
 
     const titleInput = document.getElementById('pmx-writing-title');
     if (titleInput) titleInput.value = support.writingTitle || work.title || '';
+
     const sceneInput = document.getElementById('pmx-scene-free');
     if (sceneInput) sceneInput.value = support.scene.freeText || '';
+
     const plotNote = document.getElementById('pmx-plot-note');
     if (plotNote) plotNote.value = support.plotDesign.note || '';
     const plotPrompt = document.getElementById('pmx-plot-prompt');
     if (plotPrompt) plotPrompt.value = support.plotDesign.prompt || '';
-    const plotCompleted = document.getElementById('pmx-plot-completed');
-    if (plotCompleted) plotCompleted.value = support.plotDesign.completed || '';
 
     const charNote = document.getElementById('pmx-character-note');
     if (charNote) charNote.value = support.characterDesign.note || '';
     const charPrompt = document.getElementById('pmx-character-prompt');
     if (charPrompt) charPrompt.value = support.characterDesign.prompt || '';
-    const charCompleted = document.getElementById('pmx-character-completed');
-    if (charCompleted) charCompleted.value = support.characterDesign.completed || '';
 
     const handoffNote = document.getElementById('pmx-handoff-note');
     if (handoffNote) handoffNote.value = support.handoffDesign.note || '';
@@ -15906,17 +16312,21 @@ init();
 
     const target = document.getElementById('pmx-target-chapter');
     if (target && support.targetChapterId) target.value = support.targetChapterId;
+
     const handoffSource = document.getElementById('pmx-handoff-source-chapter');
     if (handoffSource && support.handoffDesign.chapterId) handoffSource.value = support.handoffDesign.chapterId;
 
+    await pmxRenderAllRecordPickersAndSelects(support);
+    pmxSwitchPaneDom(support.activePane || 'scene');
     window.pmxRenderSourceSummary();
     window.pmxShowValidation([]);
   };
 
   window.pmxRenderRecordPickersForCurrentWork = async function () {
     const support = window.pmxNormalizeSupport(currentWork || {});
-    await pmxRenderAllRecordPickers(support);
+    await pmxRenderAllRecordPickersAndSelects(support);
   };
+
 })();
 </script>
 
