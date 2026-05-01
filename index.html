@@ -1992,6 +1992,130 @@ textarea { resize: vertical; }
 }
 
 </style>
+
+<style>
+.pmx-note-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+.pmx-record-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+.pmx-record-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-input);
+  transition: var(--transition);
+  cursor: pointer;
+}
+.pmx-record-item:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-hover);
+}
+.pmx-record-item.checked {
+  border-color: var(--purple-500);
+  background: var(--purple-glow2);
+  box-shadow: 0 0 10px var(--purple-glow2);
+}
+.pmx-record-item input[type="checkbox"] {
+  margin-top: 2px;
+  width: 15px;
+  height: 15px;
+  accent-color: var(--purple-500);
+}
+.pmx-record-body {
+  flex: 1;
+  min-width: 0;
+}
+.pmx-record-head {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.pmx-record-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.pmx-record-tags {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.pmx-record-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: var(--purple-glow2);
+  border: 1px solid var(--border-hover);
+  color: var(--purple-300);
+}
+.pmx-record-excerpt {
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.pmx-record-empty {
+  padding: 14px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  background: var(--bg-input);
+}
+.pmx-generated-prompt-mid {
+  min-height: 280px;
+}
+.vault2-inner-details {
+  margin-top: 8px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px;
+}
+.vault2-inner-summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+.vault2-inner-summary::-webkit-details-marker {
+  display: none;
+}
+.vault2-inner-summary::before {
+  content: '▸';
+  display: inline-block;
+  margin-right: 6px;
+  color: var(--purple-400);
+  transition: transform 0.2s ease;
+}
+.vault2-inner-details[open] .vault2-inner-summary::before {
+  transform: rotate(90deg);
+}
+</style>
+
 </head>
 <body>
 
@@ -2423,14 +2547,15 @@ textarea { resize: vertical; }
         </div>
 
         <div class="pmx-intro">
-          章の事実は「執筆保管庫」、今回どう書くかは「プロンプトメーカー」に分離しました。入力順と、AIへ渡る順番は分けて表示します。
+          今回の主導線は、<strong>描きたいシーン → 作品プロット設計 → キャラクター設計 → 引継ぎ資料生成 → 執筆プロンプト</strong>です。<br>
+          Claudeへ渡すための「生成用プロンプト」と、Claudeから返ってきた「完成版テキスト」の保存欄を分けています。
         </div>
 
         <div class="pmx-stack">
           <details class="pmx-section" open>
             <summary>
               <span>1. 執筆作品タイトル</span>
-              <small>執筆ファイル名に使うタイトル</small>
+              <small>執筆ファイル名と出力名に使うタイトル</small>
             </summary>
             <div class="pmx-section-body">
               <div class="form-group">
@@ -2444,57 +2569,54 @@ textarea { resize: vertical; }
           <details class="pmx-section" open>
             <summary>
               <span>2. 描きたいシーン</span>
-              <small>発想の原石</small>
+              <small>自由記述の発想メモ</small>
             </summary>
             <div class="pmx-section-body">
-              <div class="pmx-grid-2">
-                <div class="form-group">
-                  <label class="form-label" for="pmx-scene-visual">どんな場面 <span class="req">*</span></label>
-                  <textarea id="pmx-scene-visual" rows="5" placeholder="誰が、どこで、どんな空気の中にいる場面か"></textarea>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="pmx-scene-dialogue">どんなセリフ <span class="req">*</span></label>
-                  <textarea id="pmx-scene-dialogue" rows="5" placeholder="その場面で中心になるセリフや、絶対に入れたい言い回し"></textarea>
-                </div>
-              </div>
-              <div class="pmx-grid-2">
-                <div class="form-group">
-                  <label class="form-label" for="pmx-scene-emotion">その場面に流れている感情</label>
-                  <textarea id="pmx-scene-emotion" rows="4" placeholder="不安、熱、焦れ、怒り、安堵など"></textarea>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="pmx-scene-highlight">この場面で一番見せたいこと</label>
-                  <textarea id="pmx-scene-highlight" rows="4" placeholder="読者に最も強く残したい魅力や変化"></textarea>
-                </div>
+              <div class="form-group">
+                <label class="form-label" for="pmx-scene-free">描きたいシーン <span class="req">*</span></label>
+                <textarea id="pmx-scene-free" rows="16" placeholder="題名、世界観、人物像、入れたいセリフ、入れたい場面をまとめて自由に書いてください。"></textarea>
+                <div class="form-hint">「どんな場面」「どんなセリフ」を分けず、普段どおりの書き方でそのまま入れられます。</div>
               </div>
             </div>
           </details>
 
           <details class="pmx-section" open>
             <summary>
-              <span>3. プロンプトA</span>
-              <small>シーンの魅力を誤読させない演出指示</small>
+              <span>3. 作品プロット設計</span>
+              <small>Claudeに完成版プロットを作らせるための独立パーツ</small>
             </summary>
             <div class="pmx-section-body">
-              <div class="pmx-grid-2">
-                <div class="form-group">
-                  <label class="form-label" for="pmx-a-style">この場面をどう書きたいか <span class="req">*</span></label>
-                  <textarea id="pmx-a-style" rows="5" placeholder="描写の密度、テンポ、視線、言葉の温度など"></textarea>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="pmx-a-avoid">避けたい方向 <span class="req">*</span></label>
-                  <textarea id="pmx-a-avoid" rows="5" placeholder="軽くしすぎない、早く進めすぎない、説明に寄せない等"></textarea>
+              <div class="pmx-note-box">
+                分析結果の保存から必要な資料を選び、<strong>Claudeが理解しやすいプロット設計用プロンプト</strong>を作ります。完成版プロットはClaudeの返答を下の保存欄へ貼り戻してください。<strong>章立てまで含んだ完成版</strong>を必須にします。
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="pmx-plot-note">プロット設計で特に反映したいこと</label>
+                <textarea id="pmx-plot-note" rows="5" placeholder="構成の強み、絶対に入れたい要素、避けたい方向、各章で何を進めたいか、章立てで特に重視したいことなど"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">参照する分析結果の保存</label>
+                <div id="pmx-plot-records" class="pmx-record-picker"></div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="pmx-plot-prompt">Claudeへ渡す作品プロット設計プロンプト</label>
+                <textarea id="pmx-plot-prompt" class="pmx-generated-prompt pmx-generated-prompt-mid" rows="16" placeholder="「プロット設計プロンプト生成」を押すとここに出力されます。"></textarea>
+              </div>
+
+              <div class="pmx-inline-actions">
+                <div class="form-hint">完成版プロットは次の「執筆プロンプト」で使用されます。</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <button class="btn btn-secondary" type="button" onclick="pmxGeneratePlotPrompt()">プロット設計プロンプト生成</button>
+                  <button class="btn btn-secondary" type="button" onclick="pmxCopyTextById('pmx-plot-prompt','作品プロット設計プロンプトをコピーしました')">コピー</button>
                 </div>
               </div>
-              <div class="pmx-grid-2">
-                <div class="form-group">
-                  <label class="form-label" for="pmx-a-dialogue">セリフをどう効かせたいか</label>
-                  <textarea id="pmx-a-dialogue" rows="4" placeholder="刺し方、余韻、前後の間など"></textarea>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="pmx-a-emotion">感情をどう流したいか</label>
-                  <textarea id="pmx-a-emotion" rows="4" placeholder="どこで揺らし、どこで沈め、どこで爆発させるか"></textarea>
-                </div>
+
+              <div class="form-group">
+                <label class="form-label" for="pmx-plot-completed">完成版プロット（章立て必須） <span class="req">*</span></label>
+                <textarea id="pmx-plot-completed" class="pmx-generated-prompt pmx-generated-prompt-mid" rows="16" placeholder="Claudeが返した、章立てまで含む完成版プロットをここへ保存します。各章で何を描くかが分かる形で保存してください。"></textarea>
+                <div class="form-hint">執筆プロンプトでは、この欄に保存した完成版プロットをそのまま参照します。章ごとの進行が見える形で保存してください。</div>
               </div>
             </div>
           </details>
@@ -2502,49 +2624,119 @@ textarea { resize: vertical; }
           <details class="pmx-section" open>
             <summary>
               <span>4. キャラクター設計</span>
-              <small>今回の場面で崩してはいけない条件だけを抽出</small>
+              <small>Claudeに完成版キャラクターシートを作らせるための独立パーツ</small>
             </summary>
             <div class="pmx-section-body">
-              <div class="pmx-inline-actions">
-                <div class="form-hint">主要キャラと、そのキャラがこの場面で絶対に崩れてはいけない反応を保存します。</div>
-                <button class="btn btn-secondary btn-sm" type="button" onclick="pmxAddCharacterCard()">＋ 主要キャラを追加</button>
+              <div class="pmx-note-box">
+                分析結果の保存から必要な資料を選び、<strong>Claudeが理解しやすいキャラクター設計用プロンプト</strong>を作ります。完成版キャラクターシートはClaudeの返答を下の保存欄へ貼り戻してください。
               </div>
-              <div id="pmx-character-list" class="pmx-character-list"></div>
+
+              <div class="form-group">
+                <label class="form-label" for="pmx-character-note">キャラクター設計で特に反映したいこと</label>
+                <textarea id="pmx-character-note" rows="5" placeholder="主人公 / ヒロインの軸、会話温度、関係性、読者に感じさせたい魅力など"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">参照する分析結果の保存</label>
+                <div id="pmx-character-records" class="pmx-record-picker"></div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="pmx-character-prompt">Claudeへ渡すキャラクター設計プロンプト</label>
+                <textarea id="pmx-character-prompt" class="pmx-generated-prompt pmx-generated-prompt-mid" rows="16" placeholder="「キャラクター設計プロンプト生成」を押すとここに出力されます。"></textarea>
+              </div>
+
+              <div class="pmx-inline-actions">
+                <div class="form-hint">必要なら完成版プロットも前提資料として使われます。</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <button class="btn btn-secondary" type="button" onclick="pmxGenerateCharacterPrompt()">キャラクター設計プロンプト生成</button>
+                  <button class="btn btn-secondary" type="button" onclick="pmxCopyTextById('pmx-character-prompt','キャラクター設計プロンプトをコピーしました')">コピー</button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="pmx-character-completed">完成版キャラクターシート</label>
+                <textarea id="pmx-character-completed" class="pmx-generated-prompt pmx-generated-prompt-mid" rows="16" placeholder="Claudeが返した完成版キャラクターシートをここへ保存します。"></textarea>
+              </div>
             </div>
           </details>
 
           <details class="pmx-section" open>
             <summary>
-              <span>5. 執筆プロンプト</span>
-              <small>入力順とAI投入順を分離した最終出口</small>
+              <span>5. 引継ぎ資料生成</span>
+              <small>章本文から次章へ渡す資料を作るための独立パーツ</small>
+            </summary>
+            <div class="pmx-section-body">
+              <div class="pmx-note-box">
+                章本文をもとに、<strong>論理の破綻・物語の破綻・感情の破綻を防ぐ引継ぎ資料</strong>をClaudeに作らせるためのプロンプトです。出力形式は<strong>要約＋固定フォーマット</strong>で完全固定します。Claudeの返答は、執筆保管庫のその章の「次章へ渡す引継ぎ資料」へ保存します。
+              </div>
+
+              <div class="pmx-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="pmx-handoff-source-chapter">引継ぎ資料を作る章</label>
+                  <select id="pmx-handoff-source-chapter"></select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="pmx-handoff-note">引継ぎ資料で強調したいこと</label>
+                  <textarea id="pmx-handoff-note" rows="4" placeholder="次章で絶対に破綻させたくない論理、感情、伏線、関係性など"></textarea>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">参照する分析結果の保存</label>
+                <div id="pmx-handoff-records" class="pmx-record-picker"></div>
+              </div>
+
+              <div class="pmx-note-box" style="margin-top:0">
+                出力フォーマットは固定です。<br>
+                <strong>引継ぎ資料要約 → 事実状態 → 感情状態 → 関係性状態 → 物理状況 → 未解決事項 → 表現上の注意 → 次章で崩してはいけないこと → 次章へ自然に残る圧力</strong>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="pmx-handoff-prompt">Claudeへ渡す引継ぎ資料生成プロンプト</label>
+                <textarea id="pmx-handoff-prompt" class="pmx-generated-prompt pmx-generated-prompt-mid" rows="16" placeholder="「引継ぎ資料生成プロンプト生成」を押すとここに出力されます。"></textarea>
+              </div>
+
+              <div class="pmx-inline-actions">
+                <div class="form-hint">Claudeの返答は、このアプリ内では自動保存せず、執筆保管庫へ貼り戻す運用です。要約欄と固定フォーマット欄の両方へ反映してください。</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <button class="btn btn-secondary" type="button" onclick="pmxGenerateHandoffPrompt()">引継ぎ資料生成プロンプト生成</button>
+                  <button class="btn btn-secondary" type="button" onclick="pmxCopyTextById('pmx-handoff-prompt','引継ぎ資料生成プロンプトをコピーしました')">コピー</button>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <details class="pmx-section" open>
+            <summary>
+              <span>6. 執筆プロンプト</span>
+              <small>完成版プロット（章立て必須） / 完成版キャラ / 前章引継ぎ資料で執筆を開始する出口</small>
             </summary>
             <div class="pmx-section-body">
               <div class="pmx-grid-2">
                 <div class="form-group">
-                  <label class="form-label" for="pmx-target-chapter">対象章</label>
+                  <label class="form-label" for="pmx-target-chapter">執筆する章</label>
                   <select id="pmx-target-chapter" onchange="pmxHandleChapterChange()"></select>
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="pmx-output-conditions">出力条件</label>
-                  <textarea id="pmx-output-conditions" rows="4" placeholder="文体、長さ、視点、禁止事項など。未入力なら標準条件を使います。"></textarea>
+                  <textarea id="pmx-output-conditions" rows="4" placeholder="文体、視点、長さ、禁止事項など。未入力なら標準条件を使います。"></textarea>
                 </div>
               </div>
 
               <div class="pmx-grid-2">
                 <div class="pmx-info-card">
-                  <div class="pmx-info-title">今回の執筆に使う情報</div>
+                  <div class="pmx-info-title">今回の執筆に使う資料</div>
                   <div id="pmx-source-summary" class="pmx-info-body"></div>
                 </div>
                 <div class="pmx-info-card">
-                  <div class="pmx-info-title">AIへ渡る順番</div>
+                  <div class="pmx-info-title">執筆プロンプトの構成順</div>
                   <ol class="pmx-order-list">
-                    <li>全体プロット前提</li>
-                    <li>キャラクター条件</li>
-                    <li>前章引継ぎ</li>
-                    <li>今章契約</li>
+                    <li>完成版プロット（章立て込み）</li>
+                    <li>完成版キャラクターシート</li>
+                    <li>前章の引継ぎ資料</li>
+                    <li>今回の対象章情報</li>
                     <li>描きたいシーン</li>
-                    <li>プロンプトA</li>
-                    <li>前章末尾抜粋</li>
                     <li>出力条件</li>
                   </ol>
                 </div>
@@ -2553,7 +2745,7 @@ textarea { resize: vertical; }
               <div id="pmx-validation" class="pmx-validation" style="display:none"></div>
 
               <div class="form-group">
-                <label class="form-label" for="pmx-generated-prompt">完成した執筆プロンプト</label>
+                <label class="form-label" for="pmx-generated-prompt">Claudeへ渡す執筆プロンプト</label>
                 <textarea id="pmx-generated-prompt" class="pmx-generated-prompt" rows="22" placeholder="上の「執筆プロンプト生成」を押すと、ここに完成版が出力されます。"></textarea>
               </div>
 
@@ -2566,6 +2758,7 @@ textarea { resize: vertical; }
           </details>
         </div>
       </div>
+
 
 <!-- TAB: 執筆保管庫 -->
       <div class="tab-panel" id="tab-vault">
@@ -2581,7 +2774,7 @@ textarea { resize: vertical; }
           <aside class="vault2-list-panel">
             <div class="vault2-list-head">
               <div class="vault2-list-title">章一覧</div>
-              <div class="vault2-list-note">1行1章で、欠落だけを素早く確認できます。</div>
+              <div class="vault2-list-note">本文と、次章へ渡す引継ぎ資料（要約＋固定フォーマット）の欠落を素早く確認できます。</div>
             </div>
             <div id="vault2-list" class="vault2-list"></div>
           </aside>
@@ -2590,7 +2783,7 @@ textarea { resize: vertical; }
             <div id="vault2-empty" class="empty-state">
               <div class="empty-icon">📝</div>
               <h3>章を選択してください</h3>
-              <p>左の章一覧から章カードを開くと、今章契約 / 前章引継ぎ / 章本文を編集できます。</p>
+              <p>左の章一覧から章カードを開くと、本文と次章へ渡す引継ぎ資料（要約＋固定フォーマット）を編集できます。</p>
             </div>
 
             <div id="vault2-card" style="display:none">
@@ -2615,8 +2808,71 @@ textarea { resize: vertical; }
                 </div>
 
                 <div class="vault2-block">
-                  <div class="vault2-block-title">今章契約</div>
-                  <div class="vault2-block-desc">この章でAIに許可する範囲だけを書きます。未来章の予定やPart設計は入れません。</div>
+                  <div class="vault2-block-title">次章へ渡す引継ぎ資料</div>
+                  <div class="vault2-block-desc">この章を書き終えたあと、次章の執筆プロンプトへ渡す資料です。<strong>要約＋固定フォーマット</strong>の両方を保存し、論理・物語・感情の破綻を防ぎます。</div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="vault2-handoff-summary">引継ぎ資料要約 <span class="req">*</span></label>
+                    <textarea id="vault2-handoff-summary" rows="10" placeholder="この章全体を短く圧縮した要約を保存します。次章の執筆前に最初に読む前提メモです。"></textarea>
+                  </div>
+
+                  <div class="form-hint">要約だけでは完了になりません。下の固定フォーマットも合わせて保存してください。</div>
+
+                  <details class="vault2-inner-details">
+                    <summary class="vault2-inner-summary">固定フォーマットを開く（必須）</summary>
+                    <div class="vault2-subgrid" style="margin-top:12px">
+                      <div class="form-group">
+                        <label class="form-label" for="vault2-handoff-facts">事実状態</label>
+                        <textarea id="vault2-handoff-facts" rows="4" placeholder="箇条書き推奨"></textarea>
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label" for="vault2-handoff-emotion-main">感情状態：主人公</label>
+                        <textarea id="vault2-handoff-emotion-main" rows="4" placeholder="開始時点の感情"></textarea>
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label" for="vault2-handoff-emotion-other">感情状態：相手 / 周囲</label>
+                        <textarea id="vault2-handoff-emotion-other" rows="4" placeholder="相手と周囲の感情"></textarea>
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label" for="vault2-handoff-relation">関係性状態</label>
+                        <textarea id="vault2-handoff-relation" rows="4" placeholder="距離感 / 表向きの関係 / 内面のズレ"></textarea>
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label" for="vault2-handoff-physical">物理状況</label>
+                        <textarea id="vault2-handoff-physical" rows="4" placeholder="場所 / 時間帯 / 直前の出来事 / 所持物 / 傷 / 制約"></textarea>
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label" for="vault2-handoff-unresolved">未解決事項</label>
+                        <textarea id="vault2-handoff-unresolved" rows="4" placeholder="未回収の約束 / 誤解 / 伏線 / 残る圧力"></textarea>
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label" for="vault2-handoff-expression">表現上の注意 <span class="req">*</span></label>
+                        <textarea id="vault2-handoff-expression" rows="4" placeholder="口調 / 視点 / 認知の限界 / 崩してはいけない性格反応"></textarea>
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label" for="vault2-handoff-must-keep">次章で崩してはいけないこと <span class="req">*</span></label>
+                        <textarea id="vault2-handoff-must-keep" rows="4" placeholder="論理、設定、感情、関係性、伏線などで絶対に守ること"></textarea>
+                      </div>
+                      <div class="form-group vault2-field-span-2">
+                        <label class="form-label" for="vault2-handoff-pressure">次章へ自然に残る圧力 <span class="req">*</span></label>
+                        <textarea id="vault2-handoff-pressure" rows="4" placeholder="次章へ渡る未解決感、火種、期待、緊張など"></textarea>
+                      </div>
+                    </div>
+                  </details>
+                </div>
+
+                <details class="vault2-block" open>
+                  <summary class="vault2-body-summary">章本文</summary>
+                  <div class="vault2-block-desc">執筆した本文の保管場所です。引継ぎ資料生成プロンプトの元データになります。</div>
+                  <div class="form-group">
+                    <label class="form-label" for="vault2-body">章本文</label>
+                    <textarea id="vault2-body" class="vault2-body-textarea" rows="18" placeholder="この章の本文。引継ぎ資料生成の元データになります。"></textarea>
+                  </div>
+                </details>
+
+                <details class="vault2-block">
+                  <summary class="vault2-body-summary">章補助メモ（任意）</summary>
+                  <div class="vault2-block-desc">旧形式との互換用です。現在の主導線では必須ではありません。</div>
 
                   <div class="vault2-field-grid">
                     <div class="form-group vault2-field-span-2">
@@ -2656,57 +2912,13 @@ textarea { resize: vertical; }
                     <label class="form-label" for="vault2-contract-budget">文字数予算帯</label>
                     <input type="text" id="vault2-contract-budget" placeholder="例：4,000〜6,000字">
                   </div>
-                </div>
-
-                <div class="vault2-block">
-                  <div class="vault2-block-title">前章から引き継ぐべき情報 / 崩してはならない情報</div>
-                  <div class="vault2-block-desc">この章の開始時点で確定している状態だけを書きます。感想や未来予測は入れません。</div>
-
-                  <div class="vault2-subgrid">
-                    <div class="form-group">
-                      <label class="form-label" for="vault2-handoff-facts">事実状態</label>
-                      <textarea id="vault2-handoff-facts" rows="4" placeholder="箇条書き推奨"></textarea>
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label" for="vault2-handoff-emotion-main">感情状態：主人公</label>
-                      <textarea id="vault2-handoff-emotion-main" rows="4" placeholder="開始時点の感情"></textarea>
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label" for="vault2-handoff-emotion-other">感情状態：相手 / 周囲</label>
-                      <textarea id="vault2-handoff-emotion-other" rows="4" placeholder="相手と周囲の感情"></textarea>
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label" for="vault2-handoff-relation">関係性状態</label>
-                      <textarea id="vault2-handoff-relation" rows="4" placeholder="距離感 / 表向きの関係 / 内面のズレ"></textarea>
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label" for="vault2-handoff-physical">物理状況</label>
-                      <textarea id="vault2-handoff-physical" rows="4" placeholder="場所 / 時間帯 / 直前の出来事 / 所持物 / 傷 / 制約"></textarea>
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label" for="vault2-handoff-unresolved">未解決事項</label>
-                      <textarea id="vault2-handoff-unresolved" rows="4" placeholder="未回収の約束 / 誤解 / 伏線 / 残る圧力"></textarea>
-                    </div>
-                    <div class="form-group vault2-field-span-2">
-                      <label class="form-label" for="vault2-handoff-expression">表現上の注意</label>
-                      <textarea id="vault2-handoff-expression" rows="4" placeholder="口調 / 視点 / 認知の限界 / 崩してはいけない性格反応"></textarea>
-                    </div>
-                  </div>
-                </div>
-
-                <details class="vault2-block" open>
-                  <summary class="vault2-body-summary">章本文</summary>
-                  <div class="vault2-block-desc">一次ソースです。必要時のみ開いて編集します。保存時に文字数も更新します。</div>
-                  <div class="form-group">
-                    <label class="form-label" for="vault2-body">章本文</label>
-                    <textarea id="vault2-body" class="vault2-body-textarea" rows="18" placeholder="この章の本文。前章末尾抜粋や次章引継ぎ更新の元データになります。"></textarea>
-                  </div>
                 </details>
               </div>
             </div>
           </section>
         </div>
       </div>
+
 
 <!-- PAGE 3: マイルール集 -->
     <section class="page" id="page-rules">
@@ -14659,5 +14871,1054 @@ async function loadWorkPage(workId) {
 async function init(){await initDB();await seedRules();await renderWorksList();}
 init();
 </script>
+
+<script>
+(function () {
+  var pmxRecordCacheV2 = [];
+
+  function pickText(id) {
+    return String(document.getElementById(id)?.value || '').trim();
+  }
+
+  function pmxSafeArray(value) {
+    return Array.isArray(value) ? value.map(item => String(item || '').trim()).filter(Boolean) : [];
+  }
+
+  function pmxJoinNonEmpty(items, separator = '\n') {
+    return items.map(item => String(item || '').trim()).filter(Boolean).join(separator).trim();
+  }
+
+  function pmxLegacyCharacterCompleted(characters) {
+    if (!Array.isArray(characters) || !characters.length) return '';
+    return characters
+      .filter(item => item && (item.name || item.mustNotBreak || item.emotion || item.attitude || item.tone || item.relationship))
+      .map(item => {
+        const lines = [
+          `【${item.name || 'キャラクター'}】`,
+          item.emotion ? `現在感情: ${item.emotion}` : '',
+          item.attitude ? `相手への態度: ${item.attitude}` : '',
+          item.mustNotBreak ? `崩してはいけない反応: ${item.mustNotBreak}` : '',
+          item.tone ? `口調・会話温度: ${item.tone}` : '',
+          item.relationship ? `関係性の現在地: ${item.relationship}` : ''
+        ].filter(Boolean);
+        return lines.join('\n');
+      })
+      .join('\n\n')
+      .trim();
+  }
+
+  function vault2BuildHandoffSummaryText(handoff) {
+    if (!handoff || typeof handoff !== 'object') return '';
+    if (String(handoff.summary || '').trim()) return String(handoff.summary || '').trim();
+    const lines = [
+      handoff.facts ? `事実: ${handoff.facts}` : '',
+      handoff.emotionMain || handoff.emotionOther
+        ? `感情: 主人公=${handoff.emotionMain || '（未入力）'} / 相手・周囲=${handoff.emotionOther || '（未入力）'}`
+        : '',
+      handoff.relation ? `関係: ${handoff.relation}` : '',
+      handoff.physical ? `物理: ${handoff.physical}` : '',
+      handoff.unresolved ? `未解決: ${handoff.unresolved}` : '',
+      handoff.expression ? `表現: ${handoff.expression}` : '',
+      handoff.mustKeep ? `厳守: ${handoff.mustKeep}` : '',
+      handoff.pressure ? `圧力: ${handoff.pressure}` : ''
+    ].filter(Boolean);
+    return lines.join('\n').trim();
+  }
+
+  function vault2BuildHandoffStructuredText(handoff) {
+    if (!handoff || typeof handoff !== 'object') return '（引継ぎ資料なし）';
+    return [
+      '【引継ぎ資料要約】',
+      String(handoff.summary || '').trim() || '（未入力）',
+      '',
+      '【事実状態】',
+      String(handoff.facts || '').trim() || '（未入力）',
+      '',
+      '【感情状態】',
+      `主人公: ${String(handoff.emotionMain || '').trim() || '（未入力）'}`,
+      `相手 / 周囲: ${String(handoff.emotionOther || '').trim() || '（未入力）'}`,
+      '',
+      '【関係性状態】',
+      String(handoff.relation || '').trim() || '（未入力）',
+      '',
+      '【物理状況】',
+      String(handoff.physical || '').trim() || '（未入力）',
+      '',
+      '【未解決事項】',
+      String(handoff.unresolved || '').trim() || '（未入力）',
+      '',
+      '【表現上の注意】',
+      String(handoff.expression || '').trim() || '（未入力）',
+      '',
+      '【次章で崩してはいけないこと】',
+      String(handoff.mustKeep || '').trim() || '（未入力）',
+      '',
+      '【次章へ自然に残る圧力】',
+      String(handoff.pressure || '').trim() || '（未入力）'
+    ].join('\n');
+  }
+
+  function vault2MissingHandoffFields(handoff) {
+    const src = handoff || {};
+    const missing = [];
+    if (!String(src.summary || '').trim()) missing.push('要約');
+    if (!String(src.facts || '').trim()) missing.push('事実状態');
+    if (!String(src.emotionMain || '').trim()) missing.push('感情状態：主人公');
+    if (!String(src.emotionOther || '').trim()) missing.push('感情状態：相手 / 周囲');
+    if (!String(src.relation || '').trim()) missing.push('関係性状態');
+    if (!String(src.physical || '').trim()) missing.push('物理状況');
+    if (!String(src.unresolved || '').trim()) missing.push('未解決事項');
+    if (!String(src.expression || '').trim()) missing.push('表現上の注意');
+    if (!String(src.mustKeep || '').trim()) missing.push('次章で崩してはいけないこと');
+    if (!String(src.pressure || '').trim()) missing.push('次章へ自然に残る圧力');
+    return missing;
+  }
+
+  function pmxPlotHasChapterOutline(text) {
+    const value = String(text || '').trim();
+    if (!value) return false;
+    return /第\s*[0-9０-９一二三四五六七八九十百]+\s*章/.test(value)
+      || /章立て/.test(value)
+      || /chapter\s*[0-9]+/i.test(value)
+      || /#\s*第\s*[0-9０-９一二三四五六七八九十百]+\s*章/.test(value);
+  }
+
+  window.vault2ChapterDefaults = function () {
+    return {
+      contract: {
+        role: '',
+        must: '',
+        no: '',
+        endFact: '',
+        endEmotion: '',
+        endRelation: '',
+        endFire: '',
+        budget: ''
+      },
+      handoff: {
+        summary: '',
+        facts: '',
+        emotionMain: '',
+        emotionOther: '',
+        relation: '',
+        physical: '',
+        unresolved: '',
+        expression: '',
+        mustKeep: '',
+        pressure: ''
+      },
+      body: ''
+    };
+  };
+
+  window.vault2NormalizeChapterState = function (chapter, episodes = []) {
+    const src = chapter && typeof chapter.writingState === 'object' && chapter.writingState ? chapter.writingState : {};
+    const joinedBody = (episodes || [])
+      .filter(ep => ep.chapterId === chapter.id)
+      .sort((a, b) => (Number(a.number) || 0) - (Number(b.number) || 0))
+      .map(ep => String(ep.content || '').trim())
+      .filter(Boolean)
+      .join('\n\n');
+
+    const handoff = {
+      summary: String(src.handoff?.summary || '').trim(),
+      facts: String(src.handoff?.facts || '').trim(),
+      emotionMain: String(src.handoff?.emotionMain || '').trim(),
+      emotionOther: String(src.handoff?.emotionOther || '').trim(),
+      relation: String(src.handoff?.relation || '').trim(),
+      physical: String(src.handoff?.physical || '').trim(),
+      unresolved: String(src.handoff?.unresolved || '').trim(),
+      expression: String(src.handoff?.expression || '').trim(),
+      mustKeep: String(src.handoff?.mustKeep || '').trim(),
+      pressure: String(src.handoff?.pressure || '').trim()
+    };
+    if (!handoff.summary) {
+      handoff.summary = vault2BuildHandoffSummaryText(handoff);
+    }
+
+    return {
+      contract: {
+        role: String(src.contract?.role || '').trim(),
+        must: String(src.contract?.must || '').trim(),
+        no: String(src.contract?.no || '').trim(),
+        endFact: String(src.contract?.endFact || '').trim(),
+        endEmotion: String(src.contract?.endEmotion || '').trim(),
+        endRelation: String(src.contract?.endRelation || '').trim(),
+        endFire: String(src.contract?.endFire || '').trim(),
+        budget: String(src.contract?.budget || '').trim()
+      },
+      handoff,
+      body: String(src.body || chapter?.chapterText || chapter?.body || joinedBody || '').trim()
+    };
+  };
+
+  window.vault2HasHandoff = function (chapter) {
+    const state = chapter?._writingState || window.vault2NormalizeChapterState(chapter, vault2EpisodeCache || []);
+    return vault2MissingHandoffFields(state?.handoff).length === 0;
+  };
+
+  window.vault2HasBody = function (chapter) {
+    const state = chapter?._writingState || window.vault2NormalizeChapterState(chapter, vault2EpisodeCache || []);
+    return !!String(state?.body || '').trim();
+  };
+
+  window.vault2BuildWarnings = function (chapter) {
+    const warnings = [];
+    if (!window.vault2HasHandoff(chapter)) {
+      const state = chapter?._writingState || window.vault2NormalizeChapterState(chapter, vault2EpisodeCache || []);
+      const missing = vault2MissingHandoffFields(state?.handoff);
+      warnings.push(missing.length ? `引継ぎ資料未完成（${missing.length}項目）` : '引継ぎ資料未完成');
+    }
+    if (!window.vault2HasBody(chapter)) warnings.push('本文未入力');
+    return warnings;
+  };
+
+  window.vault2ChapterSummaryText = function (chapter) {
+    const state = chapter?._writingState || window.vault2NormalizeChapterState(chapter, vault2EpisodeCache || []);
+    if (state.handoff.summary) return state.handoff.summary.slice(0, 60);
+    if (state.body) return state.body.slice(0, 60);
+    if (state.contract.role) return state.contract.role;
+    return 'まだ入力されていません';
+  };
+
+  window.vault2GetSelectedChapterFromDom = function () {
+    const chapter = (vault2ChapterCache || []).find(item => item.id === vault2SelectedChapterId);
+    if (!chapter) return null;
+
+    const handoff = {
+      summary: pickText('vault2-handoff-summary'),
+      facts: pickText('vault2-handoff-facts'),
+      emotionMain: pickText('vault2-handoff-emotion-main'),
+      emotionOther: pickText('vault2-handoff-emotion-other'),
+      relation: pickText('vault2-handoff-relation'),
+      physical: pickText('vault2-handoff-physical'),
+      unresolved: pickText('vault2-handoff-unresolved'),
+      expression: pickText('vault2-handoff-expression'),
+      mustKeep: pickText('vault2-handoff-must-keep'),
+      pressure: pickText('vault2-handoff-pressure')
+    };
+    if (!handoff.summary) {
+      handoff.summary = vault2BuildHandoffSummaryText(handoff);
+    }
+
+    const state = {
+      contract: {
+        role: pickText('vault2-contract-role'),
+        must: pickText('vault2-contract-must'),
+        no: pickText('vault2-contract-no'),
+        endFact: pickText('vault2-contract-end-fact'),
+        endEmotion: pickText('vault2-contract-end-emotion'),
+        endRelation: pickText('vault2-contract-end-relation'),
+        endFire: pickText('vault2-contract-end-fire'),
+        budget: pickText('vault2-contract-budget')
+      },
+      handoff,
+      body: pickText('vault2-body')
+    };
+
+    return {
+      ...chapter,
+      title: pickText('vault2-title') || chapter.title || `第${chapter.number || '?'}章`,
+      status: document.getElementById('vault2-status')?.value || chapter.status || 'planning',
+      _writingState: state
+    };
+  };
+
+  window.vault2FillChapterCard = function (chapter) {
+    const cardWrap = document.getElementById('vault2-card');
+    const empty = document.getElementById('vault2-empty');
+    if (!cardWrap || !empty || !chapter) return;
+
+    const state = chapter._writingState || window.vault2NormalizeChapterState(chapter, vault2EpisodeCache || []);
+    empty.style.display = 'none';
+    cardWrap.style.display = 'block';
+
+    document.getElementById('vault2-header-number').textContent = `第${chapter.number || '?'}章`;
+    document.getElementById('vault2-title').value = chapter.title || `第${chapter.number || '?'}章`;
+    document.getElementById('vault2-status').innerHTML = vault2StatusOptions(chapter.status || 'planning');
+    document.getElementById('vault2-updated').textContent = `最終更新: ${vault2FormatDateLabel(chapter.updatedAt)}`;
+    document.getElementById('vault2-length').textContent = `文字数: ${vault2WordCount(state.body)}字`;
+
+    document.getElementById('vault2-handoff-summary').value = state.handoff.summary || '';
+    document.getElementById('vault2-handoff-facts').value = state.handoff.facts || '';
+    document.getElementById('vault2-handoff-emotion-main').value = state.handoff.emotionMain || '';
+    document.getElementById('vault2-handoff-emotion-other').value = state.handoff.emotionOther || '';
+    document.getElementById('vault2-handoff-relation').value = state.handoff.relation || '';
+    document.getElementById('vault2-handoff-physical').value = state.handoff.physical || '';
+    document.getElementById('vault2-handoff-unresolved').value = state.handoff.unresolved || '';
+    document.getElementById('vault2-handoff-expression').value = state.handoff.expression || '';
+    document.getElementById('vault2-handoff-must-keep').value = state.handoff.mustKeep || '';
+    document.getElementById('vault2-handoff-pressure').value = state.handoff.pressure || '';
+
+    document.getElementById('vault2-contract-role').value = state.contract.role || '';
+    document.getElementById('vault2-contract-must').value = state.contract.must || '';
+    document.getElementById('vault2-contract-no').value = state.contract.no || '';
+    document.getElementById('vault2-contract-end-fact').value = state.contract.endFact || '';
+    document.getElementById('vault2-contract-end-emotion').value = state.contract.endEmotion || '';
+    document.getElementById('vault2-contract-end-relation').value = state.contract.endRelation || '';
+    document.getElementById('vault2-contract-end-fire').value = state.contract.endFire || '';
+    document.getElementById('vault2-contract-budget').value = state.contract.budget || '';
+    document.getElementById('vault2-body').value = state.body || '';
+  };
+
+  window.vault2SaveSelectedChapter = async function (showMessage = true) {
+    if (!currentWorkId || !vault2SelectedChapterId) return;
+
+    const chapter = await dbGet(STORE_CHAPTERS, vault2SelectedChapterId);
+    if (!chapter) {
+      showToast('保存対象の章が見つかりません', 'error');
+      return;
+    }
+
+    const draft = window.vault2GetSelectedChapterFromDom();
+    if (!draft) return;
+
+    chapter.title = draft.title;
+    chapter.status = draft.status;
+    chapter.writingState = JSON.parse(JSON.stringify(draft._writingState));
+    chapter.chapterText = draft._writingState.body;
+    chapter.updatedAt = Date.now();
+
+    await dbPut(STORE_CHAPTERS, chapter);
+    await renderChapterPlanner(currentWorkId);
+
+    const index = (vault2ChapterCache || []).findIndex(item => item.id === chapter.id);
+    if (index >= 0) {
+      vault2ChapterCache[index] = {
+        ...chapter,
+        _writingState: JSON.parse(JSON.stringify(chapter.writingState))
+      };
+    }
+
+    renderWritingVaultList();
+    window.vault2FillChapterCard(chapter);
+    if (showMessage) showToast('章カードを保存しました');
+  };
+
+  window.renderWritingVaultList = function () {
+    const list = document.getElementById('vault2-list');
+    const count = document.getElementById('vault2-count');
+    if (!list) return;
+    if (count) count.textContent = String((vault2ChapterCache || []).length);
+
+    if (!(vault2ChapterCache || []).length) {
+      list.innerHTML = `
+        <div class="empty-state" style="padding:32px 18px">
+          <div class="empty-icon">🗂️</div>
+          <h3>章がありません</h3>
+          <p>「＋ 章を追加」から章カードを作成してください。</p>
+        </div>
+      `;
+      return;
+    }
+
+    list.innerHTML = vault2ChapterCache.map(chapter => {
+      const warnings = window.vault2BuildWarnings(chapter);
+      const activeClass = chapter.id === vault2SelectedChapterId ? ' active' : '';
+      const summary = window.vault2ChapterSummaryText(chapter);
+      const state = chapter._writingState || window.vault2NormalizeChapterState(chapter, vault2EpisodeCache || []);
+      return `
+        <button type="button" class="vault2-list-item${activeClass}" onclick="vault2SelectChapter('${esc(chapter.id)}')">
+          <div class="vault2-list-top">
+            <div class="vault2-list-label">第${esc(String(chapter.number || '?'))}章</div>
+            <span class="status-badge ${getChapterStatusLabel(chapter.status) === '公開済み' ? 'status-done' : chapter.status === 'drafting' ? 'status-wip' : 'status-new'}">${esc(getChapterStatusLabel(chapter.status))}</span>
+          </div>
+          <div class="vault2-list-title-text">${esc(chapter.title || `第${chapter.number || '?'}章`)}</div>
+          <div class="vault2-list-title-text" style="margin-top:6px">${esc(summary)}</div>
+          <div class="vault2-list-meta">
+            ${warnings.map(item => `<span class="vault2-missing">${esc(item)}</span>`).join('')}
+            ${warnings.length ? '' : `<span class="work-tag">欠落なし</span>`}
+          </div>
+          <div class="vault2-list-submeta">更新: ${esc(vault2FormatDateLabel(chapter.updatedAt))} / ${esc(String(vault2WordCount(state.body)))}字</div>
+        </button>
+      `;
+    }).join('');
+  };
+
+  window.vault2SelectChapter = async function (chapterId) {
+    if (!chapterId) return;
+    vault2SelectedChapterId = chapterId;
+    renderWritingVaultList();
+    const chapter = (vault2ChapterCache || []).find(item => item.id === chapterId);
+    if (chapter) window.vault2FillChapterCard(chapter);
+  };
+
+  window.loadWritingVaultTab = async function () {
+    if (!currentWorkId) return;
+
+    await ensureWorkChapterLinks(currentWorkId);
+    const chapters = await getSortedChapters(currentWorkId);
+    const episodes = await dbGetByIndex(STORE_EPISODES, 'workId', currentWorkId);
+
+    vault2EpisodeCache = episodes.slice();
+    vault2ChapterCache = chapters.map(chapter => ({
+      ...chapter,
+      _writingState: window.vault2NormalizeChapterState(chapter, episodes)
+    }));
+
+    if (!vault2SelectedChapterId || !vault2ChapterCache.some(item => item.id === vault2SelectedChapterId)) {
+      vault2SelectedChapterId = vault2ChapterCache[0]?.id || '';
+    }
+
+    renderWritingVaultList();
+
+    if (vault2SelectedChapterId) {
+      window.vault2FillChapterCard(vault2ChapterCache.find(item => item.id === vault2SelectedChapterId));
+    } else {
+      const empty = document.getElementById('vault2-empty');
+      const cardWrap = document.getElementById('vault2-card');
+      if (empty) empty.style.display = 'block';
+      if (cardWrap) cardWrap.style.display = 'none';
+    }
+
+    await window.pmxPopulateChapterSelect();
+  };
+
+  window.pmxSupportDefaults = function () {
+    return {
+      writingTitle: '',
+      scene: {
+        freeText: ''
+      },
+      plotDesign: {
+        note: '',
+        recordIds: [],
+        prompt: '',
+        completed: ''
+      },
+      characterDesign: {
+        note: '',
+        recordIds: [],
+        prompt: '',
+        completed: ''
+      },
+      handoffDesign: {
+        chapterId: '',
+        note: '',
+        recordIds: [],
+        prompt: ''
+      },
+      outputConditions: '',
+      targetChapterId: ''
+    };
+  };
+
+  window.pmxNormalizeSupport = function (work) {
+    const src = work && typeof work.writingSupport === 'object' && work.writingSupport ? work.writingSupport : {};
+    const legacyScene = pmxJoinNonEmpty([
+      src.scene?.freeText,
+      src.scene?.visual,
+      src.scene?.dialogue,
+      src.scene?.emotion,
+      src.scene?.highlight,
+      work?.scene
+    ], '\n');
+
+    const legacyPlotNote = pmxJoinNonEmpty([
+      src.promptA?.style,
+      src.promptA?.avoid ? `避けたい方向: ${src.promptA.avoid}` : '',
+      src.promptA?.dialogue ? `セリフの効かせ方: ${src.promptA.dialogue}` : '',
+      src.promptA?.emotion ? `感情の流し方: ${src.promptA.emotion}` : ''
+    ], '\n');
+
+    const normalized = {
+      writingTitle: String(src.writingTitle || work?.writingTitle || '').trim(),
+      scene: {
+        freeText: String(src.scene?.freeText || legacyScene || '').trim()
+      },
+      plotDesign: {
+        note: String(src.plotDesign?.note || legacyPlotNote || '').trim(),
+        recordIds: pmxSafeArray(src.plotDesign?.recordIds),
+        prompt: String(src.plotDesign?.prompt || '').trim(),
+        completed: String(src.plotDesign?.completed || '').trim()
+      },
+      characterDesign: {
+        note: String(src.characterDesign?.note || '').trim(),
+        recordIds: pmxSafeArray(src.characterDesign?.recordIds),
+        prompt: String(src.characterDesign?.prompt || '').trim(),
+        completed: String(src.characterDesign?.completed || pmxLegacyCharacterCompleted(src.characters) || '').trim()
+      },
+      handoffDesign: {
+        chapterId: String(src.handoffDesign?.chapterId || src.targetChapterId || '').trim(),
+        note: String(src.handoffDesign?.note || '').trim(),
+        recordIds: pmxSafeArray(src.handoffDesign?.recordIds),
+        prompt: String(src.handoffDesign?.prompt || '').trim()
+      },
+      outputConditions: String(src.outputConditions || '').trim(),
+      targetChapterId: String(src.targetChapterId || '').trim()
+    };
+
+    if (!normalized.outputConditions) {
+      normalized.outputConditions = [
+        '・対象章だけを書く',
+        '・完成版プロットの章立てを守る',
+        '・完成版キャラクターシートを優先する',
+        '・前章の引継ぎ資料（要約＋固定フォーマット）を破らない',
+        '・場面の感情と会話の熱を保ちながら、日本語の小説本文として出力する'
+      ].join('\n');
+    }
+
+    return normalized;
+  };
+
+  async function pmxGetCurrentRecords(force = false) {
+    if (!currentWorkId) return [];
+    if (!force && pmxRecordCacheV2.length) return pmxRecordCacheV2;
+    const records = await dbGetByIndex(STORE_RECORDS, 'workId', currentWorkId);
+    pmxRecordCacheV2 = records
+      .slice()
+      .sort((a, b) => (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0));
+    return pmxRecordCacheV2;
+  }
+
+  function pmxSelectedRecordIds(containerId) {
+    return Array.from(document.querySelectorAll(`#${containerId} input[type="checkbox"]:checked`))
+      .map(input => String(input.value || '').trim())
+      .filter(Boolean);
+  }
+
+  function pmxRenderRecordPicker(containerId, records, selectedIds) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const selected = new Set(selectedIds || []);
+    if (!records.length) {
+      container.innerHTML = '<div class="pmx-record-empty">この作品には分析結果の保存がまだありません。</div>';
+      return;
+    }
+
+    container.innerHTML = records.map(record => {
+      const title = (record.tags && record.tags.length ? record.tags.join(' / ') : '分析記録');
+      const excerpt = String(record.content || '').trim().slice(0, 180);
+      const checked = selected.has(String(record.id)) ? ' checked' : '';
+      return `
+        <label class="pmx-record-item${checked ? ' checked' : ''}">
+          <input type="checkbox" value="${esc(String(record.id))}" ${checked} onchange="this.closest('.pmx-record-item').classList.toggle('checked', this.checked)">
+          <div class="pmx-record-body">
+            <div class="pmx-record-head">
+              <div class="pmx-record-title">${esc(title)}</div>
+              <div class="pmx-record-tags">
+                ${(record.tags || []).map(tag => `<span class="pmx-record-tag">${esc(tag)}</span>`).join('')}
+              </div>
+            </div>
+            <div class="pmx-record-excerpt">${esc(excerpt || '本文なし')}</div>
+          </div>
+        </label>
+      `;
+    }).join('');
+  }
+
+  async function pmxRenderAllRecordPickers(support) {
+    const records = await pmxGetCurrentRecords();
+    pmxRenderRecordPicker('pmx-plot-records', records, support.plotDesign.recordIds);
+    pmxRenderRecordPicker('pmx-character-records', records, support.characterDesign.recordIds);
+    pmxRenderRecordPicker('pmx-handoff-records', records, support.handoffDesign.recordIds);
+  }
+
+  window.pmxReadSupportFromDom = function () {
+    const base = window.pmxNormalizeSupport(currentWork || {});
+    return {
+      ...base,
+      writingTitle: pickText('pmx-writing-title') || base.writingTitle,
+      scene: {
+        freeText: pickText('pmx-scene-free')
+      },
+      plotDesign: {
+        note: pickText('pmx-plot-note'),
+        recordIds: pmxSelectedRecordIds('pmx-plot-records'),
+        prompt: pickText('pmx-plot-prompt'),
+        completed: pickText('pmx-plot-completed')
+      },
+      characterDesign: {
+        note: pickText('pmx-character-note'),
+        recordIds: pmxSelectedRecordIds('pmx-character-records'),
+        prompt: pickText('pmx-character-prompt'),
+        completed: pickText('pmx-character-completed')
+      },
+      handoffDesign: {
+        chapterId: String(document.getElementById('pmx-handoff-source-chapter')?.value || '').trim(),
+        note: pickText('pmx-handoff-note'),
+        recordIds: pmxSelectedRecordIds('pmx-handoff-records'),
+        prompt: pickText('pmx-handoff-prompt')
+      },
+      outputConditions: pickText('pmx-output-conditions') || base.outputConditions,
+      targetChapterId: String(document.getElementById('pmx-target-chapter')?.value || '').trim()
+    };
+  };
+
+  window.pmxSaveSupport = async function (showMessage = true) {
+    if (!currentWorkId) return null;
+    const work = await dbGet(STORE_WORKS, currentWorkId);
+    if (!work) return null;
+
+    const support = window.pmxReadSupportFromDom();
+    work.writingSupport = JSON.parse(JSON.stringify(support));
+    work.writingTitle = support.writingTitle;
+    work.updatedAt = Date.now();
+    await dbPut(STORE_WORKS, work);
+    currentWork = work;
+    syncWritingTitleInputs(support.writingTitle);
+    if (showMessage) showToast('プロンプトメーカーを保存しました');
+    return support;
+  };
+
+  function pmxRecordBundle(selectedIds, records) {
+    if (!selectedIds.length) return '（選択なし）';
+    const byId = new Map(records.map(record => [String(record.id), record]));
+    return selectedIds.map((id, index) => {
+      const record = byId.get(String(id));
+      if (!record) return '';
+      const title = (record.tags && record.tags.length ? record.tags.join(' / ') : `記録${index + 1}`);
+      const date = new Date(record.updatedAt || record.createdAt || Date.now()).toLocaleString('ja-JP');
+      return [
+        `### 分析資料 ${index + 1}`,
+        `- タグ: ${title}`,
+        `- 更新: ${date}`,
+        '',
+        String(record.content || '').trim()
+      ].join('\n');
+    }).filter(Boolean).join('\n\n');
+  }
+
+  function pmxWorkMetaBlock(work) {
+    return [
+      `- 作品タイトル: ${work?.title || '無題'}`,
+      work?.genre ? `- ジャンル: ${work.genre}` : '',
+      work?.synopsis ? `- 作品あらすじ:\n${work.synopsis.trim()}` : ''
+    ].filter(Boolean).join('\n');
+  }
+
+  window.pmxShowValidation = function (errors) {
+    const box = document.getElementById('pmx-validation');
+    if (!box) return;
+    if (!errors.length) {
+      box.style.display = 'none';
+      box.innerHTML = '';
+      return;
+    }
+    box.style.display = 'block';
+    box.innerHTML = `
+      <strong>生成を止めました。</strong><br>
+      次の必須項目を埋めてください。<br>
+      ${errors.map(item => `・${esc(item)}`).join('<br>')}
+    `;
+  };
+
+  window.pmxValidateBeforeBuild = function (support, chapter) {
+    const errors = [];
+    if (!support.writingTitle && !(currentWork?.title || '').trim()) errors.push('執筆作品タイトル');
+    if (!support.scene.freeText) errors.push('描きたいシーン');
+    if (!support.plotDesign.completed) {
+      errors.push('完成版プロット（章立て必須）');
+    } else if (!pmxPlotHasChapterOutline(support.plotDesign.completed)) {
+      errors.push('完成版プロットの章立て');
+    }
+    if (!support.characterDesign.completed) errors.push('完成版キャラクターシート');
+    if (!chapter) errors.push('執筆する章');
+    const prev = chapter ? pmxGetPreviousChapter(vault2ChapterCache || [], chapter.id) : null;
+    if (prev && !window.vault2HasHandoff(prev)) errors.push('前章の引継ぎ資料（要約＋固定フォーマット）');
+    return errors;
+  };
+
+  window.pmxPopulateChapterSelect = async function () {
+    const support = window.pmxNormalizeSupport(currentWork || {});
+    const writingSelect = document.getElementById('pmx-target-chapter');
+    const handoffSelect = document.getElementById('pmx-handoff-source-chapter');
+    if (!currentWorkId || (!writingSelect && !handoffSelect)) return;
+
+    const chapters = (vault2ChapterCache && vault2ChapterCache.length)
+      ? vault2ChapterCache
+      : (await getSortedChapters(currentWorkId)).map(chapter => ({
+          ...chapter,
+          _writingState: window.vault2NormalizeChapterState(chapter, vault2EpisodeCache || [])
+        }));
+
+    const options = chapters.length
+      ? chapters.map(chapter => `<option value="${esc(chapter.id)}">${esc(`第${chapter.number || '?'}章｜${chapter.title || `第${chapter.number || '?'}章`}`)}</option>`).join('')
+      : '<option value="">章がありません</option>';
+
+    if (writingSelect) {
+      const currentValue = String(writingSelect.value || support.targetChapterId || chapters[0]?.id || '');
+      writingSelect.innerHTML = options;
+      writingSelect.value = chapters.some(ch => ch.id === currentValue) ? currentValue : (chapters[0]?.id || '');
+    }
+
+    if (handoffSelect) {
+      const currentValue = String(handoffSelect.value || support.handoffDesign.chapterId || chapters[0]?.id || '');
+      handoffSelect.innerHTML = options;
+      handoffSelect.value = chapters.some(ch => ch.id === currentValue) ? currentValue : (chapters[0]?.id || '');
+    }
+
+    window.pmxRenderSourceSummary();
+  };
+
+  window.pmxRenderSourceSummary = function () {
+    const box = document.getElementById('pmx-source-summary');
+    if (!box) return;
+    const support = window.pmxReadSupportFromDom();
+    const selectedChapter = (vault2ChapterCache || []).find(item => item.id === support.targetChapterId);
+    const prev = selectedChapter ? pmxGetPreviousChapter(vault2ChapterCache || [], selectedChapter.id) : null;
+    const prevState = prev ? (prev._writingState || window.vault2NormalizeChapterState(prev, vault2EpisodeCache || [])) : null;
+    const plotStatus = !support.plotDesign.completed
+      ? '未保存'
+      : (pmxPlotHasChapterOutline(support.plotDesign.completed) ? '保存済み（章立てあり）' : '保存済み（章立て不足）');
+    const prevMissing = prevState ? vault2MissingHandoffFields(prevState.handoff) : [];
+    const lines = [
+      `・完成版プロット: ${plotStatus}`,
+      `・完成版キャラクターシート: ${support.characterDesign.completed ? '保存済み' : '未保存'}`,
+      `・前章の引継ぎ資料: ${prev ? (window.vault2HasHandoff(prev) ? '保存済み（要約＋固定フォーマット）' : `未完成（${prevMissing.length}項目不足）`) : '第1章のため不要'}`,
+      `・執筆する章: ${selectedChapter ? `第${selectedChapter.number || '?'}章` : '未選択'}`,
+      `・描きたいシーン: ${support.scene.freeText ? '入力済み' : '未入力'}`,
+      `・前章引継ぎの要約長: ${prevState?.handoff?.summary ? String(prevState.handoff.summary.length) + '字' : '0字'}`
+    ];
+    box.textContent = lines.join('\n');
+  };
+
+  window.pmxHandleChapterChange = function () {
+    window.pmxRenderSourceSummary();
+  };
+
+  async function pmxBuildPlotPromptInternal() {
+    if (!currentWorkId) return null;
+    const work = await dbGet(STORE_WORKS, currentWorkId);
+    if (!work) return null;
+    const support = await window.pmxSaveSupport(false);
+    const records = await pmxGetCurrentRecords();
+
+    if (!support.scene.freeText) {
+      showToast('先に「描きたいシーン」を入力してください', 'error');
+      return null;
+    }
+
+    return [
+      '# 作品プロット設計プロンプト',
+      '',
+      'あなたは長編小説の設計担当です。',
+      '以下の資料を読み、今回執筆する作品の完成版プロットを日本語で設計してください。',
+      '出力は、Claudeが後続の執筆で再利用しやすいように、見出しつき・抜け漏れのない形で整理してください。',
+      '',
+      '## 作品メタ情報',
+      pmxWorkMetaBlock(work),
+      '',
+      '## 描きたいシーン（作者メモ・自由記述）',
+      support.scene.freeText,
+      '',
+      '## プロット設計で特に反映したいこと',
+      support.plotDesign.note || '（追加指定なし）',
+      '',
+      '## 参照する分析結果の保存',
+      pmxRecordBundle(support.plotDesign.recordIds, records),
+      '',
+      '## 出力要件',
+      [
+        '見出しつきで、次の順に必ず整理してください。',
+        '1. 作品コンセプト',
+        '2. 主人公とヒロインの物語上の役割',
+        '3. 全体プロット（導入・中盤・転換・山場・終着点）',
+        '4. 感情の流れ',
+        '5. 章立て一覧（必須）',
+        '6. 各章で起こすこと / 感情の進行 / 次章へ残す火種',
+        '7. 絶対に外してはいけない見せ場',
+        '8. 避けるべき破綻ポイント'
+      ].join('\n'),
+      '',
+      '章立て一覧では、少なくとも各章ごとに「章番号」「章タイトル案」「その章の役割」「そこで必ず起こすこと」が分かる形で出力してください。',
+      '作者メモの口調や熱量は尊重しつつ、構造は整理してください。'
+    ].join('\n');
+  }
+
+  async function pmxBuildCharacterPromptInternal() {
+    if (!currentWorkId) return null;
+    const work = await dbGet(STORE_WORKS, currentWorkId);
+    if (!work) return null;
+    const support = await window.pmxSaveSupport(false);
+    const records = await pmxGetCurrentRecords();
+
+    if (!support.scene.freeText) {
+      showToast('先に「描きたいシーン」を入力してください', 'error');
+      return null;
+    }
+
+    return [
+      '# キャラクター設計プロンプト',
+      '',
+      'あなたは長編小説のキャラクター設計担当です。',
+      '以下の資料を読み、今回執筆する作品の完成版キャラクターシートを日本語で設計してください。',
+      '',
+      '## 作品メタ情報',
+      pmxWorkMetaBlock(work),
+      '',
+      '## 描きたいシーン（作者メモ・自由記述）',
+      support.scene.freeText,
+      '',
+      '## 完成版プロット（章立て込み。あれば前提として利用）',
+      support.plotDesign.completed || '（未保存）',
+      '',
+      '## キャラクター設計で特に反映したいこと',
+      support.characterDesign.note || '（追加指定なし）',
+      '',
+      '## 参照する分析結果の保存',
+      pmxRecordBundle(support.characterDesign.recordIds, records),
+      '',
+      '## 出力要件',
+      [
+        '1. 主要キャラクターごとのプロフィール',
+        '2. 外見・雰囲気・第一印象',
+        '3. 内面の核',
+        '4. 話し方・会話温度',
+        '5. 相手との関係性',
+        '6. 感情が揺れるポイント',
+        '7. 崩してはいけない反応',
+        '8. 物語上の役割'
+      ].join('\n'),
+      '',
+      'あとで執筆プロンプトへそのまま貼り込める粒度で、具体的かつ再利用しやすくまとめてください。'
+    ].join('\n');
+  }
+
+  async function pmxBuildHandoffPromptInternal() {
+    if (!currentWorkId) return null;
+    const work = await dbGet(STORE_WORKS, currentWorkId);
+    if (!work) return null;
+    const support = await window.pmxSaveSupport(false);
+    const records = await pmxGetCurrentRecords();
+
+    const chapter = (vault2ChapterCache || []).find(item => item.id === support.handoffDesign.chapterId)
+      || (vault2ChapterCache || [])[0]
+      || null;
+    if (!chapter) {
+      showToast('先に章を作成してください', 'error');
+      return null;
+    }
+    const state = chapter._writingState || window.vault2NormalizeChapterState(chapter, vault2EpisodeCache || []);
+    if (!state.body) {
+      showToast('選択した章の本文がまだありません', 'error');
+      return null;
+    }
+
+    return [
+      '# 引継ぎ資料生成プロンプト',
+      '',
+      'あなたは小説の継続執筆用サマライザーです。',
+      '以下の章本文と資料を読み、次章の執筆で論理・物語・感情が破綻しないための引継ぎ資料を日本語で作成してください。',
+      '',
+      '## 作品メタ情報',
+      pmxWorkMetaBlock(work),
+      '',
+      '## 完成版プロット',
+      support.plotDesign.completed || '（未保存）',
+      '',
+      '## 完成版キャラクターシート',
+      support.characterDesign.completed || '（未保存）',
+      '',
+      `## 対象章\n第${chapter.number || '?'}章｜${chapter.title || `第${chapter.number || '?'}章`}`,
+      '',
+      '## 章本文',
+      state.body,
+      '',
+      '## 作者が特に引き継がせたいこと',
+      support.handoffDesign.note || '（追加指定なし）',
+      '',
+      '## 参照する分析結果の保存',
+      pmxRecordBundle(support.handoffDesign.recordIds, records),
+      '',
+      '## 出力要件',
+      [
+        '出力形式は固定です。以下の見出し名を変えず、この順番で必ず出力してください。',
+        '【引継ぎ資料要約】',
+        '【事実状態】',
+        '【感情状態】',
+        '【関係性状態】',
+        '【物理状況】',
+        '【未解決事項】',
+        '【表現上の注意】',
+        '【次章で崩してはいけないこと】',
+        '【次章へ自然に残る圧力】'
+      ].join('\n'),
+      '',
+      '感想ではなく、次章の執筆者がそのまま参照できる引継ぎ資料として出力してください。要約と固定フォーマットの両方を必ず埋めてください。'
+    ].join('\n');
+  }
+
+  window.pmxBuildWritingPrompt = async function () {
+    if (!currentWorkId) return null;
+    const work = await dbGet(STORE_WORKS, currentWorkId);
+    if (!work) return null;
+
+    const support = await window.pmxSaveSupport(false);
+    if (!vault2ChapterCache || !vault2ChapterCache.length) {
+      await window.loadWritingVaultTab();
+    }
+
+    const selectedChapter = (vault2ChapterCache || []).find(item => item.id === support.targetChapterId)
+      || (vault2ChapterCache || [])[0]
+      || null;
+
+    const validationErrors = window.pmxValidateBeforeBuild(support, selectedChapter);
+    window.pmxShowValidation(validationErrors);
+    if (validationErrors.length) return null;
+
+    const prev = selectedChapter ? pmxGetPreviousChapter(vault2ChapterCache || [], selectedChapter.id) : null;
+    const prevState = prev ? (prev._writingState || window.vault2NormalizeChapterState(prev, vault2EpisodeCache || [])) : null;
+    const writingTitle = support.writingTitle || work.title || '無題';
+
+    return [
+      '# 執筆プロンプト',
+      '',
+      'あなたは長編小説の執筆アシスタントです。',
+      `作品名は「${writingTitle}」です。`,
+      '以下の資料を優先し、完成版プロットの章立てを守りながら、対象章だけを日本語の小説本文として書いてください。',
+      '',
+      '## 完成版プロット（章立て込み）',
+      support.plotDesign.completed,
+      '',
+      '## 完成版キャラクターシート',
+      support.characterDesign.completed,
+      '',
+      '## 前章の引継ぎ資料',
+      prevState ? vault2BuildHandoffStructuredText(prevState.handoff) : '（前章なし / 第1章）',
+      '',
+      '## 今回執筆する章',
+      [
+        `- 章番号: 第${selectedChapter.number || '?'}章`,
+        `- 章タイトル: ${selectedChapter.title || `第${selectedChapter.number || '?'}章`}`,
+        `- 状態: ${getChapterStatusLabel(selectedChapter.status) || '未設定'}`
+      ].join('\n'),
+      '',
+      '## 描きたいシーン（作者メモ・自由記述）',
+      support.scene.freeText,
+      '',
+      '## 出力条件',
+      support.outputConditions,
+      '',
+      '## 厳守事項',
+      [
+        '・対象章の外まで話を先走らせない',
+        '・完成版プロットの章立てと章ごとの役割を崩さない',
+        '・完成版キャラクターシートに反する改変をしない',
+        '・前章の引継ぎ資料（要約＋固定フォーマット）を破らない',
+        '・会話、感情、叙述の温度差を丁寧に扱う',
+        '・本文だけを出力する'
+      ].join('\n')
+    ].join('\n');
+  };
+
+  window.pmxGeneratePlotPrompt = async function () {
+    const prompt = await pmxBuildPlotPromptInternal();
+    if (!prompt) return;
+    const area = document.getElementById('pmx-plot-prompt');
+    if (area) area.value = prompt;
+    await window.pmxSaveSupport(false);
+    showToast('作品プロット設計プロンプトを生成しました');
+  };
+
+  window.pmxGenerateCharacterPrompt = async function () {
+    const prompt = await pmxBuildCharacterPromptInternal();
+    if (!prompt) return;
+    const area = document.getElementById('pmx-character-prompt');
+    if (area) area.value = prompt;
+    await window.pmxSaveSupport(false);
+    showToast('キャラクター設計プロンプトを生成しました');
+  };
+
+  window.pmxGenerateHandoffPrompt = async function () {
+    const prompt = await pmxBuildHandoffPromptInternal();
+    if (!prompt) return;
+    const area = document.getElementById('pmx-handoff-prompt');
+    if (area) area.value = prompt;
+    await window.pmxSaveSupport(false);
+    showToast('引継ぎ資料生成プロンプトを生成しました');
+  };
+
+  window.pmxGenerateWritingPrompt = async function () {
+    const prompt = await window.pmxBuildWritingPrompt();
+    if (!prompt) return;
+    const textarea = document.getElementById('pmx-generated-prompt');
+    if (textarea) textarea.value = prompt;
+    await window.pmxSaveSupport(false);
+    showToast('執筆プロンプトを生成しました');
+  };
+
+  window.pmxCopyTextById = async function (id, message) {
+    const text = pickText(id);
+    if (!text) {
+      showToast('先にプロンプトを生成してください', 'error');
+      return;
+    }
+    await copyToClipboard(text);
+    showToast(message || 'コピーしました');
+  };
+
+  window.pmxCopyGeneratedPrompt = async function () {
+    await window.pmxCopyTextById('pmx-generated-prompt', '執筆プロンプトをコピーしました');
+  };
+
+  window.pmxDownloadGeneratedPrompt = async function () {
+    const text = pickText('pmx-generated-prompt');
+    if (!text) {
+      showToast('先に執筆プロンプトを生成してください', 'error');
+      return;
+    }
+    const work = await dbGet(STORE_WORKS, currentWorkId);
+    const support = window.pmxReadSupportFromDom();
+    const title = support.writingTitle || work?.title || '無題';
+    downloadFile(buildFilename(title, '執筆プロンプト'), text);
+  };
+
+  window.loadPromptMakerTab = async function () {
+    if (!currentWorkId) return;
+    const work = await dbGet(STORE_WORKS, currentWorkId);
+    if (!work) return;
+
+    currentWork = work;
+    const support = window.pmxNormalizeSupport(work);
+
+    const titleInput = document.getElementById('pmx-writing-title');
+    if (titleInput) titleInput.value = support.writingTitle || work.title || '';
+    const sceneInput = document.getElementById('pmx-scene-free');
+    if (sceneInput) sceneInput.value = support.scene.freeText || '';
+    const plotNote = document.getElementById('pmx-plot-note');
+    if (plotNote) plotNote.value = support.plotDesign.note || '';
+    const plotPrompt = document.getElementById('pmx-plot-prompt');
+    if (plotPrompt) plotPrompt.value = support.plotDesign.prompt || '';
+    const plotCompleted = document.getElementById('pmx-plot-completed');
+    if (plotCompleted) plotCompleted.value = support.plotDesign.completed || '';
+
+    const charNote = document.getElementById('pmx-character-note');
+    if (charNote) charNote.value = support.characterDesign.note || '';
+    const charPrompt = document.getElementById('pmx-character-prompt');
+    if (charPrompt) charPrompt.value = support.characterDesign.prompt || '';
+    const charCompleted = document.getElementById('pmx-character-completed');
+    if (charCompleted) charCompleted.value = support.characterDesign.completed || '';
+
+    const handoffNote = document.getElementById('pmx-handoff-note');
+    if (handoffNote) handoffNote.value = support.handoffDesign.note || '';
+    const handoffPrompt = document.getElementById('pmx-handoff-prompt');
+    if (handoffPrompt) handoffPrompt.value = support.handoffDesign.prompt || '';
+
+    const output = document.getElementById('pmx-output-conditions');
+    if (output) output.value = support.outputConditions || '';
+    const generated = document.getElementById('pmx-generated-prompt');
+    if (generated && !generated.value) generated.value = '';
+
+    syncWritingTitleInputs(support.writingTitle || work.title || '');
+    await window.pmxRenderRecordPickersForCurrentWork();
+    await window.pmxPopulateChapterSelect();
+
+    const target = document.getElementById('pmx-target-chapter');
+    if (target && support.targetChapterId) target.value = support.targetChapterId;
+    const handoffSource = document.getElementById('pmx-handoff-source-chapter');
+    if (handoffSource && support.handoffDesign.chapterId) handoffSource.value = support.handoffDesign.chapterId;
+
+    window.pmxRenderSourceSummary();
+    window.pmxShowValidation([]);
+  };
+
+  window.pmxRenderRecordPickersForCurrentWork = async function () {
+    const support = window.pmxNormalizeSupport(currentWork || {});
+    await pmxRenderAllRecordPickers(support);
+  };
+})();
+</script>
+
 </body>
 </html>
